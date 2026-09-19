@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # Load environment variables from .env file
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
