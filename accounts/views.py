@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm
-
+from django.contrib.auth.decorators import login_required
+from .decorators import role_required
 
 def register(request):
 
@@ -61,8 +62,52 @@ def register_success(request):
         'accounts/register_success.html'
     )
 
+# ==========================================
+# MAIN DASHBOARD
+# ==========================================
+
+@login_required
 def dashboard(request):
+
+    if request.user.role == 'PATIENT':
+        return redirect('patient_dashboard')
+
+    elif request.user.role == 'DOCTOR':
+        return redirect('doctor_dashboard')
+
+    elif request.user.role == 'ADMIN':
+        return redirect('admin_dashboard')
+
+    return redirect('login')
+
+
+# ==========================================
+# ROLE-BASED DASHBOARDS
+# ==========================================
+
+@login_required
+@role_required('PATIENT')
+def patient_dashboard(request):
     return render(
         request,
-        'accounts/dashboard.html'
+        'accounts/patient_dashboard.html'
+    )
+
+
+@login_required
+@role_required('DOCTOR')
+def doctor_dashboard(request):
+    return render(
+        request,
+        'accounts/doctor_dashboard.html'
+    )
+
+
+
+@login_required
+@role_required('ADMIN')
+def admin_dashboard(request):
+    return render(
+        request,
+        'accounts/admin_dashboard.html'
     )
