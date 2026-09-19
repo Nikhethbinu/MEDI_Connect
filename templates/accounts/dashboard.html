@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MediConnect Dashboard</title>
+</head>
+
+<body>
+
+    <h1>Welcome to MediConnect</h1>
+
+    <h2>Dashboard</h2>
+
+    <p>You are successfully logged in.</p>
+
+    <p>
+        Welcome, {{ user.name }}
+    </p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</body>
+</html>
