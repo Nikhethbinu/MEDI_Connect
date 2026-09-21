@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # projects apps
     'accounts',
+    'patients',
+    'doctors',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +138,10 @@ MAILERS = {
     },
 }
 AUTH_USER_MODEL = 'accounts.User'
+# ==========================================
+# AUTHENTICATION URLS
+# ==========================================
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'

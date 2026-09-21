@@ -19,6 +19,42 @@ from django.urls import include, path
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
+
+    # ==========================================
+    # DJANGO ADMIN
+    # ==========================================
+
+    path(
+        'admin/',
+        admin.site.urls
+    ),
+
+
+    # ==========================================
+    # ACCOUNTS APP
+    # ==========================================
+
+    path(
+        '',
+        include('accounts.urls')
+    ),
+
+
+    # ==========================================
+    # PATIENT APP
+    # ==========================================
+
+    path(
+        'patient/',
+        include('patients.urls')
+    ),
+    # ==========================================
+    # DOCTOR APP
+    # ==========================================
+    path(
+        'doctor/',
+        include('doctors.urls')
+    ),
+    
+
 ]

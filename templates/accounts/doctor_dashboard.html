@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <title>MediConnect - Doctor Dashboard</title>
+
 </head>
 
 <body>
@@ -14,9 +17,35 @@
 
     <h2>Doctor Dashboard</h2>
 
-    <p>Welcome, {{ user.name }}</p>
+    <p>
+        Welcome, {{ user.name }}
+    </p>
 
-    <p>You are logged in as a Doctor.</p>
+    <p>
+        You are logged in as a Doctor.
+    </p>
+
+
+    <!-- ==========================================
+         DOCTOR FEATURES
+         ========================================== -->
+
+    <h3>Doctor Services</h3>
+
+    <ul>
+
+        <li>
+            <a href="{% url 'doctor_profile' %}">
+                My Profile
+            </a>
+        </li>
+
+    </ul>
+
+
+    <!-- ==========================================
+         ACCOUNT ACTIONS
+         ========================================== -->
 
     <br>
 
@@ -25,4 +54,5 @@
     </a>
 
 </body>
+
 </html>
