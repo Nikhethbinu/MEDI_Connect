@@ -174,7 +174,23 @@ class DoctorAvailability(models.Model):
     is_active = models.BooleanField(
         default=True
     )
+    # ------------------------------------------
+    # DATABASE CONSTRAINTS
+    # ------------------------------------------
 
+    class Meta:
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'doctor',
+                    'day',
+                    'start_time',
+                    'end_time'
+                ],
+                name='unique_doctor_availability'
+            )
+        ]
     # ------------------------------------------
     # STRING REPRESENTATION
     # ------------------------------------------

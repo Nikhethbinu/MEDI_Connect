@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        MediConnect - Doctor Availability
+    </title>
+
+</head>
+
+<body>
+
+    <!-- ==========================================
+         DOCTOR AVAILABILITY
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Manage Availability</h2>
+
+    <p>
+        Welcome, {{ user.name }}
+    </p>
+
+
+    <!-- ==========================================
+         ADD AVAILABILITY
+         ========================================== -->
+
+    <h3>Add Availability</h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Add Availability
+        </button>
+
+    </form>
+
+
+    <!-- ==========================================
+         EXISTING AVAILABILITY
+         ========================================== -->
+
+    <h3>My Availability</h3>
+
+    {% if availabilities %}
+
+        <ul>
+
+            {% for availability in availabilities %}
+
+                <li>
+
+                    {{ availability.get_day_display }}
+
+                    :
+
+                    {{ availability.start_time }}
+
+                    -
+
+                    {{ availability.end_time }}
+
+                    |
+                    <a href="{% url 'edit_availability' availability.id %}">
+                        Edit
+                    </a>
+                    |
+                    <a href="{% url 'delete_availability' availability.id %}">
+                        Delete
+                    </a>
+
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% else %}
+
+        <p>
+            No availability slots added yet.
+        </p>
+
+    {% endif %}
+
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    <br>
+
+    <a href="{% url 'doctor_dashboard' %}">
+        Back to Dashboard
+    </a>
+
+    <br><br>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</body>
+
+</html>
