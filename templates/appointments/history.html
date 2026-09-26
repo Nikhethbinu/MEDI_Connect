@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MediConnect - Appointment History</title>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         APPOINTMENT HISTORY
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>My Appointments</h2>
+
+    <!-- ==========================================
+         CHECK APPOINTMENTS
+         ========================================== -->
+
+    {% if appointments %}
+
+        <!-- ==========================================
+             APPOINTMENT LIST
+             ========================================== -->
+
+        {% for appointment in appointments %}
+
+            <hr>
+
+            <h3>
+                Dr. {{ appointment.doctor.user.name }}
+            </h3>
+
+            <p>
+                <strong>Department:</strong>
+                {{ appointment.doctor.department.name }}
+            </p>
+
+            <p>
+                <strong>Specialization:</strong>
+                {{ appointment.doctor.specialization }}
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                {{ appointment.appointment_date }}
+            </p>
+
+            <p>
+                <strong>Time:</strong>
+                {{ appointment.appointment_time }}
+            </p>
+
+            <p>
+                <strong>Reason:</strong>
+                {{ appointment.reason }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ appointment.get_status_display }}
+            </p>
+
+        {% endfor %}
+
+        <hr>
+
+    {% else %}
+
+        <!-- ==========================================
+             NO APPOINTMENTS
+             ========================================== -->
+
+        <p>
+            You have no appointments.
+        </p>
+
+    {% endif %}
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    <br>
+
+    <a href="{% url 'doctor_search' %}">
+        Find a Doctor
+    </a>
+
+    <br><br>
+
+    <a href="{% url 'patient_dashboard' %}">
+        Patient Dashboard
+    </a>
+
+    <br><br>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</body>
+
+</html>

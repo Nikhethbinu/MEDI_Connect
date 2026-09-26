@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        MediConnect - Book Appointment
+    </title>
+
+</head>
+
+<body>
+
+    <!-- ==========================================
+         BOOK APPOINTMENT
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Book Appointment</h2>
+
+
+    <!-- ==========================================
+         DOCTOR INFORMATION
+         ========================================== -->
+
+    <h3>
+        Dr. {{ doctor.user.name }}
+    </h3>
+
+    <p>
+        Department:
+        {{ doctor.department.name }}
+    </p>
+
+    <p>
+        Specialization:
+        {{ doctor.specialization }}
+    </p>
+
+    <p>
+        Consultation Fee:
+        ₹{{ doctor.consultation_fee }}
+    </p>
+
+
+    <!-- ==========================================
+         DOCTOR AVAILABILITY
+         ========================================== -->
+
+    <h3>Doctor Availability</h3>
+
+    {% if availabilities %}
+
+        <ul>
+
+            {% for availability in availabilities %}
+
+                <li>
+                    {{ availability.get_day_display }}
+                    :
+                    {{ availability.start_time }}
+                    -
+                    {{ availability.end_time }}
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% else %}
+
+        <p>
+            This doctor has no available timings.
+        </p>
+
+    {% endif %}
+
+
+    <!-- ==========================================
+         APPOINTMENT FORM
+         ========================================== -->
+
+    <h3>Appointment Details</h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Book Appointment
+        </button>
+
+    </form>
+
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    <br>
+
+    <a href="{% url 'doctor_detail' doctor.id %}">
+        Back to Doctor Details
+    </a>
+
+    <br><br>
+
+    <a href="{% url 'patient_dashboard' %}">
+        Patient Dashboard
+    </a>
+
+</body>
+
+</html>
