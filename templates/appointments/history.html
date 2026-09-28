@@ -63,9 +63,22 @@
                 {{ appointment.get_status_display }}
             </p>
 
+        <!-- ==========================================
+             CANCEL APPOINTMENT
+        ========================================== -->
+        {% if appointment.status == 'PENDING' or appointment.status == 'CONFIRMED' %}
+            <p>
+                <a href="{% url 'cancel_appointment' appointment.id %}">
+                    Cancel Appointment
+                </a>
+            </p>
+
+        {% endif %}
+
         {% endfor %}
 
         <hr>
+
 
     {% else %}
 
@@ -78,6 +91,8 @@
         </p>
 
     {% endif %}
+
+    
 
     <!-- ==========================================
          NAVIGATION

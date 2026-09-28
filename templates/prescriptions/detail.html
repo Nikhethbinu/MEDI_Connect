@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MediConnect - Prescription</title>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         PRESCRIPTION
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Prescription</h2>
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ prescription.appointment.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ prescription.appointment.patient.phone }}
+    </p>
+
+    <!-- ==========================================
+         DOCTOR INFORMATION
+         ========================================== -->
+
+    <h3>Doctor</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ prescription.appointment.doctor.user.name }}
+    </p>
+
+    <p>
+        <strong>Department:</strong>
+        {{ prescription.appointment.doctor.department.name }}
+    </p>
+
+    <!-- ==========================================
+         APPOINTMENT
+         ========================================== -->
+
+    <h3>Appointment</h3>
+
+    <p>
+        <strong>Date:</strong>
+        {{ prescription.appointment.appointment_date }}
+    </p>
+
+    <p>
+        <strong>Time:</strong>
+        {{ prescription.appointment.appointment_time }}
+    </p>
+
+    <!-- ==========================================
+         DIAGNOSIS
+         ========================================== -->
+
+    <h3>Diagnosis</h3>
+
+    <p>
+        {{ prescription.diagnosis }}
+    </p>
+
+    <!-- ==========================================
+         MEDICINES
+         ========================================== -->
+
+    <h3>Medicines</h3>
+
+    {% if prescription.items.all %}
+
+        {% for item in prescription.items.all %}
+
+            <hr>
+
+            <h4>
+                {{ item.medicine.name }}
+            </h4>
+
+            <p>
+                <strong>Dosage:</strong>
+                {{ item.dosage }}
+            </p>
+
+            <p>
+                <strong>Frequency:</strong>
+                {{ item.frequency }}
+            </p>
+
+            <p>
+                <strong>Duration:</strong>
+                {{ item.duration }}
+            </p>
+
+            <p>
+                <strong>Instructions:</strong>
+                {{ item.instructions }}
+            </p>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No medicines prescribed.
+        </p>
+
+    {% endif %}
+
+    <!-- ==========================================
+         DOCTOR NOTES
+         ========================================== -->
+
+    <h3>Doctor Notes</h3>
+
+    <p>
+        {{ prescription.notes }}
+    </p>
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    <br>
+
+    {% if request.user.role == 'DOCTOR' %}
+
+        <a href="{% url 'doctor_appointments' %}">
+            Doctor Appointments
+        </a>
+
+    {% elif request.user.role == 'PATIENT' %}
+
+        <a href="{% url 'appointment_history' %}">
+            My Appointments
+        </a>
+
+    {% endif %}
+
+</body>
+
+</html>

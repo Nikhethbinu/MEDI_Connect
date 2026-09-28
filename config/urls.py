@@ -56,6 +56,10 @@ urlpatterns = [
         include('doctors.urls')
     ),
     path('appointments/', include('appointments.urls')),
+    # ==========================================
+    # PRESCRIPTION URLS
+    # ==========================================    
+    path('prescriptions/', include('prescriptions.urls')),
     
 
 ]

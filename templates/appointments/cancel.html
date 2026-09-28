@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MediConnect - Cancel Appointment</title>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         CANCEL APPOINTMENT
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Cancel Appointment</h2>
+
+    <p>
+        Are you sure you want to cancel this appointment?
+    </p>
+
+    <!-- ==========================================
+         APPOINTMENT DETAILS
+         ========================================== -->
+
+    <h3>
+        Dr. {{ appointment.doctor.user.name }}
+    </h3>
+
+    <p>
+        <strong>Department:</strong>
+        {{ appointment.doctor.department.name }}
+    </p>
+
+    <p>
+        <strong>Date:</strong>
+        {{ appointment.appointment_date }}
+    </p>
+
+    <p>
+        <strong>Time:</strong>
+        {{ appointment.appointment_time }}
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+        {{ appointment.get_status_display }}
+    </p>
+
+    <!-- ==========================================
+         CONFIRM CANCELLATION
+         ========================================== -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button type="submit">
+            Yes, Cancel Appointment
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'appointment_history' %}">
+        No, Go Back
+    </a>
+
+</body>
+
+</html>

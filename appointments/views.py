@@ -261,3 +261,185 @@ def cancel_appointment(request, appointment_id):
             'appointment': appointment
         }
     )
+
+# ==========================================
+# DOCTOR APPOINTMENT DASHBOARD
+# ==========================================
+
+@login_required
+@role_required('DOCTOR')
+def doctor_appointments(request):
+
+    # ------------------------------------------
+    # GET LOGGED-IN DOCTOR
+    # ------------------------------------------
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+    # ------------------------------------------
+    # GET DOCTOR APPOINTMENTS
+    # ------------------------------------------
+
+    appointments = Appointment.objects.filter(
+        doctor=doctor
+    ).select_related(
+        'patient',
+        'doctor',
+        'doctor__department'
+    ).order_by(
+        '-appointment_date',
+        '-appointment_time'
+    )
+
+    # ------------------------------------------
+    # ADD PRESCRIPTION INFORMATION
+    # ------------------------------------------
+
+    for appointment in appointments:
+
+        try:
+            prescription = appointment.prescription
+
+            appointment.has_prescription = True
+            appointment.prescription_id_value = prescription.id
+
+        except Exception:
+            appointment.has_prescription = False
+            appointment.prescription_id_value = None
+
+    # ------------------------------------------
+    # RENDER DOCTOR APPOINTMENTS
+    # ------------------------------------------
+
+    return render(
+        request,
+        'appointments/doctor_appointments.html',
+        {
+            'appointments': appointments
+        }
+    )
+
+# ==========================================
+# CONFIRM APPOINTMENT
+# ==========================================
+
+@login_required
+@role_required('DOCTOR')
+def confirm_appointment(request, appointment_id):
+
+    # ------------------------------------------
+    # GET DOCTOR
+    # ------------------------------------------
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+    # ------------------------------------------
+    # GET APPOINTMENT
+    # ------------------------------------------
+
+    appointment = get_object_or_404(
+        Appointment,
+        id=appointment_id,
+        doctor=doctor
+    )
+
+    # ------------------------------------------
+    # CONFIRM ONLY PENDING APPOINTMENTS
+    # ------------------------------------------
+
+    if request.method == 'POST':
+
+        if appointment.status == 'PENDING':
+
+            appointment.status = 'CONFIRMED'
+            appointment.save()
+
+    return redirect('doctor_appointments')
+
+
+# ==========================================
+# REJECT APPOINTMENT
+# ==========================================
+
+@login_required
+@role_required('DOCTOR')
+def reject_appointment(request, appointment_id):
+
+    # ------------------------------------------
+    # GET DOCTOR
+    # ------------------------------------------
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+    # ------------------------------------------
+    # GET APPOINTMENT
+    # ------------------------------------------
+
+    appointment = get_object_or_404(
+        Appointment,
+        id=appointment_id,
+        doctor=doctor
+    )
+
+    # ------------------------------------------
+    # REJECT ONLY PENDING APPOINTMENTS
+    # ------------------------------------------
+
+    if request.method == 'POST':
+
+        if appointment.status == 'PENDING':
+
+            appointment.status = 'REJECTED'
+            appointment.save()
+
+    return redirect('doctor_appointments')
+
+
+# ==========================================
+# COMPLETE APPOINTMENT
+# ==========================================
+
+@login_required
+@role_required('DOCTOR')
+def complete_appointment(request, appointment_id):
+
+    # ------------------------------------------
+    # GET DOCTOR
+    # ------------------------------------------
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+    # ------------------------------------------
+    # GET APPOINTMENT
+    # ------------------------------------------
+
+    appointment = get_object_or_404(
+        Appointment,
+        id=appointment_id,
+        doctor=doctor
+    )
+
+    # ------------------------------------------
+    # COMPLETE ONLY CONFIRMED APPOINTMENTS
+    # ------------------------------------------
+
+    if request.method == 'POST':
+
+        if appointment.status == 'CONFIRMED':
+
+            appointment.status = 'COMPLETED'
+            appointment.save()
+
+    return redirect('doctor_appointments')

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MediConnect - Create Prescription</title>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         CREATE PRESCRIPTION
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Create Prescription</h2>
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ appointment.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ appointment.patient.phone }}
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        {{ appointment.patient.email }}
+    </p>
+
+    <!-- ==========================================
+         APPOINTMENT INFORMATION
+         ========================================== -->
+
+    <h3>Appointment</h3>
+
+    <p>
+        <strong>Date:</strong>
+        {{ appointment.appointment_date }}
+    </p>
+
+    <p>
+        <strong>Time:</strong>
+        {{ appointment.appointment_time }}
+    </p>
+
+    <p>
+        <strong>Reason:</strong>
+        {{ appointment.reason }}
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+        {{ appointment.get_status_display }}
+    </p>
+
+    <!-- ==========================================
+         PRESCRIPTION FORM
+         ========================================== -->
+
+    <h3>Prescription Details</h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ prescription_form.non_field_errors }}
+
+        {{ prescription_form.as_p }}
+
+        <!-- ==========================================
+             MEDICINE
+             ========================================== -->
+
+        <h3>Medicine</h3>
+
+        {{ item_form.non_field_errors }}
+
+        {{ item_form.as_p }}
+
+        <!-- ==========================================
+             SUBMIT
+             ========================================== -->
+
+        <button type="submit">
+            Create Prescription
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'doctor_appointments' %}">
+        Back to Appointments
+    </a>
+
+</body>
+
+</html>
