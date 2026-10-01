@@ -74,7 +74,17 @@
             </p>
 
         {% endif %}
+        <!-- ==========================================
+             VIEW PRESCRIPTION
+        ========================================== -->
+        {% if appointment.has_prescription %}
+            <p>
+                <a href="{% url 'prescription_detail' appointment.prescription_id_value %}">
+                    View Prescription
+                </a>
+            </p>
 
+        {% endif %}
         {% endfor %}
 
         <hr>

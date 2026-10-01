@@ -128,26 +128,37 @@
     <p>
         {{ prescription.notes }}
     </p>
-
-    <!-- ==========================================
-         NAVIGATION
-         ========================================== -->
-
-    <br>
+        <!-- ==========================================
+        NAVIGATION
+        ========================================== -->
 
     {% if request.user.role == 'DOCTOR' %}
 
-        <a href="{% url 'doctor_appointments' %}">
-            Doctor Appointments
-        </a>
+        <p>
+            <a
+                href="{% url 'edit_prescription' prescription.id %}"
+            >
+                Edit Prescription
+            </a>
+        </p>
+
+        <p>
+            <a href="{% url 'doctor_appointments' %}">
+                Doctor Appointments
+            </a>
+        </p>
 
     {% elif request.user.role == 'PATIENT' %}
 
-        <a href="{% url 'appointment_history' %}">
-            My Appointments
-        </a>
+        <p>
+            <a href="{% url 'appointment_history' %}">
+                My Appointments
+            </a>
+        </p>
 
     {% endif %}
+
+    
 
 </body>
 

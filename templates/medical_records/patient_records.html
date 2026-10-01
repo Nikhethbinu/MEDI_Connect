@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - My Medical Records</title>
+
+</head>
+
+<body>
+
+    <h1>MediConnect</h1>
+
+    <h2>My Medical Records</h2>
+
+    <hr>
+
+    {% if records %}
+
+        {% for record in records %}
+
+            <div>
+
+                <h3>
+                    Record {{ forloop.counter }}
+                </h3>
+
+                <p>
+                    <strong>Date:</strong>
+                    {{ record.appointment.appointment_date }}
+                </p>
+
+                <p>
+                    <strong>Doctor:</strong>
+                    {{ record.appointment.doctor.user.name }}
+                </p>
+
+                <p>
+                    <strong>Diagnosis:</strong>
+                    {{ record.diagnosis|default:"Not recorded" }}
+                </p>
+
+                <p>
+                    <a
+                        href="{% url 'medical_record_detail' record.id %}"
+                    >
+                        View Full Medical Record
+                    </a>
+                </p>
+
+                <hr>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No medical records available.
+        </p>
+
+    {% endif %}
+
+
+    <br>
+
+    <a href="{% url 'dashboard' %}">
+        Back to Dashboard
+    </a>
+
+</body>
+
+</html>

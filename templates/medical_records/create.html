@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Medical Record</title>
+
+</head>
+
+<body>
+
+    <h1>MediConnect</h1>
+
+    <h2>Create Medical Record</h2>
+
+    <hr>
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ appointment.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ appointment.patient.phone }}
+    </p>
+
+    <p>
+        <strong>Appointment Date:</strong>
+        {{ appointment.appointment_date }}
+    </p>
+
+    <hr>
+
+    <!-- ==========================================
+         MEDICAL RECORD FORM
+         ========================================== -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <br>
+
+        <button type="submit">
+            Save Medical Record
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'doctor_appointments' %}">
+        Back to Doctor Appointments
+    </a>
+
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Medical Record</title>
+
+</head>
+
+<body>
+
+    <h1>MediConnect</h1>
+
+    <h2>Medical Record</h2>
+
+    <hr>
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ record.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ record.patient.phone }}
+    </p>
+
+    <hr>
+
+    <!-- ==========================================
+         APPOINTMENT INFORMATION
+         ========================================== -->
+
+    <h3>Appointment</h3>
+
+    <p>
+        <strong>Date:</strong>
+        {{ record.appointment.appointment_date }}
+    </p>
+
+    <p>
+        <strong>Doctor:</strong>
+        {{ record.appointment.doctor.user.name }}
+    </p>
+
+    <hr>
+
+    <!-- ==========================================
+         MEDICAL INFORMATION
+         ========================================== -->
+
+    <h3>Symptoms</h3>
+
+    <p>
+        {{ record.symptoms|default:"No symptoms recorded." }}
+    </p>
+
+
+    <h3>Diagnosis</h3>
+
+    <p>
+        {{ record.diagnosis|default:"No diagnosis recorded." }}
+    </p>
+
+
+    <h3>Treatment</h3>
+
+    <p>
+        {{ record.treatment|default:"No treatment recorded." }}
+    </p>
+
+
+    <h3>Additional Notes</h3>
+
+    <p>
+        {{ record.notes|default:"No additional notes." }}
+    </p>
+
+    <hr>
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    {% if request.user.role == 'DOCTOR' %}
+
+        <a href="{% url 'doctor_appointments' %}">
+            Doctor Appointments
+        </a>
+
+    {% elif request.user.role == 'PATIENT' %}
+
+        <a href="{% url 'patient_medical_records' %}">
+            My Medical Records
+        </a>
+
+    {% endif %}
+
+</body>
+
+</html>

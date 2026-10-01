@@ -46,6 +46,7 @@ class PrescriptionForm(forms.ModelForm):
 class PrescriptionItemForm(forms.ModelForm):
 
     class Meta:
+
         model = PrescriptionItem
 
         fields = [
@@ -91,3 +92,16 @@ class PrescriptionItemForm(forms.ModelForm):
         self.fields['medicine'].queryset = Medicine.objects.filter(
             is_active=True
         ).order_by('name')
+
+
+# ==========================================
+# PRESCRIPTION ITEM FORMSET
+# ==========================================
+
+PrescriptionItemFormSet = forms.inlineformset_factory(
+    Prescription,
+    PrescriptionItem,
+    form=PrescriptionItemForm,
+    extra=1,
+    can_delete=True
+)

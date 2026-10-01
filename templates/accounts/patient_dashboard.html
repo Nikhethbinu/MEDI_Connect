@@ -43,6 +43,17 @@
             <a href="{% url 'doctor_search' %}">
                 Find Doctors
             </a>
+        </li>
+        <li>
+            <a href="{% url 'appointment_history' %}">
+                My Appointments
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'patient_medical_records' %}">
+                My Medical Records
+            </a>
+        </li>
 
     </ul>
 
@@ -56,15 +67,7 @@
     <a href="{% url 'logout' %}">
         Logout
     </a>
-    <!-- ==========================================
-     APPOINTMENT HISTORY
-     ========================================== -->
-
-    <p>
-        <a href="{% url 'appointment_history' %}">
-            My Appointments
-         </a>
-    </p>
+   
 
 </body>
 

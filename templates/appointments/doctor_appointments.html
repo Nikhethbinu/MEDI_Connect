@@ -2,164 +2,246 @@
 <html>
 
 <head>
+
     <title>MediConnect - Doctor Appointments</title>
+
 </head>
 
 <body>
 
     <!-- ==========================================
-         DOCTOR APPOINTMENTS
+         HEADER
          ========================================== -->
 
     <h1>MediConnect</h1>
 
-    <h2>My Appointments</h2>
+    <h2>Doctor Appointments</h2>
+
+    <hr>
+
 
     <!-- ==========================================
-         CHECK APPOINTMENTS
+         APPOINTMENTS
          ========================================== -->
 
     {% if appointments %}
 
         {% for appointment in appointments %}
 
-            <hr>
+            <div>
 
-            <!-- ==========================================
-                 PATIENT INFORMATION
-                 ========================================== -->
+                <h3>
+                    Appointment {{ forloop.counter }}
+                </h3>
 
-            <h3>
-                Patient: {{ appointment.patient.name }}
-            </h3>
 
-            <p>
-                <strong>Username:</strong>
-                {{ appointment.patient.username }}
-            </p>
+                <!-- ==========================================
+                     PATIENT INFORMATION
+                     ========================================== -->
 
-            <p>
-                <strong>Phone:</strong>
-                {{ appointment.patient.phone }}
-            </p>
+                <h4>Patient Information</h4>
 
-            <p>
-                <strong>Email:</strong>
-                {{ appointment.patient.email }}
-            </p>
+                <p>
+                    <strong>Name:</strong>
+                    {{ appointment.patient.name }}
+                </p>
 
-            <!-- ==========================================
-                 APPOINTMENT INFORMATION
-                 ========================================== -->
+                <p>
+                    <strong>Phone:</strong>
+                    {{ appointment.patient.phone }}
+                </p>
 
-            <p>
-                <strong>Date:</strong>
-                {{ appointment.appointment_date }}
-            </p>
+                <p>
+                    <strong>Email:</strong>
+                    {{ appointment.patient.email }}
+                </p>
 
-            <p>
-                <strong>Time:</strong>
-                {{ appointment.appointment_time }}
-            </p>
 
-            <p>
-                <strong>Reason:</strong>
-                {{ appointment.reason }}
-            </p>
+                <!-- ==========================================
+                     APPOINTMENT INFORMATION
+                     ========================================== -->
 
-            <p>
-                <strong>Status:</strong>
-                {{ appointment.get_status_display }}
-            </p>
+                <h4>Appointment Information</h4>
 
-            <!-- ==========================================
-                 PENDING APPOINTMENT ACTIONS
-                 ========================================== -->
+                <p>
+                    <strong>Date:</strong>
+                    {{ appointment.appointment_date }}
+                </p>
 
-            {% if appointment.status == 'PENDING' %}
+                <p>
+                    <strong>Time:</strong>
+                    {{ appointment.appointment_time }}
+                </p>
 
-                <form
-                    method="POST"
-                    action="{% url 'confirm_appointment' appointment.id %}"
-                >
+                <p>
+                    <strong>Reason:</strong>
+                    {{ appointment.reason|default:"No reason provided." }}
+                </p>
 
-                    {% csrf_token %}
+                <p>
+                    <strong>Status:</strong>
+                    {{ appointment.get_status_display }}
+                </p>
 
-                    <button type="submit">
-                        Confirm Appointment
-                    </button>
 
-                </form>
+                <!-- ==========================================
+                     PENDING APPOINTMENT
+                     ========================================== -->
 
-                <br>
+                {% if appointment.status == 'PENDING' %}
 
-                <form
-                    method="POST"
-                    action="{% url 'reject_appointment' appointment.id %}"
-                >
+                    <form
+                        method="POST"
+                        action="{% url 'confirm_appointment' appointment.id %}"
+                    >
 
-                    {% csrf_token %}
+                        {% csrf_token %}
 
-                    <button type="submit">
-                        Reject Appointment
-                    </button>
+                        <button type="submit">
+                            Confirm Appointment
+                        </button>
 
-                </form>
+                    </form>
 
-            {% endif %}
 
-            <!-- ==========================================
-                 CONFIRMED APPOINTMENT ACTION
-                 ========================================== -->
+                    <br>
 
-            {% if appointment.status == 'CONFIRMED' %}
 
-                <form
-                    method="POST"
-                    action="{% url 'complete_appointment' appointment.id %}"
-                >
+                    <form
+                        method="POST"
+                        action="{% url 'reject_appointment' appointment.id %}"
+                    >
 
-                    {% csrf_token %}
+                        {% csrf_token %}
 
-                    <button type="submit">
-                        Complete Appointment
-                    </button>
+                        <button type="submit">
+                            Reject Appointment
+                        </button>
 
-                </form>
+                    </form>
 
-            {% endif %}
 
-            <!-- ==========================================
-                 PRESCRIPTION MANAGEMENT
-                 ========================================== -->
+                <!-- ==========================================
+                     CONFIRMED APPOINTMENT
+                     ========================================== -->
 
-            {% if appointment.status == 'COMPLETED' %}
+                {% elif appointment.status == 'CONFIRMED' %}
 
-                {% if appointment.has_prescription %}
+                    <form
+                        method="POST"
+                        action="{% url 'complete_appointment' appointment.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Complete Appointment
+                        </button>
+
+                    </form>
+
+
+                <!-- ==========================================
+                     COMPLETED APPOINTMENT
+                     ========================================== -->
+
+                {% elif appointment.status == 'COMPLETED' %}
+
+                    <h4>Appointment Completed</h4>
+
+
+                    <!-- ==========================================
+                         PRESCRIPTION
+                         ========================================== -->
+
+                    {% if appointment.has_prescription %}
+
+                        <p>
+
+                            <a
+                                href="{% url 'prescription_detail' appointment.prescription_id_value %}"
+                            >
+                                View Prescription
+                            </a>
+
+                        </p>
+
+                    {% else %}
+
+                        <p>
+
+                            <a
+                                href="{% url 'create_prescription' appointment.id %}"
+                            >
+                                Create Prescription
+                            </a>
+
+                        </p>
+
+                    {% endif %}
+
+
+                    <!-- ==========================================
+                         MEDICAL RECORD
+                         ========================================== -->
+
+                    {% if appointment.has_medical_record %}
+
+                        <p>
+
+                            <a
+                                href="{% url 'medical_record_detail' appointment.medical_record_id_value %}"
+                            >
+                                View Medical Record
+                            </a>
+
+                        </p>
+
+                    {% else %}
+
+                        <p>
+
+                            <a
+                                href="{% url 'create_medical_record' appointment.id %}"
+                            >
+                                Create Medical Record
+                            </a>
+
+                        </p>
+
+                    {% endif %}
+
+
+                <!-- ==========================================
+                     REJECTED APPOINTMENT
+                     ========================================== -->
+
+                {% elif appointment.status == 'REJECTED' %}
+
                     <p>
-                        <a href="{% url 'prescription_detail' appointment.prescription_id_value %}">
-                            View Prescription
-                        </a>
+                        Appointment was rejected.
                     </p>
 
-                {% else %}
+
+                <!-- ==========================================
+                     CANCELLED APPOINTMENT
+                     ========================================== -->
+
+                {% elif appointment.status == 'CANCELLED' %}
+
                     <p>
-                        <a href="{% url 'create_prescription' appointment.id %}">
-                            Create Prescription
-                        </a>
+                        Appointment was cancelled.
                     </p>
 
                 {% endif %}
-            {% endif %}
+
+            </div>
+
+            <hr>
+
         {% endfor %}
 
-        <hr>
-
     {% else %}
-
-        <!-- ==========================================
-             NO APPOINTMENTS
-             ========================================== -->
 
         <p>
             No appointments found.
@@ -167,33 +249,27 @@
 
     {% endif %}
 
+
     <!-- ==========================================
          NAVIGATION
          ========================================== -->
 
-    <br>
+    <p>
 
-    <a href="{% url 'doctor_dashboard' %}">
-        Doctor Dashboard
-    </a>
+        <a href="{% url 'doctor_dashboard' %}">
+            Back to Doctor Dashboard
+        </a>
 
-    <br><br>
+    </p>
 
-    <a href="{% url 'doctor_profile' %}">
-        My Profile
-    </a>
 
-    <br><br>
+    <p>
 
-    <a href="{% url 'doctor_availability' %}">
-        Manage Availability
-    </a>
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
 
-    <br><br>
-
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
+    </p>
 
 </body>
 

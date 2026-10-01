@@ -200,13 +200,31 @@ def appointment_history(request):
         'doctor',
         'doctor__user',
         'doctor__department'
+    ).prefetch_related(
+        'prescription'
     ).order_by(
         '-appointment_date',
         '-appointment_time'
     )
 
     # ------------------------------------------
-    # RENDER APPOINTMENT HISTORY
+    # CHECK PRESCRIPTION
+    # ------------------------------------------
+
+    for appointment in appointments:
+
+        try:
+            prescription = appointment.prescription
+
+            appointment.has_prescription = True
+            appointment.prescription_id_value = prescription.id
+
+        except Appointment.prescription.RelatedObjectDoesNotExist:
+            appointment.has_prescription = False
+            appointment.prescription_id_value = None
+
+    # ------------------------------------------
+    # RENDER HISTORY
     # ------------------------------------------
 
     return render(
@@ -309,7 +327,28 @@ def doctor_appointments(request):
         except Exception:
             appointment.has_prescription = False
             appointment.prescription_id_value = None
+        # ==========================================
+    # CHECK MEDICAL RECORD
+    # ==========================================
 
+    for appointment in appointments:
+
+        try:
+
+            medical_record = appointment.medical_record
+
+            appointment.has_medical_record = True
+
+            appointment.medical_record_id_value = (
+                medical_record.id
+            )
+
+        except Appointment.medical_record.RelatedObjectDoesNotExist:
+
+            appointment.has_medical_record = False
+
+            appointment.medical_record_id_value = None
+            
     # ------------------------------------------
     # RENDER DOCTOR APPOINTMENTS
     # ------------------------------------------

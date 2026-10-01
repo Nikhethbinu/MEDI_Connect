@@ -18,7 +18,7 @@ from .models import (
 
 from .forms import (
     PrescriptionForm,
-    PrescriptionItemForm
+    PrescriptionItemFormSet
 )
 
 
@@ -62,7 +62,7 @@ def create_prescription(request, appointment_id):
         )
 
     # ------------------------------------------
-    # HANDLE FORM SUBMISSION
+    # HANDLE SUBMISSION
     # ------------------------------------------
 
     if request.method == 'POST':
@@ -71,13 +71,13 @@ def create_prescription(request, appointment_id):
             request.POST
         )
 
-        item_form = PrescriptionItemForm(
+        item_formset = PrescriptionItemFormSet(
             request.POST
         )
 
         if (
             prescription_form.is_valid()
-            and item_form.is_valid()
+            and item_formset.is_valid()
         ):
 
             # ------------------------------------------
@@ -93,16 +93,26 @@ def create_prescription(request, appointment_id):
             prescription.save()
 
             # ------------------------------------------
-            # CREATE MEDICINE ITEM
+            # CREATE MEDICINE ITEMS
             # ------------------------------------------
 
-            item = item_form.save(
+            items = item_formset.save(
                 commit=False
             )
 
-            item.prescription = prescription
+            for item in items:
 
-            item.save()
+                item.prescription = prescription
+
+                item.save()
+
+            # ------------------------------------------
+            # DELETE MARKED ITEMS
+            # ------------------------------------------
+
+            for item in item_formset.deleted_objects:
+
+                item.delete()
 
             # ------------------------------------------
             # REDIRECT
@@ -117,7 +127,7 @@ def create_prescription(request, appointment_id):
 
         prescription_form = PrescriptionForm()
 
-        item_form = PrescriptionItemForm()
+        item_formset = PrescriptionItemFormSet()
 
     # ------------------------------------------
     # RENDER PAGE
@@ -129,10 +139,9 @@ def create_prescription(request, appointment_id):
         {
             'appointment': appointment,
             'prescription_form': prescription_form,
-            'item_form': item_form,
+            'item_formset': item_formset,
         }
     )
-
 
 # ==========================================
 # PRESCRIPTION DETAIL
@@ -190,5 +199,122 @@ def prescription_detail(
         'prescriptions/detail.html',
         {
             'prescription': prescription
+        }
+    )
+# ==========================================
+# EDIT PRESCRIPTION
+# ==========================================
+
+@login_required
+@role_required('DOCTOR')
+def edit_prescription(request, prescription_id):
+
+    # ------------------------------------------
+    # GET LOGGED-IN DOCTOR
+    # ------------------------------------------
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+    # ------------------------------------------
+    # GET PRESCRIPTION
+    # ------------------------------------------
+
+    prescription = get_object_or_404(
+        Prescription,
+        id=prescription_id,
+        appointment__doctor=doctor
+    )
+
+    # ------------------------------------------
+    # GET APPOINTMENT
+    # ------------------------------------------
+
+    appointment = prescription.appointment
+
+    # ------------------------------------------
+    # ONLY COMPLETED APPOINTMENTS
+    # ------------------------------------------
+
+    if appointment.status != 'COMPLETED':
+
+        return redirect(
+            'doctor_appointments'
+        )
+
+    # ------------------------------------------
+    # HANDLE FORM SUBMISSION
+    # ------------------------------------------
+
+    if request.method == 'POST':
+
+        prescription_form = PrescriptionForm(
+            request.POST,
+            instance=prescription
+        )
+
+        item_formset = PrescriptionItemFormSet(
+            request.POST,
+            instance=prescription
+        )
+
+        # ------------------------------------------
+        # VALIDATE FORMS
+        # ------------------------------------------
+
+        if (
+            prescription_form.is_valid()
+            and item_formset.is_valid()
+        ):
+
+            # ------------------------------------------
+            # UPDATE PRESCRIPTION
+            # ------------------------------------------
+
+            prescription_form.save()
+
+            # ------------------------------------------
+            # UPDATE / ADD / DELETE MEDICINES
+            # ------------------------------------------
+
+            item_formset.save()
+
+            # ------------------------------------------
+            # REDIRECT TO DETAIL PAGE
+            # ------------------------------------------
+
+            return redirect(
+                'prescription_detail',
+                prescription_id=prescription.id
+            )
+
+    # ------------------------------------------
+    # DISPLAY EXISTING DATA
+    # ------------------------------------------
+
+    else:
+
+        prescription_form = PrescriptionForm(
+            instance=prescription
+        )
+
+        item_formset = PrescriptionItemFormSet(
+            instance=prescription
+        )
+
+    # ------------------------------------------
+    # RENDER EDIT PAGE
+    # ------------------------------------------
+
+    return render(
+        request,
+        'prescriptions/edit.html',
+        {
+            'appointment': appointment,
+            'prescription': prescription,
+            'prescription_form': prescription_form,
+            'item_formset': item_formset,
         }
     )

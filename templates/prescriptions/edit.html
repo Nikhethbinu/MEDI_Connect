@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Edit Prescription</title>
+
+</head>
+
+<body>
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Edit Prescription</h2>
+
+    <hr>
+
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ appointment.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ appointment.patient.phone }}
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        {{ appointment.patient.email }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         EDIT PRESCRIPTION FORM
+         ========================================== -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- ==========================================
+             PRESCRIPTION DETAILS
+             ========================================== -->
+
+        <h3>Prescription Details</h3>
+
+        {{ prescription_form.non_field_errors }}
+
+        <p>
+            {{ prescription_form.diagnosis.label_tag }}
+            <br>
+            {{ prescription_form.diagnosis }}
+
+            {% for error in prescription_form.diagnosis.errors %}
+                <br>
+                <span>{{ error }}</span>
+            {% endfor %}
+        </p>
+
+
+        <p>
+            {{ prescription_form.notes.label_tag }}
+            <br>
+            {{ prescription_form.notes }}
+
+            {% for error in prescription_form.notes.errors %}
+                <br>
+                <span>{{ error }}</span>
+            {% endfor %}
+        </p>
+
+
+        <hr>
+
+
+        <!-- ==========================================
+             MEDICINES
+             ========================================== -->
+
+        <h3>Medicines</h3>
+
+        {{ item_formset.management_form }}
+
+        <div id="medicine-container">
+
+            {% for item_form in item_formset %}
+
+                <div class="medicine-form">
+
+                    <h4>
+                        Medicine {{ forloop.counter }}
+                    </h4>
+
+
+                    {{ item_form.non_field_errors }}
+
+
+                    <!-- Medicine -->
+
+                    <p>
+
+                        {{ item_form.medicine.label_tag }}
+
+                        <br>
+
+                        {{ item_form.medicine }}
+
+                        {% for error in item_form.medicine.errors %}
+
+                            <br>
+                            <span>{{ error }}</span>
+
+                        {% endfor %}
+
+                    </p>
+
+
+                    <!-- Dosage -->
+
+                    <p>
+
+                        {{ item_form.dosage.label_tag }}
+
+                        <br>
+
+                        {{ item_form.dosage }}
+
+                        {% for error in item_form.dosage.errors %}
+
+                            <br>
+                            <span>{{ error }}</span>
+
+                        {% endfor %}
+
+                    </p>
+
+
+                    <!-- Frequency -->
+
+                    <p>
+
+                        {{ item_form.frequency.label_tag }}
+
+                        <br>
+
+                        {{ item_form.frequency }}
+
+                        {% for error in item_form.frequency.errors %}
+
+                            <br>
+                            <span>{{ error }}</span>
+
+                        {% endfor %}
+
+                    </p>
+
+
+                    <!-- Duration -->
+
+                    <p>
+
+                        {{ item_form.duration.label_tag }}
+
+                        <br>
+
+                        {{ item_form.duration }}
+
+                        {% for error in item_form.duration.errors %}
+
+                            <br>
+                            <span>{{ error }}</span>
+
+                        {% endfor %}
+
+                    </p>
+
+
+                    <!-- Instructions -->
+
+                    <p>
+
+                        {{ item_form.instructions.label_tag }}
+
+                        <br>
+
+                        {{ item_form.instructions }}
+
+                        {% for error in item_form.instructions.errors %}
+
+                            <br>
+                            <span>{{ error }}</span>
+
+                        {% endfor %}
+
+                    </p>
+
+
+                    <!-- DELETE -->
+
+                    {% if item_form.instance.pk %}
+
+                        <p>
+                            {{ item_form.DELETE }}
+                            {{ item_form.DELETE.label }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+                <hr>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             ADD ANOTHER MEDICINE
+             ========================================== -->
+
+        <button
+            type="button"
+            id="add-medicine"
+        >
+            + Add Another Medicine
+        </button>
+
+
+        <br>
+        <br>
+
+
+        <!-- ==========================================
+             SAVE CHANGES
+             ========================================== -->
+
+        <button type="submit">
+            Save Changes
+        </button>
+
+    </form>
+
+
+    <br>
+
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    <a
+        href="{% url 'prescription_detail' prescription.id %}"
+    >
+        Cancel
+    </a>
+
+
+    <br>
+    <br>
+
+
+    <a href="{% url 'doctor_appointments' %}">
+        Back to Doctor Appointments
+    </a>
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ADD MEDICINE
+         ========================================== -->
+
+    <script>
+
+        const addMedicineButton =
+            document.getElementById(
+                'add-medicine'
+            );
+
+
+        const medicineContainer =
+            document.getElementById(
+                'medicine-container'
+            );
+
+
+        const totalForms =
+            document.querySelector(
+                '[name$="-TOTAL_FORMS"]'
+            );
+
+
+        addMedicineButton.addEventListener(
+            'click',
+            function () {
+
+                const formCount =
+                    parseInt(
+                        totalForms.value
+                    );
+
+
+                const firstForm =
+                    document.querySelector(
+                        '.medicine-form'
+                    );
+
+
+                const newForm =
+                    firstForm.cloneNode(true);
+
+
+                /*
+                ==========================================
+                UPDATE FORM INDEX
+                ==========================================
+                */
+
+                newForm.innerHTML =
+                    newForm.innerHTML.replace(
+                        /-\d+-/g,
+                        `-${formCount}-`
+                    );
+
+
+                /*
+                ==========================================
+                CLEAR INPUT VALUES
+                ==========================================
+                */
+
+                newForm.querySelectorAll(
+                    'input'
+                ).forEach(
+                    function (input) {
+
+                        if (
+                            input.type !== 'hidden'
+                            &&
+                            input.type !== 'checkbox'
+                        ) {
+
+                            input.value = '';
+
+                        }
+
+                    }
+                );
+
+
+                /*
+                ==========================================
+                CLEAR TEXTAREA
+                ==========================================
+                */
+
+                newForm.querySelectorAll(
+                    'textarea'
+                ).forEach(
+                    function (textarea) {
+
+                        textarea.value = '';
+
+                    }
+                );
+
+
+                /*
+                ==========================================
+                RESET MEDICINE SELECT
+                ==========================================
+                */
+
+                newForm.querySelectorAll(
+                    'select'
+                ).forEach(
+                    function (select) {
+
+                        select.selectedIndex = 0;
+
+                    }
+                );
+
+
+                /*
+                ==========================================
+                UNCHECK DELETE
+                ==========================================
+                */
+
+                newForm.querySelectorAll(
+                    'input[type="checkbox"]'
+                ).forEach(
+                    function (checkbox) {
+
+                        checkbox.checked = false;
+
+                    }
+                );
+
+
+                /*
+                ==========================================
+                UPDATE HEADING
+                ==========================================
+                */
+
+                const heading =
+                    newForm.querySelector('h4');
+
+
+                if (heading) {
+
+                    heading.textContent =
+                        `Medicine ${formCount + 1}`;
+
+                }
+
+
+                /*
+                ==========================================
+                ADD NEW FORM
+                ==========================================
+                */
+
+                medicineContainer.appendChild(
+                    newForm
+                );
+
+
+                /*
+                ==========================================
+                UPDATE TOTAL FORMS
+                ==========================================
+                */
+
+                totalForms.value =
+                    formCount + 1;
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

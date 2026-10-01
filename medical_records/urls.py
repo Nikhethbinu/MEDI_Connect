@@ -4,38 +4,39 @@ from . import views
 
 
 # ==========================================
-# PRESCRIPTION URL PATTERNS
+# MEDICAL RECORD URLS
 # ==========================================
 
 urlpatterns = [
 
     # ------------------------------------------
-    # CREATE PRESCRIPTION
+    # CREATE RECORD
     # ------------------------------------------
 
     path(
         'create/<int:appointment_id>/',
-        views.create_prescription,
-        name='create_prescription'
+        views.create_medical_record,
+        name='create_medical_record'
     ),
 
     # ------------------------------------------
-    # PRESCRIPTION DETAIL
+    # RECORD DETAIL
     # ------------------------------------------
 
     path(
-        'detail/<int:prescription_id>/',
-        views.prescription_detail,
-        name='prescription_detail'
+        'detail/<int:record_id>/',
+        views.medical_record_detail,
+        name='medical_record_detail'
     ),
 
     # ------------------------------------------
-    # EDIT PRESCRIPTION
+    # PATIENT RECORDS
     # ------------------------------------------
 
     path(
-        'edit/<int:prescription_id>/',
-        views.edit_prescription,
-        name='edit_prescription'
+        'patient/',
+        views.patient_medical_records,
+        name='patient_medical_records'
     ),
+
 ]

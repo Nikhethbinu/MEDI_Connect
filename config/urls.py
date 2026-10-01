@@ -60,6 +60,10 @@ urlpatterns = [
     # PRESCRIPTION URLS
     # ==========================================    
     path('prescriptions/', include('prescriptions.urls')),
+    # ==========================================
+    # MEDICAL RECORD URLS
+    # ==========================================
+    path('medical-records/', include('medical_records.urls')),
     
 
 ]

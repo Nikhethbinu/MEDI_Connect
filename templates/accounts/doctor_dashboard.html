@@ -21,15 +21,7 @@
         Welcome, {{ user.name }}
     </p>
 
-    <p>
-        You are logged in as a Doctor.
-    </p>
-    <p>
-        <a href="{% url 'doctor_appointments' %}">
-            View My Appointments
-        </a>
-    </p>
-
+    
 
     <!-- ==========================================
          DOCTOR FEATURES
@@ -48,7 +40,13 @@
             <a href="{% url 'doctor_availability' %}">
                 Manage Availability
             </a>
-
+        </li>
+        <li>
+            <a href="{% url 'doctor_appointments' %}">
+                My Appointments
+            </a>
+        </li>
+       
     </ul>
 
 

@@ -77,14 +77,49 @@
         {{ prescription_form.as_p }}
 
         <!-- ==========================================
-             MEDICINE
-             ========================================== -->
+     MEDICINES
+     ========================================== -->
 
-        <h3>Medicine</h3>
+        <h3>Medicines</h3>
 
-        {{ item_form.non_field_errors }}
+        {{ item_formset.management_form }}
 
-        {{ item_form.as_p }}
+        {% for item_form in item_formset %}
+
+            <hr>
+
+            <h4>
+                Medicine {{ forloop.counter }}
+            </h4>
+
+            {{ item_form.non_field_errors }}
+
+            <p>
+                {{ item_form.medicine.label_tag }}
+                {{ item_form.medicine }}
+            </p>
+
+            <p>
+                {{ item_form.dosage.label_tag }}
+                {{ item_form.dosage }}
+            </p>
+
+            <p>
+                {{ item_form.frequency.label_tag }}
+                {{ item_form.frequency }}
+            </p>
+
+            <p>
+                {{ item_form.duration.label_tag }}
+                {{ item_form.duration }}
+            </p>
+
+            <p>
+                {{ item_form.instructions.label_tag }}
+                {{ item_form.instructions }}
+            </p>
+
+        {% endfor %}
 
         <!-- ==========================================
              SUBMIT
