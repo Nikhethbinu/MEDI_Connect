@@ -1,5 +1,5 @@
 from django import forms
-from .models import Doctor,DoctorAvailability
+from .models import Doctor,DoctorAvailability,Department
 
 
 # ==========================================
@@ -74,3 +74,42 @@ class DoctorAvailabilityForm(forms.ModelForm):
                 )
 
         return cleaned_data
+
+class DepartmentForm(forms.ModelForm):
+
+    class Meta:
+        model = Department
+
+        fields = [
+            'name',
+            'description',
+            'is_active',
+        ]
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Enter department name'
+                }
+            ),
+
+            'description': forms.Textarea(
+                attrs={
+                    'rows': 4,
+                    'placeholder': 'Enter department description'
+                }
+            ),
+
+            'is_active': forms.CheckboxInput(),
+        }
+
+    def clean_name(self):
+
+        name = self.cleaned_data['name'].strip()
+
+        if not name:
+            raise forms.ValidationError(
+                'Department name cannot be empty.'
+            )
+
+        return name

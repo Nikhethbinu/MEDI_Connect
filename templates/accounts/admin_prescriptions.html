@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Prescription Management</title>
+
+</head>
+
+<body>
+
+<h1>MediConnect</h1>
+
+<h2>Prescription Management</h2>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SEARCH
+========================================== -->
+
+<h3>
+    Search Prescriptions
+</h3>
+
+<form method="GET">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ search_query }}"
+        placeholder="Patient, doctor, diagnosis..."
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+    {% if search_query %}
+
+        <a href="{% url 'admin_prescriptions' %}">
+            Clear Search
+        </a>
+
+    {% endif %}
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     PRESCRIPTION COUNT
+========================================== -->
+
+<h3>
+
+    Total Prescriptions:
+    {{ prescriptions|length }}
+
+</h3>
+
+<!-- ==========================================
+     PRESCRIPTION LIST
+========================================== -->
+
+{% if prescriptions %}
+
+    {% for prescription in prescriptions %}
+
+        <div>
+
+            <h3>
+                Prescription {{ forloop.counter }}
+            </h3>
+
+            <!-- ==========================================
+                 PATIENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Patient Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Name:
+                </strong>
+
+                {{ prescription.appointment.patient.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Username:
+                </strong>
+
+                {{ prescription.appointment.patient.username }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Phone:
+                </strong>
+
+                {{ prescription.appointment.patient.phone }}
+
+            </p>
+
+            <!-- ==========================================
+                 DOCTOR INFORMATION
+            ========================================== -->
+
+            <h4>
+                Doctor Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Doctor:
+                </strong>
+
+                {{ prescription.appointment.doctor.user.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Specialization:
+                </strong>
+
+                {{ prescription.appointment.doctor.specialization }}
+
+            </p>
+
+            <!-- ==========================================
+                 APPOINTMENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Appointment Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Date:
+                </strong>
+
+                {{ prescription.appointment.appointment_date }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Time:
+                </strong>
+
+                {{ prescription.appointment.appointment_time }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Appointment Status:
+                </strong>
+
+                {{ prescription.appointment.get_status_display }}
+
+            </p>
+
+            <!-- ==========================================
+                 PRESCRIPTION INFORMATION
+            ========================================== -->
+
+            <h4>
+                Prescription Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Diagnosis:
+                </strong>
+
+                {{ prescription.diagnosis|default:"No diagnosis provided." }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Notes:
+                </strong>
+
+                {{ prescription.notes|default:"No additional notes." }}
+
+            </p>
+
+            <!-- ==========================================
+                 MEDICINES
+            ========================================== -->
+
+            <h4>
+                Prescribed Medicines
+            </h4>
+
+            {% if prescription.items.all %}
+
+                {% for item in prescription.items.all %}
+
+                    <div>
+
+                        <p>
+
+                            <strong>
+                                Medicine:
+                            </strong>
+
+                            {{ item.medicine.name }}
+
+                        </p>
+
+                        <p>
+
+                            <strong>
+                                Dosage:
+                            </strong>
+
+                            {{ item.dosage }}
+
+                        </p>
+
+                        <p>
+
+                            <strong>
+                                Frequency:
+                            </strong>
+
+                            {{ item.frequency }}
+
+                        </p>
+
+                        <p>
+
+                            <strong>
+                                Duration:
+                            </strong>
+
+                            {{ item.duration }}
+
+                        </p>
+
+                        <p>
+
+                            <strong>
+                                Instructions:
+                            </strong>
+
+                            {{ item.instructions|default:"No instructions provided." }}
+
+                        </p>
+
+                    </div>
+
+                    <hr>
+
+                {% empty %}
+
+                    <p>
+                        No medicines prescribed.
+                    </p>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    No medicines prescribed.
+                </p>
+
+            {% endif %}
+
+            <!-- ==========================================
+                 CREATED INFORMATION
+            ========================================== -->
+
+            <p>
+
+                <strong>
+                    Prescription Created:
+                </strong>
+
+                {{ prescription.created_at }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Last Updated:
+                </strong>
+
+                {{ prescription.updated_at }}
+
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No prescriptions found.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</p>
+
+</body>
+
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        MediConnect - Medical Record Management
+    </title>
+
+</head>
+
+<body>
+
+<h1>
+    MediConnect
+</h1>
+
+<h2>
+    Medical Record Management
+</h2>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SEARCH AND FILTER
+========================================== -->
+
+<h3>
+    Search and Filter Medical Records
+</h3>
+
+<form method="GET">
+
+    <!-- ==========================================
+         SEARCH
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Search:
+        </label>
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search_query }}"
+            placeholder="Patient, doctor, diagnosis, symptoms..."
+        >
+
+    </p>
+
+    <!-- ==========================================
+         DATE FILTER
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Appointment Date:
+        </label>
+
+        <input
+            type="date"
+            name="date"
+            value="{{ date_filter }}"
+        >
+
+    </p>
+
+    <button type="submit">
+        Apply Filters
+    </button>
+
+    {% if search_query or date_filter %}
+
+        <a href="{% url 'admin_medical_records' %}">
+            Clear Filters
+        </a>
+
+    {% endif %}
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     RECORD COUNT
+========================================== -->
+
+<h3>
+
+    Total Medical Records:
+    {{ records|length }}
+
+</h3>
+
+<!-- ==========================================
+     MEDICAL RECORD LIST
+========================================== -->
+
+{% if records %}
+
+    {% for record in records %}
+
+        <div>
+
+            <h3>
+                Medical Record {{ forloop.counter }}
+            </h3>
+
+            <!-- ==========================================
+                 PATIENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Patient Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Name:
+                </strong>
+
+                {{ record.patient.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Username:
+                </strong>
+
+                {{ record.patient.username }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Phone:
+                </strong>
+
+                {{ record.patient.phone }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Email:
+                </strong>
+
+                {{ record.patient.email }}
+
+            </p>
+
+            <!-- ==========================================
+                 DOCTOR INFORMATION
+            ========================================== -->
+
+            <h4>
+                Doctor Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Doctor:
+                </strong>
+
+                {{ record.appointment.doctor.user.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Specialization:
+                </strong>
+
+                {{ record.appointment.doctor.specialization }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Department:
+                </strong>
+
+                {% if record.appointment.doctor.department %}
+
+                    {{ record.appointment.doctor.department.name }}
+
+                {% else %}
+
+                    Not assigned
+
+                {% endif %}
+
+            </p>
+
+            <!-- ==========================================
+                 APPOINTMENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Appointment Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Date:
+                </strong>
+
+                {{ record.appointment.appointment_date }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Time:
+                </strong>
+
+                {{ record.appointment.appointment_time }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Status:
+                </strong>
+
+                {{ record.appointment.get_status_display }}
+
+            </p>
+
+            <!-- ==========================================
+                 MEDICAL INFORMATION
+            ========================================== -->
+
+            <h4>
+                Medical Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Symptoms:
+                </strong>
+
+                {{ record.symptoms|default:"No symptoms recorded." }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Diagnosis:
+                </strong>
+
+                {{ record.diagnosis|default:"No diagnosis recorded." }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Treatment:
+                </strong>
+
+                {{ record.treatment|default:"No treatment recorded." }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Notes:
+                </strong>
+
+                {{ record.notes|default:"No additional notes." }}
+
+            </p>
+
+            <!-- ==========================================
+                 RECORD TIMESTAMPS
+            ========================================== -->
+
+            <p>
+
+                <strong>
+                    Record Created:
+                </strong>
+
+                {{ record.created_at }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Last Updated:
+                </strong>
+
+                {{ record.updated_at }}
+
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No medical records found.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</p>
+
+</body>
+
+</html>

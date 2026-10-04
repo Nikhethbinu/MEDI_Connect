@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Doctor Management</title>
+
+</head>
+
+<body>
+
+<h1>MediConnect</h1>
+
+<h2>Doctor Management</h2>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SEARCH DOCTORS
+========================================== -->
+
+<h3>Search Doctors</h3>
+
+<form method="GET">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ search_query }}"
+        placeholder="Search by name, specialization, department..."
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+    {% if search_query %}
+
+        <a href="{% url 'admin_doctors' %}">
+            Clear Search
+        </a>
+
+    {% endif %}
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     DOCTOR COUNT
+========================================== -->
+
+<h3>
+    Total Doctors: {{ doctors|length }}
+</h3>
+
+<!-- ==========================================
+     DOCTOR LIST
+========================================== -->
+
+{% if doctors %}
+
+    {% for doctor in doctors %}
+
+        <div>
+
+            <h3>
+                Doctor {{ forloop.counter }}
+            </h3>
+
+            <p>
+                <strong>Name:</strong>
+                {{ doctor.user.name }}
+            </p>
+
+            <p>
+                <strong>Username:</strong>
+                {{ doctor.user.username }}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                {{ doctor.user.phone }}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                {{ doctor.user.email }}
+            </p>
+
+            <p>
+                <strong>Specialization:</strong>
+                {{ doctor.specialization|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Qualification:</strong>
+                {{ doctor.qualification|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Experience:</strong>
+                {{ doctor.experience_years }} years
+            </p>
+
+            <p>
+                <strong>Department:</strong>
+
+                {% if doctor.department %}
+                    {{ doctor.department.name }}
+                {% else %}
+                    Not assigned
+                {% endif %}
+
+            </p>
+
+            <p>
+                <strong>Consultation Fee:</strong>
+                ₹{{ doctor.consultation_fee }}
+            </p>
+
+            <p>
+                <strong>Available:</strong>
+
+                {% if doctor.is_available %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+
+            </p>
+
+            <p>
+                <strong>Bio:</strong>
+                {{ doctor.bio|default:"Not provided" }}
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No doctors found.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<p>
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+</p>
+
+<p>
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+</p>
+
+</body>
+
+</html>

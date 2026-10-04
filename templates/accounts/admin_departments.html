@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Appointment Management</title>
+
+</head>
+
+<body>
+
+<h1>MediConnect</h1>
+
+<h2>Appointment Management</h2>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SEARCH AND FILTER
+========================================== -->
+
+<h3>Search and Filter Appointments</h3>
+
+<form method="GET">
+
+    <!-- ==========================================
+         SEARCH
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Search:
+        </label>
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search_query }}"
+            placeholder="Patient, doctor, phone, specialization..."
+        >
+
+    </p>
+
+    <!-- ==========================================
+         STATUS FILTER
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Status:
+        </label>
+
+        <select name="status">
+
+            <option value="">
+                All Statuses
+            </option>
+
+            <option
+                value="PENDING"
+                {% if status_filter == 'PENDING' %}selected{% endif %}
+            >
+                Pending
+            </option>
+
+            <option
+                value="CONFIRMED"
+                {% if status_filter == 'CONFIRMED' %}selected{% endif %}
+            >
+                Confirmed
+            </option>
+
+            <option
+                value="REJECTED"
+                {% if status_filter == 'REJECTED' %}selected{% endif %}
+            >
+                Rejected
+            </option>
+
+            <option
+                value="CANCELLED"
+                {% if status_filter == 'CANCELLED' %}selected{% endif %}
+            >
+                Cancelled
+            </option>
+
+            <option
+                value="COMPLETED"
+                {% if status_filter == 'COMPLETED' %}selected{% endif %}
+            >
+                Completed
+            </option>
+
+        </select>
+
+    </p>
+
+    <!-- ==========================================
+         DATE FILTER
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Appointment Date:
+        </label>
+
+        <input
+            type="date"
+            name="date"
+            value="{{ date_filter }}"
+        >
+
+    </p>
+
+    <button type="submit">
+        Apply Filters
+    </button>
+
+    {% if search_query or status_filter or date_filter %}
+
+        <a href="{% url 'admin_appointments' %}">
+            Clear Filters
+        </a>
+
+    {% endif %}
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     APPOINTMENT COUNT
+========================================== -->
+
+<h3>
+
+    Total Appointments:
+    {{ appointments|length }}
+
+</h3>
+
+<!-- ==========================================
+     APPOINTMENT LIST
+========================================== -->
+
+{% if appointments %}
+
+    {% for appointment in appointments %}
+
+        <div>
+
+            <h3>
+                Appointment {{ forloop.counter }}
+            </h3>
+
+            <!-- ==========================================
+                 PATIENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Patient Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Name:
+                </strong>
+
+                {{ appointment.patient.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Username:
+                </strong>
+
+                {{ appointment.patient.username }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Phone:
+                </strong>
+
+                {{ appointment.patient.phone }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Email:
+                </strong>
+
+                {{ appointment.patient.email }}
+
+            </p>
+
+            <!-- ==========================================
+                 DOCTOR INFORMATION
+            ========================================== -->
+
+            <h4>
+                Doctor Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Doctor:
+                </strong>
+
+                {{ appointment.doctor.user.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Specialization:
+                </strong>
+
+                {{ appointment.doctor.specialization }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Department:
+                </strong>
+
+                {% if appointment.doctor.department %}
+
+                    {{ appointment.doctor.department.name }}
+
+                {% else %}
+
+                    Not assigned
+
+                {% endif %}
+
+            </p>
+
+            <!-- ==========================================
+                 APPOINTMENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Appointment Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Date:
+                </strong>
+
+                {{ appointment.appointment_date }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Time:
+                </strong>
+
+                {{ appointment.appointment_time }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Reason:
+                </strong>
+
+                {{ appointment.reason|default:"No reason provided." }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Status:
+                </strong>
+
+                {{ appointment.get_status_display }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Created:
+                </strong>
+
+                {{ appointment.created_at }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Last Updated:
+                </strong>
+
+                {{ appointment.updated_at }}
+
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No appointments found.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     FOOTER NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</p>
+
+</body>
+
+</html>

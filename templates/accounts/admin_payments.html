@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        MediConnect - Payment Management
+    </title>
+
+</head>
+
+<body>
+
+<h1>
+    MediConnect
+</h1>
+
+<h2>
+    Payment Management
+</h2>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SEARCH AND FILTER
+========================================== -->
+
+<h3>
+    Search and Filter Payments
+</h3>
+
+<form method="GET">
+
+    <!-- ==========================================
+         SEARCH
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Search:
+        </label>
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search_query }}"
+            placeholder="Patient, doctor, transaction ID..."
+        >
+
+    </p>
+
+    <!-- ==========================================
+         STATUS
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Payment Status:
+        </label>
+
+        <select name="status">
+
+            <option value="">
+                All Statuses
+            </option>
+
+            <option
+                value="PENDING"
+                {% if status_filter == 'PENDING' %}selected{% endif %}
+            >
+                Pending
+            </option>
+
+            <option
+                value="PAID"
+                {% if status_filter == 'PAID' %}selected{% endif %}
+            >
+                Paid
+            </option>
+
+            <option
+                value="FAILED"
+                {% if status_filter == 'FAILED' %}selected{% endif %}
+            >
+                Failed
+            </option>
+
+            <option
+                value="CANCELLED"
+                {% if status_filter == 'CANCELLED' %}selected{% endif %}
+            >
+                Cancelled
+            </option>
+
+        </select>
+
+    </p>
+
+    <!-- ==========================================
+         PAYMENT METHOD
+    ========================================== -->
+
+    <p>
+
+        <label>
+            Payment Method:
+        </label>
+
+        <select name="method">
+
+            <option value="">
+                All Methods
+            </option>
+
+            <option
+                value="CASH"
+                {% if method_filter == 'CASH' %}selected{% endif %}
+            >
+                Cash
+            </option>
+
+            <option
+                value="CARD"
+                {% if method_filter == 'CARD' %}selected{% endif %}
+            >
+                Card
+            </option>
+
+            <option
+                value="UPI"
+                {% if method_filter == 'UPI' %}selected{% endif %}
+            >
+                UPI
+            </option>
+
+            <option
+                value="NET_BANKING"
+                {% if method_filter == 'NET_BANKING' %}selected{% endif %}
+            >
+                Net Banking
+            </option>
+
+        </select>
+
+    </p>
+
+    <button type="submit">
+        Apply Filters
+    </button>
+
+    {% if search_query or status_filter or method_filter %}
+
+        <a href="{% url 'admin_payments' %}">
+            Clear Filters
+        </a>
+
+    {% endif %}
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     PAYMENT COUNT
+========================================== -->
+
+<h3>
+
+    Total Payments:
+    {{ payments|length }}
+
+</h3>
+
+<!-- ==========================================
+     PAYMENT LIST
+========================================== -->
+
+{% if payments %}
+
+    {% for payment in payments %}
+
+        <div>
+
+            <h3>
+                Payment {{ forloop.counter }}
+            </h3>
+
+            <!-- ==========================================
+                 PATIENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Patient Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Name:
+                </strong>
+
+                {{ payment.patient.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Username:
+                </strong>
+
+                {{ payment.patient.username }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Phone:
+                </strong>
+
+                {{ payment.patient.phone }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Email:
+                </strong>
+
+                {{ payment.patient.email }}
+
+            </p>
+
+            <!-- ==========================================
+                 DOCTOR INFORMATION
+            ========================================== -->
+
+            <h4>
+                Doctor Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Doctor:
+                </strong>
+
+                {{ payment.appointment.doctor.user.name }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Specialization:
+                </strong>
+
+                {{ payment.appointment.doctor.specialization }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Department:
+                </strong>
+
+                {% if payment.appointment.doctor.department %}
+
+                    {{ payment.appointment.doctor.department.name }}
+
+                {% else %}
+
+                    Not assigned
+
+                {% endif %}
+
+            </p>
+
+            <!-- ==========================================
+                 APPOINTMENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Appointment Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Date:
+                </strong>
+
+                {{ payment.appointment.appointment_date }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Time:
+                </strong>
+
+                {{ payment.appointment.appointment_time }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Appointment Status:
+                </strong>
+
+                {{ payment.appointment.get_status_display }}
+
+            </p>
+
+            <!-- ==========================================
+                 PAYMENT INFORMATION
+            ========================================== -->
+
+            <h4>
+                Payment Information
+            </h4>
+
+            <p>
+
+                <strong>
+                    Consultation Fee:
+                </strong>
+
+                ₹{{ payment.consultation_fee }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Additional Charges:
+                </strong>
+
+                ₹{{ payment.additional_charges }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Total Amount:
+                </strong>
+
+                ₹{{ payment.total_amount }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Payment Method:
+                </strong>
+
+                {{ payment.get_payment_method_display|default:"Not selected" }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Payment Status:
+                </strong>
+
+                {{ payment.get_status_display }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Transaction ID:
+                </strong>
+
+                {{ payment.transaction_id|default:"Not available" }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Payment Date:
+                </strong>
+
+                {{ payment.payment_date|default:"Not paid yet" }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Created:
+                </strong>
+
+                {{ payment.created_at }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Last Updated:
+                </strong>
+
+                {{ payment.updated_at }}
+
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No payments found.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</p>
+
+</body>
+
+</html>

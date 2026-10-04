@@ -1,28 +1,218 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <title>MediConnect - Admin Dashboard</title>
+
 </head>
 
 <body>
 
     <!-- ==========================================
-         ADMIN DASHBOARD
+         HEADER
          ========================================== -->
 
     <h1>MediConnect</h1>
 
     <h2>Admin Dashboard</h2>
 
-    <p>Welcome, {{ user.name }}</p>
+    <p>
+        Welcome,
+        <strong>{{ request.user.name }}</strong>
+    </p>
 
-    <p>You are logged in as an Administrator.</p>
+    <hr>
+    <hr>    
 
-    <br>
+    <!-- ==========================================
+         MANAGEMENT
+         ========================================== -->
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
+    <h3>Management</h3>
+
+    <p>
+        <a href="/admin/">
+            Django Admin Panel
+        </a>
+    </p>
+    <p>
+        <a href="{% url 'admin_patients' %}">
+            Manage Patients
+        </a>
+    </p>
+    <p>
+        <a href="{% url 'admin_doctors' %}">
+            Manage Doctors
+        </a>
+
+    </p>
+    <p>
+        <a href="{% url 'admin_departments' %}">
+            Manage Departments
+        </a>  
+    </p>
+    <p>
+        <a href="{% url 'admin_appointments' %}">
+            Manage Appointments
+        </a>                
+    </p> 
+    <p>
+        <a href="{% url 'admin_prescriptions' %}">
+            Manage Prescriptions
+        </a> 
+    </p> 
+    <p>
+        <a href="{% url 'admin_medical_records' %}">
+            Manage Medical Records
+        </a>        
+    </p>
+    <p>
+        <a href="{% url 'admin_payments' %}">
+            Manage Payments
+        </a>
+    </p>
+    <p>
+        <a href="{% url 'admin_reports' %}">
+            View Reports
+        </a>    
+    </p>    
+    <hr>
+
+    <hr>
+
+    <!-- ==========================================
+         USER STATISTICS
+         ========================================== -->
+
+    <h3>Users</h3>
+
+    <p>
+        <strong>Total Patients:</strong>
+        {{ total_patients }}
+    </p>
+
+    <p>
+        <strong>Total Doctors:</strong>
+        {{ total_doctors }}
+    </p>
+
+    <p>
+        <strong>Total Departments:</strong>
+        {{ total_departments }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         APPOINTMENT STATISTICS
+         ========================================== -->
+
+    <h3>Appointments</h3>
+
+    <p>
+        <strong>Total Appointments:</strong>
+        {{ total_appointments }}
+    </p>
+
+    <p>
+        <strong>Pending:</strong>
+        {{ pending_appointments }}
+    </p>
+
+    <p>
+        <strong>Confirmed:</strong>
+        {{ confirmed_appointments }}
+    </p>
+
+    <p>
+        <strong>Completed:</strong>
+        {{ completed_appointments }}
+    </p>
+
+    <p>
+        <strong>Cancelled:</strong>
+        {{ cancelled_appointments }}
+    </p>
+
+    <p>
+        <strong>Rejected:</strong>
+        {{ rejected_appointments }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         PRESCRIPTION & MEDICAL RECORDS
+         ========================================== -->
+
+    <h3>Medical Activity</h3>
+
+    <p>
+        <strong>Total Prescriptions:</strong>
+        {{ total_prescriptions }}
+    </p>
+
+    <p>
+        <strong>Total Medical Records:</strong>
+        {{ total_medical_records }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         PAYMENT STATISTICS
+         ========================================== -->
+
+    <h3>Payments</h3>
+
+    <p>
+        <strong>Total Payments:</strong>
+        {{ total_payments }}
+    </p>
+
+    <p>
+        <strong>Paid Payments:</strong>
+        {{ paid_payments }}
+    </p>
+
+    <p>
+        <strong>Pending Payments:</strong>
+        {{ pending_payments }}
+    </p>
+
+    <p>
+        <strong>Total Revenue:</strong>
+        ₹{{ total_revenue }}
+    </p>
+
+    
+    <p>
+        <a href="{% url 'admin_prescriptions' %}">
+            Manage Prescriptions
+        </a> 
+    </p>
+
+
+
+    <!-- ==========================================
+         LOGOUT
+         ========================================== -->
+
+    <p>
+
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+
+    </p>
 
 </body>
+
 </html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>MediConnect - Patient Management</title>
+
+</head>
+
+<body>
+
+<h1>MediConnect</h1>
+
+<h2>Patient Management</h2>
+
+<hr>
+
+<!-- ==========================================
+     ADMIN NAVIGATION
+========================================== -->
+
+<p>
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SEARCH PATIENTS
+========================================== -->
+
+<h3>Search Patients</h3>
+
+<form method="GET">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ search_query }}"
+        placeholder="Search by name, username, phone or email"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+    {% if search_query %}
+        <a href="{% url 'admin_patients' %}">
+            Clear Search
+        </a>
+    {% endif %}
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     PATIENT COUNT
+========================================== -->
+
+<h3>
+    Total Patients: {{ patients|length }}
+</h3>
+
+<!-- ==========================================
+     PATIENT LIST
+========================================== -->
+
+{% if patients %}
+
+    {% for patient in patients %}
+
+        <div>
+
+            <h3>
+                Patient {{ forloop.counter }}
+            </h3>
+
+            <p>
+                <strong>Name:</strong>
+                {{ patient.user.name }}
+            </p>
+
+            <p>
+                <strong>Username:</strong>
+                {{ patient.user.username }}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                {{ patient.user.phone }}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                {{ patient.user.email }}
+            </p>
+
+            <p>
+                <strong>Date of Birth:</strong>
+                {{ patient.date_of_birth|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Gender:</strong>
+                {{ patient.gender|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Blood Group:</strong>
+                {{ patient.blood_group|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                {{ patient.address|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Emergency Contact:</strong>
+                {{ patient.emergency_contact_name|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Emergency Phone:</strong>
+                {{ patient.emergency_contact_phone|default:"Not provided" }}
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No patients found.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     FOOTER NAVIGATION
+========================================== -->
+
+<p>
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+</p>
+
+<p>
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+</p>
+
+</body>
+</html>

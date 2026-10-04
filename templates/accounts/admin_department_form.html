@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        MediConnect - {{ page_title }}
+    </title>
+
+</head>
+
+<body>
+
+<h1>MediConnect</h1>
+
+<h2>
+    {{ page_title }}
+</h2>
+
+<hr>
+
+<!-- ==========================================
+     DEPARTMENT FORM
+========================================== -->
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Save Department
+    </button>
+
+</form>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_departments' %}">
+        Back to Department Management
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+</body>
+
+</html>

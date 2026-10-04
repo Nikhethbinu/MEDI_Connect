@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        MediConnect - Admin Reports
+    </title>
+
+</head>
+
+<body>
+
+<h1>
+    MediConnect
+</h1>
+
+<h2>
+    Admin Reports
+</h2>
+
+<hr>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     SYSTEM OVERVIEW
+========================================== -->
+
+<h3>
+    System Overview
+</h3>
+
+<p>
+    <strong>Total Patients:</strong>
+    {{ total_patients }}
+</p>
+
+<p>
+    <strong>Total Doctors:</strong>
+    {{ total_doctors }}
+</p>
+
+<p>
+    <strong>Total Departments:</strong>
+    {{ total_departments }}
+</p>
+
+<p>
+    <strong>Active Departments:</strong>
+    {{ active_departments }}
+</p>
+
+<p>
+    <strong>Total Appointments:</strong>
+    {{ total_appointments }}
+</p>
+
+<p>
+    <strong>Total Prescriptions:</strong>
+    {{ total_prescriptions }}
+</p>
+
+<p>
+    <strong>Total Medical Records:</strong>
+    {{ total_medical_records }}
+</p>
+
+<p>
+    <strong>Total Payments:</strong>
+    {{ total_payments }}
+</p>
+
+<hr>
+
+<!-- ==========================================
+     APPOINTMENT REPORT
+========================================== -->
+
+<h3>
+    Appointment Report
+</h3>
+
+<p>
+    <strong>Pending:</strong>
+    {{ pending_appointments }}
+</p>
+
+<p>
+    <strong>Confirmed:</strong>
+    {{ confirmed_appointments }}
+</p>
+
+<p>
+    <strong>Completed:</strong>
+    {{ completed_appointments }}
+</p>
+
+<p>
+    <strong>Rejected:</strong>
+    {{ rejected_appointments }}
+</p>
+
+<p>
+    <strong>Cancelled:</strong>
+    {{ cancelled_appointments }}
+</p>
+
+<hr>
+
+<!-- ==========================================
+     PAYMENT REPORT
+========================================== -->
+
+<h3>
+    Payment Report
+</h3>
+
+<p>
+    <strong>Total Payments:</strong>
+    {{ total_payments }}
+</p>
+
+<p>
+    <strong>Paid Payments:</strong>
+    {{ paid_payments }}
+</p>
+
+<p>
+    <strong>Pending Payments:</strong>
+    {{ pending_payments }}
+</p>
+
+<p>
+    <strong>Failed Payments:</strong>
+    {{ failed_payments }}
+</p>
+
+<p>
+    <strong>Cancelled Payments:</strong>
+    {{ cancelled_payments }}
+</p>
+
+<hr>
+
+<!-- ==========================================
+     REVENUE REPORT
+========================================== -->
+
+<h3>
+    Revenue Report
+</h3>
+
+<p>
+
+    <strong>
+        Total Revenue:
+    </strong>
+
+    ₹{{ total_revenue }}
+
+</p>
+
+<p>
+
+    <strong>
+        Pending Revenue:
+    </strong>
+
+    ₹{{ pending_revenue }}
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     PAYMENT METHOD REPORT
+========================================== -->
+
+<h3>
+    Payment Method Report
+</h3>
+
+<p>
+
+    <strong>
+        Cash Payments:
+    </strong>
+
+    {{ cash_payments }}
+
+</p>
+
+<p>
+
+    <strong>
+        Card Payments:
+    </strong>
+
+    {{ card_payments }}
+
+</p>
+
+<p>
+
+    <strong>
+        UPI Payments:
+    </strong>
+
+    {{ upi_payments }}
+
+</p>
+
+<p>
+
+    <strong>
+        Net Banking Payments:
+    </strong>
+
+    {{ net_banking_payments }}
+
+</p>
+
+<hr>
+
+<!-- ==========================================
+     DEPARTMENT REPORT
+========================================== -->
+
+<h3>
+    Department-wise Doctor Report
+</h3>
+
+{% if department_reports %}
+
+    {% for department in department_reports %}
+
+        <div>
+
+            <h4>
+                {{ department.name }}
+            </h4>
+
+            <p>
+
+                <strong>
+                    Doctors:
+                </strong>
+
+                {{ department.doctor_count }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Status:
+                </strong>
+
+                {% if department.is_active %}
+
+                    Active
+
+                {% else %}
+
+                    Inactive
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No department data available.
+    </p>
+
+{% endif %}
+
+<!-- ==========================================
+     MANAGEMENT LINKS
+========================================== -->
+
+<h3>
+    Management
+</h3>
+
+<p>
+
+    <a href="{% url 'admin_patients' %}">
+        Manage Patients
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_doctors' %}">
+        Manage Doctors
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_departments' %}">
+        Manage Departments
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_appointments' %}">
+        Manage Appointments
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_prescriptions' %}">
+        Manage Prescriptions
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_medical_records' %}">
+        Manage Medical Records
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'admin_payments' %}">
+        Manage Payments
+    </a>
+
+</p>
+
+<hr>
+
+<p>
+
+    <a href="{% url 'admin_dashboard' %}">
+        Back to Admin Dashboard
+    </a>
+
+</p>
+
+<p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</p>
+
+</body>
+
+</html>
