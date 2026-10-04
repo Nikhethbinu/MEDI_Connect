@@ -210,6 +210,35 @@
                         </p>
 
                     {% endif %}
+                    <!-- ==========================================
+                        BILLING / PAYMENT
+                        ========================================== -->
+
+                    {% if appointment.has_payment %}
+
+                        <p>
+
+                            <a
+                                href="{% url 'payment_detail' appointment.payment_id_value %}"
+                            >
+                                View Bill
+                            </a>
+
+                        </p>
+
+                    {% else %}
+
+                        <p>
+
+                            <a
+                                href="{% url 'create_payment' appointment.id %}"
+                            >
+                                Create Bill
+                            </a>
+
+                        </p>
+
+                    {% endif %}
 
 
                 <!-- ==========================================

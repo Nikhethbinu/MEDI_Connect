@@ -281,7 +281,7 @@ def cancel_appointment(request, appointment_id):
     )
 
 # ==========================================
-# DOCTOR APPOINTMENT DASHBOARD
+# DOCTOR APPOINTMENTS
 # ==========================================
 
 @login_required
@@ -313,25 +313,35 @@ def doctor_appointments(request):
     )
 
     # ------------------------------------------
-    # ADD PRESCRIPTION INFORMATION
+    # CHECK PRESCRIPTION AND MEDICAL RECORD
     # ------------------------------------------
 
     for appointment in appointments:
 
+        # ==========================================
+        # PRESCRIPTION
+        # ==========================================
+
         try:
+
             prescription = appointment.prescription
 
             appointment.has_prescription = True
-            appointment.prescription_id_value = prescription.id
 
-        except Exception:
+            appointment.prescription_id_value = (
+                prescription.id
+            )
+
+        except Appointment.prescription.RelatedObjectDoesNotExist:
+
             appointment.has_prescription = False
-            appointment.prescription_id_value = None
-        # ==========================================
-    # CHECK MEDICAL RECORD
-    # ==========================================
 
-    for appointment in appointments:
+            appointment.prescription_id_value = None
+
+
+        # ==========================================
+        # MEDICAL RECORD
+        # ==========================================
 
         try:
 
@@ -348,9 +358,30 @@ def doctor_appointments(request):
             appointment.has_medical_record = False
 
             appointment.medical_record_id_value = None
-            
+        
+        # ==========================================
+        # PAYMENT
+        # ==========================================
+
+        try:
+
+            payment = appointment.payment
+
+            appointment.has_payment = True
+
+            appointment.payment_id_value = (
+                payment.id
+            )
+
+        except Appointment.payment.RelatedObjectDoesNotExist:
+
+            appointment.has_payment = False
+
+            appointment.payment_id_value = None
+
+
     # ------------------------------------------
-    # RENDER DOCTOR APPOINTMENTS
+    # RENDER
     # ------------------------------------------
 
     return render(

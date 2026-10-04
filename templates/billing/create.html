@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Create Bill</title>
+
+</head>
+
+<body>
+
+    <h1>MediConnect</h1>
+
+    <h2>Create Payment / Bill</h2>
+
+    <hr>
+
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ appointment.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ appointment.patient.phone }}
+    </p>
+
+    <hr>
+
+
+    <!-- ==========================================
+         APPOINTMENT INFORMATION
+         ========================================== -->
+
+    <h3>Appointment</h3>
+
+    <p>
+        <strong>Date:</strong>
+        {{ appointment.appointment_date }}
+    </p>
+
+    <p>
+        <strong>Doctor:</strong>
+        {{ appointment.doctor.user.name }}
+    </p>
+
+    <hr>
+
+
+    <!-- ==========================================
+         BILL FORM
+         ========================================== -->
+
+    <h3>Bill Details</h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <p>
+            {{ form.consultation_fee.label_tag }}
+            <br>
+            {{ form.consultation_fee }}
+
+            {% for error in form.consultation_fee.errors %}
+                <br>
+                {{ error }}
+            {% endfor %}
+        </p>
+
+
+        <p>
+            {{ form.additional_charges.label_tag }}
+            <br>
+            {{ form.additional_charges }}
+
+            {% for error in form.additional_charges.errors %}
+                <br>
+                {{ error }}
+            {% endfor %}
+        </p>
+
+
+        <p>
+            {{ form.payment_method.label_tag }}
+            <br>
+            {{ form.payment_method }}
+        </p>
+
+
+        <p>
+            {{ form.status.label_tag }}
+            <br>
+            {{ form.status }}
+        </p>
+
+
+        <p>
+            {{ form.transaction_id.label_tag }}
+            <br>
+            {{ form.transaction_id }}
+        </p>
+
+
+        <br>
+
+        <button type="submit">
+            Create Bill
+        </button>
+
+    </form>
+
+
+    <br>
+
+    <a href="{% url 'doctor_appointments' %}">
+        Back to Doctor Appointments
+    </a>
+
+</body>
+
+</html>

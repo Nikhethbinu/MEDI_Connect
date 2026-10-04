@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Payment Details</title>
+
+</head>
+
+<body>
+
+    <h1>MediConnect</h1>
+
+    <h2>Payment / Bill</h2>
+
+    <hr>
+
+
+    <!-- ==========================================
+         PATIENT
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ payment.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ payment.patient.phone }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         APPOINTMENT
+         ========================================== -->
+
+    <h3>Appointment Information</h3>
+
+    <p>
+        <strong>Date:</strong>
+        {{ payment.appointment.appointment_date }}
+    </p>
+
+    <p>
+        <strong>Doctor:</strong>
+        {{ payment.appointment.doctor.user.name }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         BILL DETAILS
+         ========================================== -->
+
+    <h3>Bill Details</h3>
+
+    <p>
+        <strong>Consultation Fee:</strong>
+        ₹{{ payment.consultation_fee }}
+    </p>
+
+    <p>
+        <strong>Additional Charges:</strong>
+        ₹{{ payment.additional_charges }}
+    </p>
+
+    <p>
+        <strong>Total Amount:</strong>
+        ₹{{ payment.total_amount }}
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         PAYMENT DETAILS
+         ========================================== -->
+
+    <h3>Payment Information</h3>
+
+    <p>
+        <strong>Status:</strong>
+        {{ payment.get_status_display }}
+    </p>
+
+    <p>
+        <strong>Payment Method:</strong>
+        {{ payment.get_payment_method_display|default:"Not selected" }}
+    </p>
+
+    <p>
+        <strong>Transaction ID:</strong>
+        {{ payment.transaction_id|default:"Not available" }}
+    </p>
+
+    {% if payment.payment_date %}
+
+        <p>
+            <strong>Payment Date:</strong>
+            {{ payment.payment_date }}
+        </p>
+
+    {% endif %}
+
+
+    <hr>
+
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    {% if request.user.role == 'DOCTOR' %}
+
+        <a href="{% url 'doctor_appointments' %}">
+            Doctor Appointments
+        </a>
+
+    {% elif request.user.role == 'PATIENT' %}
+
+        <a href="{% url 'patient_payments' %}">
+            My Payments
+        </a>
+
+    {% endif %}
+
+</body>
+
+</html>

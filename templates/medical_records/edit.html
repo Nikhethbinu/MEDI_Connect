@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediConnect - Edit Medical Record</title>
+
+</head>
+
+<body>
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+
+    <h1>MediConnect</h1>
+
+    <h2>Edit Medical Record</h2>
+
+    <hr>
+
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+         ========================================== -->
+
+    <h3>Patient Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ record.patient.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ record.patient.phone }}
+    </p>
+
+    <p>
+        <strong>Appointment Date:</strong>
+        {{ appointment.appointment_date }}
+    </p>
+
+    <hr>
+
+
+    <!-- ==========================================
+         MEDICAL RECORD FORM
+         ========================================== -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+
+        <!-- ==========================================
+             SYMPTOMS
+             ========================================== -->
+
+        <p>
+
+            {{ form.symptoms.label_tag }}
+
+            <br>
+
+            {{ form.symptoms }}
+
+            {% for error in form.symptoms.errors %}
+
+                <br>
+                <span>{{ error }}</span>
+
+            {% endfor %}
+
+        </p>
+
+
+        <!-- ==========================================
+             DIAGNOSIS
+             ========================================== -->
+
+        <p>
+
+            {{ form.diagnosis.label_tag }}
+
+            <br>
+
+            {{ form.diagnosis }}
+
+            {% for error in form.diagnosis.errors %}
+
+                <br>
+                <span>{{ error }}</span>
+
+            {% endfor %}
+
+        </p>
+
+
+        <!-- ==========================================
+             TREATMENT
+             ========================================== -->
+
+        <p>
+
+            {{ form.treatment.label_tag }}
+
+            <br>
+
+            {{ form.treatment }}
+
+            {% for error in form.treatment.errors %}
+
+                <br>
+                <span>{{ error }}</span>
+
+            {% endfor %}
+
+        </p>
+
+
+        <!-- ==========================================
+             NOTES
+             ========================================== -->
+
+        <p>
+
+            {{ form.notes.label_tag }}
+
+            <br>
+
+            {{ form.notes }}
+
+            {% for error in form.notes.errors %}
+
+                <br>
+                <span>{{ error }}</span>
+
+            {% endfor %}
+
+        </p>
+
+
+        <br>
+
+
+        <!-- ==========================================
+             SAVE
+             ========================================== -->
+
+        <button type="submit">
+            Save Changes
+        </button>
+
+    </form>
+
+
+    <br>
+
+
+    <!-- ==========================================
+         NAVIGATION
+         ========================================== -->
+
+    <a
+        href="{% url 'medical_record_detail' record.id %}"
+    >
+        Cancel
+    </a>
+
+    <br>
+    <br>
+
+    <a href="{% url 'doctor_appointments' %}">
+        Back to Doctor Appointments
+    </a>
+
+</body>
+
+</html>

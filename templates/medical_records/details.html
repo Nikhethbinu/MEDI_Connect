@@ -90,15 +90,33 @@
 
     {% if request.user.role == 'DOCTOR' %}
 
-        <a href="{% url 'doctor_appointments' %}">
-            Doctor Appointments
-        </a>
+        <p>
+
+            <a
+                href="{% url 'edit_medical_record' record.id %}"
+            >
+                Edit Medical Record
+            </a>
+
+        </p>
+
+        <p>
+
+            <a href="{% url 'doctor_appointments' %}">
+                Doctor Appointments
+            </a>
+
+        </p>
 
     {% elif request.user.role == 'PATIENT' %}
 
-        <a href="{% url 'patient_medical_records' %}">
-            My Medical Records
-        </a>
+        <p>
+
+            <a href="{% url 'patient_medical_records' %}">
+                My Medical Records
+            </a>
+
+        </p>
 
     {% endif %}
 

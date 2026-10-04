@@ -64,6 +64,7 @@ urlpatterns = [
     # MEDICAL RECORD URLS
     # ==========================================
     path('medical-records/', include('medical_records.urls')),
+    path('billing/', include('billing.urls')),
     
 
 ]

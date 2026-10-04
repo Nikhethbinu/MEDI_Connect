@@ -4,40 +4,39 @@ from . import views
 
 
 # ==========================================
-# MEDICAL RECORD URLS
+# BILLING URLS
 # ==========================================
 
 urlpatterns = [
 
     # ------------------------------------------
-    # CREATE RECORD
+    # CREATE PAYMENT
     # ------------------------------------------
 
     path(
         'create/<int:appointment_id>/',
-        views.create_medical_record,
-        name='create_medical_record'
+        views.create_payment,
+        name='create_payment'
     ),
 
     # ------------------------------------------
-    # RECORD DETAIL
+    # PAYMENT DETAIL
     # ------------------------------------------
 
     path(
-        'detail/<int:record_id>/',
-        views.medical_record_detail,
-        name='medical_record_detail'
+        'detail/<int:payment_id>/',
+        views.payment_detail,
+        name='payment_detail'
     ),
 
     # ------------------------------------------
-    # PATIENT RECORDS
+    # PATIENT PAYMENTS
     # ------------------------------------------
 
     path(
         'patient/',
-        views.patient_medical_records,
-        name='patient_medical_records'
+        views.patient_payments,
+        name='patient_payments'
     ),
-    path('edit/<int:record_id>/', views.edit_medical_record, name='edit_medical_record'),
 
 ]

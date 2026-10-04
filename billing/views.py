@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import (
@@ -6,27 +8,26 @@ from django.shortcuts import (
     get_object_or_404
 )
 
+from django.utils import timezone
+
 from accounts.decorators import role_required
 
 from doctors.models import Doctor
 
 from appointments.models import Appointment
 
-from .models import MedicalRecord
+from .models import Payment
 
-from .forms import MedicalRecordForm
+from .forms import PaymentForm
 
 
 # ==========================================
-# CREATE MEDICAL RECORD
+# CREATE PAYMENT / BILL
 # ==========================================
 
 @login_required
 @role_required('DOCTOR')
-def create_medical_record(
-    request,
-    appointment_id
-):
+def create_payment(request, appointment_id):
 
     # ------------------------------------------
     # GET LOGGED-IN DOCTOR
@@ -49,49 +50,83 @@ def create_medical_record(
     )
 
     # ------------------------------------------
-    # CHECK EXISTING RECORD
+    # CHECK EXISTING PAYMENT
     # ------------------------------------------
 
-    if hasattr(
-        appointment,
-        'medical_record'
-    ):
+    if hasattr(appointment, 'payment'):
 
         return redirect(
-            'medical_record_detail',
-            record_id=appointment.medical_record.id
+            'payment_detail',
+            payment_id=appointment.payment.id
         )
 
     # ------------------------------------------
-    # HANDLE FORM
+    # DEFAULT CONSULTATION FEE
+    # ------------------------------------------
+
+    initial_data = {
+        'consultation_fee':
+            appointment.doctor.consultation_fee,
+        'additional_charges': Decimal('0.00'),
+    }
+
+    # ------------------------------------------
+    # HANDLE FORM SUBMISSION
     # ------------------------------------------
 
     if request.method == 'POST':
 
-        form = MedicalRecordForm(
+        form = PaymentForm(
             request.POST
         )
 
         if form.is_valid():
 
-            record = form.save(
+            payment = form.save(
                 commit=False
             )
 
-            record.patient = appointment.patient
+            # ------------------------------------------
+            # CONNECT APPOINTMENT
+            # ------------------------------------------
 
-            record.appointment = appointment
+            payment.appointment = appointment
 
-            record.save()
+            # ------------------------------------------
+            # CONNECT PATIENT
+            # ------------------------------------------
+
+            payment.patient = appointment.patient
+
+            # ------------------------------------------
+            # CALCULATE TOTAL
+            # ------------------------------------------
+
+            payment.total_amount = (
+                payment.consultation_fee
+                + payment.additional_charges
+            )
+
+            # ------------------------------------------
+            # PAYMENT DATE
+            # ------------------------------------------
+
+            if payment.status == 'PAID':
+
+                payment.payment_date = timezone.now()
+
+            payment.save()
 
             return redirect(
-                'medical_record_detail',
-                record_id=record.id
+                'payment_detail',
+                payment_id=payment.id
             )
 
     else:
 
-        form = MedicalRecordForm()
+        form = PaymentForm(
+            initial=initial_data
+        )
 
     # ------------------------------------------
     # RENDER
@@ -99,7 +134,7 @@ def create_medical_record(
 
     return render(
         request,
-        'medical_records/create.html',
+        'billing/create.html',
         {
             'appointment': appointment,
             'form': form,
@@ -108,27 +143,27 @@ def create_medical_record(
 
 
 # ==========================================
-# MEDICAL RECORD DETAIL
+# PAYMENT DETAIL
 # ==========================================
 
 @login_required
-def medical_record_detail(
+def payment_detail(
     request,
-    record_id
+    payment_id
 ):
 
     # ------------------------------------------
-    # GET RECORD
+    # GET PAYMENT
     # ------------------------------------------
 
-    record = get_object_or_404(
-        MedicalRecord.objects.select_related(
+    payment = get_object_or_404(
+        Payment.objects.select_related(
             'patient',
             'appointment',
             'appointment__doctor',
             'appointment__doctor__user',
         ),
-        id=record_id
+        id=payment_id
     )
 
     # ------------------------------------------
@@ -138,7 +173,7 @@ def medical_record_detail(
     if request.user.role == 'DOCTOR':
 
         if (
-            record.appointment.doctor.user
+            payment.appointment.doctor.user
             != request.user
         ):
 
@@ -152,7 +187,7 @@ def medical_record_detail(
 
     elif request.user.role == 'PATIENT':
 
-        if record.patient != request.user:
+        if payment.patient != request.user:
 
             return redirect(
                 'dashboard'
@@ -174,110 +209,35 @@ def medical_record_detail(
 
     return render(
         request,
-        'medical_records/detail.html',
+        'billing/detail.html',
         {
-            'record': record,
+            'payment': payment,
         }
     )
 
 
 # ==========================================
-# PATIENT MEDICAL RECORDS
+# PATIENT PAYMENT HISTORY
 # ==========================================
 
 @login_required
 @role_required('PATIENT')
-def patient_medical_records(request):
-    
+def patient_payments(request):
 
-    records = MedicalRecord.objects.filter(
+    payments = Payment.objects.filter(
         patient=request.user
     ).select_related(
         'appointment',
         'appointment__doctor',
-        'appointment__doctor__user',
-        'appointment__doctor__department'
+        'appointment__doctor__user'
     ).order_by(
         '-created_at'
     )
 
     return render(
         request,
-        'medical_records/patient_records.html',
+        'billing/patient_payments.html',
         {
-            'records': records,
-        }
-    )
-
-# ==========================================
-# EDIT MEDICAL RECORD
-# ==========================================
-
-@login_required
-@role_required('DOCTOR')
-def edit_medical_record(request, record_id):
-
-    # ------------------------------------------
-    # GET LOGGED-IN DOCTOR
-    # ------------------------------------------
-
-    doctor = get_object_or_404(
-        Doctor,
-        user=request.user
-    )
-
-    # ------------------------------------------
-    # GET MEDICAL RECORD
-    # ------------------------------------------
-
-    record = get_object_or_404(
-        MedicalRecord,
-        id=record_id,
-        appointment__doctor=doctor
-    )
-
-    # ------------------------------------------
-    # GET APPOINTMENT
-    # ------------------------------------------
-
-    appointment = record.appointment
-
-    # ------------------------------------------
-    # HANDLE FORM SUBMISSION
-    # ------------------------------------------
-
-    if request.method == 'POST':
-
-        form = MedicalRecordForm(
-            request.POST,
-            instance=record
-        )
-
-        if form.is_valid():
-
-            form.save()
-
-            return redirect(
-                'medical_record_detail',
-                record_id=record.id
-            )
-
-    else:
-
-        form = MedicalRecordForm(
-            instance=record
-        )
-
-    # ------------------------------------------
-    # RENDER EDIT PAGE
-    # ------------------------------------------
-
-    return render(
-        request,
-        'medical_records/edit.html',
-        {
-            'record': record,
-            'appointment': appointment,
-            'form': form,
+            'payments': payments,
         }
     )
