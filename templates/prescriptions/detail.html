@@ -1,165 +1,557 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>MediConnect - Prescription</title>
-</head>
+{% block title %}
+MediConnect - Prescription
+{% endblock %}
 
-<body>
+{% block content %}
 
-    <!-- ==========================================
-         PRESCRIPTION
-         ========================================== -->
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
 
-    <h1>MediConnect</h1>
+<div class="mc-page-header">
 
-    <h2>Prescription</h2>
+    <h1 class="mc-page-title">
+        Prescription
+    </h1>
 
-    <!-- ==========================================
-         PATIENT INFORMATION
-         ========================================== -->
-
-    <h3>Patient</h3>
-
-    <p>
-        <strong>Name:</strong>
-        {{ prescription.appointment.patient.name }}
+    <p class="mc-page-subtitle">
+        View your prescribed medicines and treatment instructions.
     </p>
 
-    <p>
-        <strong>Phone:</strong>
-        {{ prescription.appointment.patient.phone }}
-    </p>
+</div>
 
-    <!-- ==========================================
-         DOCTOR INFORMATION
-         ========================================== -->
 
-    <h3>Doctor</h3>
+<!-- ==========================================
+     PRESCRIPTION SUMMARY
+========================================== -->
 
-    <p>
-        <strong>Name:</strong>
-        {{ prescription.appointment.doctor.user.name }}
-    </p>
+<div class="mc-grid-2">
 
-    <p>
-        <strong>Department:</strong>
-        {{ prescription.appointment.doctor.department.name }}
-    </p>
+    <div class="mc-card">
 
-    <!-- ==========================================
-         APPOINTMENT
-         ========================================== -->
+        <h2>
+            <i class="bi bi-person-circle"></i>
+            Patient
+        </h2>
 
-    <h3>Appointment</h3>
+        <div class="prescription-info">
 
-    <p>
-        <strong>Date:</strong>
-        {{ prescription.appointment.appointment_date }}
-    </p>
+            <span>Patient Name</span>
 
-    <p>
-        <strong>Time:</strong>
-        {{ prescription.appointment.appointment_time }}
-    </p>
+            <strong>
+                {{ prescription.appointment.patient.name }}
+            </strong>
 
-    <!-- ==========================================
-         DIAGNOSIS
-         ========================================== -->
+        </div>
 
-    <h3>Diagnosis</h3>
+        <div class="prescription-info">
 
-    <p>
-        {{ prescription.diagnosis }}
-    </p>
+            <span>Doctor</span>
 
-    <!-- ==========================================
-         MEDICINES
-         ========================================== -->
+            <strong>
+                {{ prescription.appointment.doctor.user.name }}
+            </strong>
 
-    <h3>Medicines</h3>
+        </div>
+
+    </div>
+
+
+    <div class="mc-card">
+
+        <h2>
+            <i class="bi bi-calendar-check"></i>
+            Appointment
+        </h2>
+
+        <div class="prescription-info">
+
+            <span>Date</span>
+
+            <strong>
+                {{ prescription.appointment.appointment_date }}
+            </strong>
+
+        </div>
+
+        <div class="prescription-info">
+
+            <span>Time</span>
+
+            <strong>
+                {{ prescription.appointment.appointment_time }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     DIAGNOSIS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-clipboard2-pulse"></i>
+        Diagnosis
+    </h2>
+
+    <div class="prescription-text">
+
+        {{ prescription.diagnosis|default:"No diagnosis provided." }}
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     MEDICINES
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-capsule"></i>
+        Prescribed Medicines
+    </h2>
+
 
     {% if prescription.items.all %}
 
-        {% for item in prescription.items.all %}
+        <div class="medicine-list">
 
-            <hr>
+            {% for item in prescription.items.all %}
 
-            <h4>
-                {{ item.medicine.name }}
-            </h4>
+                <div class="medicine-card">
 
-            <p>
-                <strong>Dosage:</strong>
-                {{ item.dosage }}
-            </p>
+                    <div class="medicine-icon">
 
-            <p>
-                <strong>Frequency:</strong>
-                {{ item.frequency }}
-            </p>
+                        <i class="bi bi-capsule-pill"></i>
 
-            <p>
-                <strong>Duration:</strong>
-                {{ item.duration }}
-            </p>
+                    </div>
 
-            <p>
-                <strong>Instructions:</strong>
-                {{ item.instructions }}
-            </p>
+                    <div class="medicine-content">
 
-        {% endfor %}
+                        <h3>
+                            {{ item.medicine.name }}
+                        </h3>
 
-    {% else %}
+                        {% if item.medicine.dosage_form %}
 
-        <p>
-            No medicines prescribed.
-        </p>
+                            <p class="medicine-form">
+
+                                {{ item.medicine.dosage_form }}
+
+                            </p>
+
+                        {% endif %}
+
+                        <div class="medicine-details">
+
+                            <div>
+
+                                <span>Dosage</span>
+
+                                <strong>
+                                    {{ item.dosage }}
+                                </strong>
+
+                            </div>
+
+                            <div>
+
+                                <span>Frequency</span>
+
+                                <strong>
+                                    {{ item.frequency }}
+                                </strong>
+
+                            </div>
+
+                            <div>
+
+                                <span>Duration</span>
+
+                                <strong>
+                                    {{ item.duration }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                        {% if item.instructions %}
+
+                            <div class="medicine-instructions">
+
+                                <i class="bi bi-info-circle"></i>
+
+                                {{ item.instructions }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="mc-empty">
+
+                    <i class="bi bi-capsule"
+                       style="font-size:40px;color:var(--purple);">
+                    </i>
+
+                    <h3>No Medicines</h3>
+
+                    <p>
+                        No medicines were prescribed.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
 
     {% endif %}
 
-    <!-- ==========================================
-         DOCTOR NOTES
-         ========================================== -->
+</div>
 
-    <h3>Doctor Notes</h3>
 
-    <p>
+<!-- ==========================================
+     NOTES
+========================================== -->
+
+{% if prescription.notes %}
+
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-journal-text"></i>
+        Doctor's Notes
+    </h2>
+
+    <div class="prescription-text">
+
         {{ prescription.notes }}
-    </p>
-        <!-- ==========================================
-        NAVIGATION
-        ========================================== -->
 
-    {% if request.user.role == 'DOCTOR' %}
+    </div>
 
-        <p>
-            <a
-                href="{% url 'edit_prescription' prescription.id %}"
-            >
-                Edit Prescription
-            </a>
-        </p>
+</div>
 
-        <p>
-            <a href="{% url 'doctor_appointments' %}">
-                Doctor Appointments
-            </a>
-        </p>
+{% endif %}
 
-    {% elif request.user.role == 'PATIENT' %}
 
-        <p>
-            <a href="{% url 'appointment_history' %}">
-                My Appointments
-            </a>
-        </p>
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
 
-    {% endif %}
+<div class="prescription-navigation">
 
-    
+    <a
+        href="{% url 'appointment_history' %}"
+        class="mc-btn mc-btn-outline"
+    >
 
-</body>
+        <i class="bi bi-arrow-left"></i>
 
-</html>
+        My Appointments
+
+    </a>
+
+    <a
+        href="{% url 'patient_dashboard' %}"
+        class="mc-btn mc-btn-outline"
+    >
+
+        <i class="bi bi-grid"></i>
+
+        Patient Dashboard
+
+    </a>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   PRESCRIPTION INFO
+========================================== */
+
+.prescription-info {
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+.prescription-info:last-child {
+
+    border-bottom: none;
+
+}
+
+.prescription-info span {
+
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--text-light);
+
+    margin-bottom: 5px;
+
+}
+
+.prescription-info strong {
+
+    color: var(--text-dark);
+
+}
+
+
+/* ==========================================
+   PRESCRIPTION TEXT
+========================================== */
+
+.prescription-text {
+
+    padding: 18px;
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+    color: var(--text-medium);
+
+    line-height: 1.7;
+
+}
+
+
+/* ==========================================
+   MEDICINES
+========================================== */
+
+.medicine-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+
+.medicine-card {
+
+    display: flex;
+
+    gap: 16px;
+
+    padding: 20px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+    background: var(--page-background);
+
+}
+
+
+.medicine-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    border-radius: 50%;
+
+    background: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.medicine-icon i {
+
+    font-size: 26px;
+
+    color: var(--purple);
+
+}
+
+
+.medicine-content {
+
+    flex: 1;
+
+}
+
+
+.medicine-content h3 {
+
+    margin: 0 0 3px;
+
+    color: var(--text-dark);
+
+}
+
+
+.medicine-form {
+
+    margin: 0 0 14px;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+
+}
+
+
+.medicine-details {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.medicine-details span {
+
+    display: block;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+
+}
+
+
+.medicine-details strong {
+
+    color: var(--text-dark);
+
+    font-size: 14px;
+
+}
+
+
+.medicine-instructions {
+
+    margin-top: 15px;
+
+    padding: 10px 12px;
+
+    background: var(--white);
+
+    border-radius: var(--radius-small);
+
+    color: var(--text-medium);
+
+    font-size: 13px;
+
+}
+
+
+.medicine-instructions i {
+
+    color: var(--purple);
+
+    margin-right: 5px;
+
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.prescription-navigation {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+
+.prescription-navigation .mc-btn {
+
+    width: auto;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .medicine-card {
+
+        flex-direction: column;
+
+    }
+
+    .medicine-details {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .prescription-navigation {
+
+        flex-direction: column;
+
+    }
+
+    .prescription-navigation .mc-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

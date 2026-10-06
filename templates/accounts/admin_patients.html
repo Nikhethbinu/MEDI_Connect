@@ -1,161 +1,126 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-    <title>MediConnect - Patient Management</title>
+{% block title %}MediConnect - Manage Patients{% endblock %}
 
-</head>
+{% block content %}
 
-<body>
+<div class="mc-page-header">
+    <h1 class="mc-page-title">Manage Patients</h1>
+    <p class="mc-page-subtitle">
+        View and manage registered patients.
+    </p>
+</div>
 
-<h1>MediConnect</h1>
 
-<h2>Patient Management</h2>
+<!-- Patient Statistics -->
+<div class="mc-grid mc-grid-3">
 
-<hr>
-
-<!-- ==========================================
-     ADMIN NAVIGATION
-========================================== -->
-
-<p>
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-</p>
-
-<hr>
-
-<!-- ==========================================
-     SEARCH PATIENTS
-========================================== -->
-
-<h3>Search Patients</h3>
-
-<form method="GET">
-
-    <input
-        type="text"
-        name="search"
-        value="{{ search_query }}"
-        placeholder="Search by name, username, phone or email"
-    >
-
-    <button type="submit">
-        Search
-    </button>
-
-    {% if search_query %}
-        <a href="{% url 'admin_patients' %}">
-            Clear Search
-        </a>
-    {% endif %}
-
-</form>
-
-<hr>
-
-<!-- ==========================================
-     PATIENT COUNT
-========================================== -->
-
-<h3>
-    Total Patients: {{ patients|length }}
-</h3>
-
-<!-- ==========================================
-     PATIENT LIST
-========================================== -->
-
-{% if patients %}
-
-    {% for patient in patients %}
-
-        <div>
-
-            <h3>
-                Patient {{ forloop.counter }}
-            </h3>
-
-            <p>
-                <strong>Name:</strong>
-                {{ patient.user.name }}
-            </p>
-
-            <p>
-                <strong>Username:</strong>
-                {{ patient.user.username }}
-            </p>
-
-            <p>
-                <strong>Phone:</strong>
-                {{ patient.user.phone }}
-            </p>
-
-            <p>
-                <strong>Email:</strong>
-                {{ patient.user.email }}
-            </p>
-
-            <p>
-                <strong>Date of Birth:</strong>
-                {{ patient.date_of_birth|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Gender:</strong>
-                {{ patient.gender|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Blood Group:</strong>
-                {{ patient.blood_group|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Address:</strong>
-                {{ patient.address|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Emergency Contact:</strong>
-                {{ patient.emergency_contact_name|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Emergency Phone:</strong>
-                {{ patient.emergency_contact_phone|default:"Not provided" }}
-            </p>
-
+    <div class="mc-stat-card">
+        <div class="mc-stat-label">
+            <i class="bi bi-people"></i>
+            Total Patients
         </div>
 
-        <hr>
+        <div class="mc-stat-value">
+            {{ patients|length }}
+        </div>
+    </div>
 
-    {% endfor %}
+</div>
 
-{% else %}
 
-    <p>
-        No patients found.
-    </p>
+<!-- Patients Table -->
+<div class="mc-card">
 
-{% endif %}
+    <div class="mc-section-header">
+        <div>
+            <h2>
+                <i class="bi bi-person-vcard"></i>
+                Patient List
+            </h2>
 
-<!-- ==========================================
-     FOOTER NAVIGATION
-========================================== -->
+            <p>
+                Registered patient accounts in MediConnect.
+            </p>
+        </div>
 
-<p>
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-</p>
+        <a href="{% url 'admin_dashboard' %}" class="mc-btn mc-btn-outline">
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
+        </a>
+    </div>
 
-<p>
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
-</p>
 
-</body>
-</html>
+    {% if patients %}
+
+    <div class="mc-table-wrapper">
+
+        <table class="mc-table">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Registered</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for patient in patients %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ patient.name }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ patient.username }}
+                    </td>
+
+                    <td>
+                        {{ patient.email|default:"Not provided" }}
+                    </td>
+
+                    <td>
+                        {{ patient.phone|default:"Not provided" }}
+                    </td>
+
+                    <td>
+                        {{ patient.date_joined|date:"d M Y" }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="mc-empty">
+
+        <i class="bi bi-people"></i>
+
+        <h3>No Patients Found</h3>
+
+        <p>
+            No patient accounts are currently registered.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

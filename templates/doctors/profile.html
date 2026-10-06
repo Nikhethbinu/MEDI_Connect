@@ -1,56 +1,458 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+MediConnect - Doctor Profile
+{% endblock %}
 
-    <title>MediConnect - Doctor Profile</title>
+{% block content %}
 
-</head>
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
 
-<body>
+<div class="mc-page-header">
 
-    <!-- ==========================================
-         DOCTOR PROFILE
-         ========================================== -->
+    <h1 class="mc-page-title">
+        My Profile
+    </h1>
 
-    <h1>MediConnect</h1>
-
-    <h2>Doctor Profile</h2>
-
-    <p>
-        Welcome, Dr. {{ user.name }}
+    <p class="mc-page-subtitle">
+        Manage your professional information.
     </p>
 
-
-    <!-- ==========================================
-         PROFILE FORM
-         ========================================== -->
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <button type="submit">
-            Save Profile
-        </button>
-
-    </form>
+</div>
 
 
-    <br>
+<!-- ==========================================
+     PROFILE
+========================================== -->
 
-    <a href="{% url 'doctor_dashboard' %}">
-        Back to Dashboard
+<div class="mc-card">
+
+    <div class="doctor-profile-header">
+
+        <div class="doctor-profile-avatar">
+
+            <i class="bi bi-person-circle"></i>
+
+        </div>
+
+
+        <div>
+
+            <h2>
+                {{ doctor.user.name }}
+            </h2>
+
+            <p>
+                {{ doctor.specialization }}
+            </p>
+
+            {% if doctor.department %}
+
+                <span class="mc-badge">
+
+                    <i class="bi bi-hospital"></i>
+
+                    {{ doctor.department.name }}
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     PROFESSIONAL DETAILS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-person-badge"></i>
+
+        Professional Details
+
+    </h2>
+
+
+    <div class="profile-details-grid">
+
+
+        <div>
+
+            <span>Full Name</span>
+
+            <strong>
+                {{ doctor.user.name }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>Specialization</span>
+
+            <strong>
+                {{ doctor.specialization }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>Qualification</span>
+
+            <strong>
+                {{ doctor.qualification }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>Experience</span>
+
+            <strong>
+                {{ doctor.experience_years }} Years
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>Department</span>
+
+            <strong>
+
+                {% if doctor.department %}
+
+                    {{ doctor.department.name }}
+
+                {% else %}
+
+                    Not Assigned
+
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>Consultation Fee</span>
+
+            <strong class="profile-fee">
+
+                ₹{{ doctor.consultation_fee }}
+
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     BIO
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-info-circle"></i>
+
+        About Me
+
+    </h2>
+
+
+    <p>
+
+        {{ doctor.bio|default:"No professional bio has been added yet." }}
+
+    </p>
+
+</div>
+
+
+<!-- ==========================================
+     AVAILABILITY STATUS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-toggle-on"></i>
+
+        Availability
+
+    </h2>
+
+
+    {% if doctor.is_available %}
+
+        <span class="mc-badge mc-badge-success">
+
+            <i class="bi bi-check-circle"></i>
+
+            Currently Available
+
+        </span>
+
+    {% else %}
+
+        <span class="mc-badge mc-badge-danger">
+
+            <i class="bi bi-x-circle"></i>
+
+            Currently Unavailable
+
+        </span>
+
+    {% endif %}
+
+
+</div>
+
+<!-- ==========================================
+     ACTIONS
+========================================== -->
+
+<div class="profile-actions">
+
+    <a
+        href="{% url 'edit_doctor_profile' %}"
+        class="mc-btn"
+    >
+
+        <i class="bi bi-pencil"></i>
+
+        Edit Profile
+
     </a>
 
-    <br><br>
 
-    <a href="{% url 'logout' %}">
-        Logout
+    <a
+        href="{% url 'doctor_availability' %}"
+        class="mc-btn"
+    >
+
+        <i class="bi bi-clock"></i>
+
+        Manage Availability
+
     </a>
 
-</body>
 
-</html>
+    <a
+        href="{% url 'doctor_dashboard' %}"
+        class="mc-btn mc-btn-outline"
+    >
+
+        <i class="bi bi-grid"></i>
+
+        Dashboard
+
+    </a>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   PROFILE HEADER
+========================================== */
+
+.doctor-profile-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.doctor-profile-header h2 {
+
+    margin-bottom: 5px;
+
+}
+
+
+.doctor-profile-header p {
+
+    margin-bottom: 10px;
+
+    color: var(--purple);
+
+    font-weight: 600;
+
+}
+
+
+.doctor-profile-avatar {
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.doctor-profile-avatar i {
+
+    font-size: 55px;
+
+    color: var(--purple);
+
+}
+
+
+/* ==========================================
+   DETAILS
+========================================== */
+
+.profile-details-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.profile-details-grid > div {
+
+    padding: 16px;
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-small);
+
+}
+
+
+.profile-details-grid span {
+
+    display: block;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.profile-details-grid strong {
+
+    color: var(--text-dark);
+
+}
+
+
+.profile-fee {
+
+    color: var(--purple) !important;
+
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.profile-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+
+.profile-actions .mc-btn {
+
+    width: auto;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .doctor-profile-header {
+
+        flex-direction: column;
+
+        text-align: center;
+
+    }
+
+
+    .profile-details-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .profile-actions {
+
+        flex-direction: column;
+
+    }
+
+
+    .profile-actions .mc-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

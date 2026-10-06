@@ -1,119 +1,567 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
 
-    <title>
-        MediConnect - Book Appointment
-    </title>
+{% block title %}
 
-</head>
+    MediConnect - Book Appointment
 
-<body>
+{% endblock %}
 
-    <!-- ==========================================
-         BOOK APPOINTMENT
-         ========================================== -->
 
-    <h1>MediConnect</h1>
+{% block content %}
 
-    <h2>Book Appointment</h2>
+
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+
+        Book Appointment
+
+    </h1>
+
+
+    <p class="mc-page-subtitle">
+
+        Schedule your consultation with
+        {{ doctor.user.name }}.
+
+    </p>
+
+</div>
+
+
+<div class="appointment-book-layout">
 
 
     <!-- ==========================================
          DOCTOR INFORMATION
-         ========================================== -->
+    ========================================== -->
 
-    <h3>
-        Dr. {{ doctor.user.name }}
-    </h3>
-
-    <p>
-        Department:
-        {{ doctor.department.name }}
-    </p>
-
-    <p>
-        Specialization:
-        {{ doctor.specialization }}
-    </p>
-
-    <p>
-        Consultation Fee:
-        ₹{{ doctor.consultation_fee }}
-    </p>
+    <div class="mc-card doctor-summary-card">
 
 
-    <!-- ==========================================
-         DOCTOR AVAILABILITY
-         ========================================== -->
+        <div class="doctor-summary-avatar">
 
-    <h3>Doctor Availability</h3>
+            <i class="bi bi-person-circle"></i>
 
-    {% if availabilities %}
+        </div>
 
-        <ul>
 
-            {% for availability in availabilities %}
+        <h2>
 
-                <li>
-                    {{ availability.get_day_display }}
-                    :
-                    {{ availability.start_time }}
-                    -
-                    {{ availability.end_time }}
-                </li>
+            {{ doctor.user.name }}
 
-            {% endfor %}
+        </h2>
 
-        </ul>
 
-    {% else %}
+        <p class="doctor-profile-specialization">
 
-        <p>
-            This doctor has no available timings.
+            {{ doctor.specialization }}
+
         </p>
 
-    {% endif %}
+
+        {% if doctor.department %}
+
+            <span class="mc-badge">
+
+                <i class="bi bi-hospital"></i>
+
+                {{ doctor.department.name }}
+
+            </span>
+
+        {% endif %}
+
+
+        <div class="doctor-summary-details">
+
+
+            <div>
+
+                <i class="bi bi-mortarboard"></i>
+
+                <span>
+
+                    {{ doctor.qualification }}
+
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="bi bi-briefcase"></i>
+
+                <span>
+
+                    {{ doctor.experience_years }}
+                    years experience
+
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="bi bi-currency-rupee"></i>
+
+                <span>
+
+                    ₹{{ doctor.consultation_fee }}
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
 
 
     <!-- ==========================================
          APPOINTMENT FORM
-         ========================================== -->
+    ========================================== -->
 
-    <h3>Appointment Details</h3>
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        {{ form.non_field_errors }}
-
-        {{ form.as_p }}
-
-        <button type="submit">
-            Book Appointment
-        </button>
-
-    </form>
+    <div class="mc-form-card">
 
 
-    <!-- ==========================================
-         NAVIGATION
-         ========================================== -->
+        <h2>
 
-    <br>
+            <i class="bi bi-calendar-plus"></i>
 
-    <a href="{% url 'doctor_detail' doctor.id %}">
-        Back to Doctor Details
-    </a>
+            Appointment Details
 
-    <br><br>
+        </h2>
 
-    <a href="{% url 'patient_dashboard' %}">
-        Patient Dashboard
-    </a>
 
-</body>
+        <p class="form-description">
 
-</html>
+            Select your preferred date and time.
+
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- ==========================================
+                 FORM ERRORS
+            ========================================== -->
+
+            {% if form.non_field_errors %}
+
+                <div class="form-error-box">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ==========================================
+                 APPOINTMENT DATE
+            ========================================== -->
+
+            <div class="mc-form-group">
+
+                <label
+                    for="{{ form.appointment_date.id_for_label }}"
+                    class="mc-form-label"
+                >
+
+                    Appointment Date
+
+                </label>
+
+
+                {{ form.appointment_date }}
+
+
+                {% for error in form.appointment_date.errors %}
+
+                    <small class="form-error">
+
+                        {{ error }}
+
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ==========================================
+                 APPOINTMENT TIME
+            ========================================== -->
+
+            <div class="mc-form-group">
+
+                <label
+                    for="{{ form.appointment_time.id_for_label }}"
+                    class="mc-form-label"
+                >
+
+                    Appointment Time
+
+                </label>
+
+
+                {{ form.appointment_time }}
+
+
+                {% for error in form.appointment_time.errors %}
+
+                    <small class="form-error">
+
+                        {{ error }}
+
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ==========================================
+                 REASON
+            ========================================== -->
+
+            <div class="mc-form-group">
+
+                <label
+                    for="{{ form.reason.id_for_label }}"
+                    class="mc-form-label"
+                >
+
+                    Reason for Appointment
+
+                </label>
+
+
+                {{ form.reason }}
+
+
+                {% for error in form.reason.errors %}
+
+                    <small class="form-error">
+
+                        {{ error }}
+
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ==========================================
+                 SUBMIT
+            ========================================== -->
+
+            <button
+                type="submit"
+                class="mc-btn mc-btn-large"
+            >
+
+                <i class="bi bi-calendar-check"></i>
+
+                Book Appointment
+
+            </button>
+
+
+        </form>
+
+
+        <!-- ==========================================
+             BACK TO DOCTOR
+        ========================================== -->
+
+        <a
+            href="{% url 'doctor_detail' doctor.id %}"
+            class="mc-btn mc-btn-outline appointment-back-btn"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back to Doctor
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+
+<style>
+
+/* ==========================================
+   BOOKING LAYOUT
+========================================== */
+
+.appointment-book-layout {
+
+    display: grid;
+
+    grid-template-columns: 0.85fr 1.15fr;
+
+    gap: 25px;
+
+    align-items: start;
+
+}
+
+
+/* ==========================================
+   DOCTOR SUMMARY
+========================================== */
+
+.doctor-summary-card {
+
+    text-align: center;
+
+}
+
+
+.doctor-summary-avatar {
+
+    width: 95px;
+
+    height: 95px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    background-color: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.doctor-summary-avatar i {
+
+    font-size: 60px;
+
+    color: var(--purple);
+
+}
+
+
+.doctor-summary-card h2 {
+
+    margin-bottom: 5px;
+
+}
+
+
+.doctor-summary-details {
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+
+    text-align: left;
+
+}
+
+
+.doctor-summary-details div {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.doctor-summary-details i {
+
+    color: var(--teal);
+
+    margin-top: 4px;
+
+}
+
+
+.doctor-summary-details span {
+
+    color: var(--text-medium);
+
+    font-size: 14px;
+
+}
+
+
+/* ==========================================
+   FORM HEADING
+========================================== */
+
+.mc-form-card h2 {
+
+    margin-bottom: 8px;
+
+}
+
+
+.mc-form-card h2 i {
+
+    color: var(--purple);
+
+}
+
+
+.form-description {
+
+    margin-bottom: 25px;
+
+}
+
+
+/* ==========================================
+   DJANGO FORM FIELDS
+========================================== */
+
+.mc-form-card input,
+.mc-form-card textarea,
+.mc-form-card select {
+
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-small);
+
+    background-color: var(--white);
+
+    color: var(--text-dark);
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    outline: none;
+
+}
+
+
+.mc-form-card input:focus,
+.mc-form-card textarea:focus,
+.mc-form-card select:focus {
+
+    border-color: var(--teal);
+
+    box-shadow:
+        0 0 0 3px rgba(40, 106, 118, 0.10);
+
+}
+
+
+/* ==========================================
+   FORM TEXTAREA
+========================================== */
+
+.mc-form-card textarea {
+
+    min-height: 120px;
+
+    resize: vertical;
+
+}
+
+
+/* ==========================================
+   FORM ERRORS
+========================================== */
+
+.form-error-box {
+
+    padding: 12px 15px;
+
+    margin-bottom: 20px;
+
+    border-radius: var(--radius-small);
+
+    background-color: #FCECEC;
+
+    color: var(--danger);
+
+}
+
+
+.form-error {
+
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--danger);
+
+    font-size: 13px;
+
+}
+
+
+/* ==========================================
+   BACK BUTTON
+========================================== */
+
+.appointment-back-btn {
+
+    margin-top: 12px;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .appointment-book-layout {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+</style>
+
+
+{% endblock %}

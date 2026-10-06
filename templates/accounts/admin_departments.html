@@ -1,371 +1,115 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}MediConnect - Manage Departments{% endblock %}
 
-    <title>MediConnect - Appointment Management</title>
+{% block content %}
 
-</head>
+<div class="mc-page-header">
 
-<body>
+    <h1 class="mc-page-title">
+        Manage Departments
+    </h1>
 
-<h1>MediConnect</h1>
-
-<h2>Appointment Management</h2>
-
-<hr>
-
-<!-- ==========================================
-     NAVIGATION
-========================================== -->
-
-<p>
-
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-
-</p>
-
-<hr>
-
-<!-- ==========================================
-     SEARCH AND FILTER
-========================================== -->
-
-<h3>Search and Filter Appointments</h3>
-
-<form method="GET">
-
-    <!-- ==========================================
-         SEARCH
-    ========================================== -->
-
-    <p>
-
-        <label>
-            Search:
-        </label>
-
-        <input
-            type="text"
-            name="search"
-            value="{{ search_query }}"
-            placeholder="Patient, doctor, phone, specialization..."
-        >
-
+    <p class="mc-page-subtitle">
+        View and manage hospital departments.
     </p>
 
-    <!-- ==========================================
-         STATUS FILTER
-    ========================================== -->
+</div>
 
-    <p>
 
-        <label>
-            Status:
-        </label>
+<div class="mc-card">
 
-        <select name="status">
-
-            <option value="">
-                All Statuses
-            </option>
-
-            <option
-                value="PENDING"
-                {% if status_filter == 'PENDING' %}selected{% endif %}
-            >
-                Pending
-            </option>
-
-            <option
-                value="CONFIRMED"
-                {% if status_filter == 'CONFIRMED' %}selected{% endif %}
-            >
-                Confirmed
-            </option>
-
-            <option
-                value="REJECTED"
-                {% if status_filter == 'REJECTED' %}selected{% endif %}
-            >
-                Rejected
-            </option>
-
-            <option
-                value="CANCELLED"
-                {% if status_filter == 'CANCELLED' %}selected{% endif %}
-            >
-                Cancelled
-            </option>
-
-            <option
-                value="COMPLETED"
-                {% if status_filter == 'COMPLETED' %}selected{% endif %}
-            >
-                Completed
-            </option>
-
-        </select>
-
-    </p>
-
-    <!-- ==========================================
-         DATE FILTER
-    ========================================== -->
-
-    <p>
-
-        <label>
-            Appointment Date:
-        </label>
-
-        <input
-            type="date"
-            name="date"
-            value="{{ date_filter }}"
-        >
-
-    </p>
-
-    <button type="submit">
-        Apply Filters
-    </button>
-
-    {% if search_query or status_filter or date_filter %}
-
-        <a href="{% url 'admin_appointments' %}">
-            Clear Filters
-        </a>
-
-    {% endif %}
-
-</form>
-
-<hr>
-
-<!-- ==========================================
-     APPOINTMENT COUNT
-========================================== -->
-
-<h3>
-
-    Total Appointments:
-    {{ appointments|length }}
-
-</h3>
-
-<!-- ==========================================
-     APPOINTMENT LIST
-========================================== -->
-
-{% if appointments %}
-
-    {% for appointment in appointments %}
+    <div class="mc-section-header">
 
         <div>
 
-            <h3>
-                Appointment {{ forloop.counter }}
-            </h3>
-
-            <!-- ==========================================
-                 PATIENT INFORMATION
-            ========================================== -->
-
-            <h4>
-                Patient Information
-            </h4>
+            <h2>
+                <i class="bi bi-building"></i>
+                Department List
+            </h2>
 
             <p>
-
-                <strong>
-                    Name:
-                </strong>
-
-                {{ appointment.patient.name }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Username:
-                </strong>
-
-                {{ appointment.patient.username }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Phone:
-                </strong>
-
-                {{ appointment.patient.phone }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Email:
-                </strong>
-
-                {{ appointment.patient.email }}
-
-            </p>
-
-            <!-- ==========================================
-                 DOCTOR INFORMATION
-            ========================================== -->
-
-            <h4>
-                Doctor Information
-            </h4>
-
-            <p>
-
-                <strong>
-                    Doctor:
-                </strong>
-
-                {{ appointment.doctor.user.name }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Specialization:
-                </strong>
-
-                {{ appointment.doctor.specialization }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Department:
-                </strong>
-
-                {% if appointment.doctor.department %}
-
-                    {{ appointment.doctor.department.name }}
-
-                {% else %}
-
-                    Not assigned
-
-                {% endif %}
-
-            </p>
-
-            <!-- ==========================================
-                 APPOINTMENT INFORMATION
-            ========================================== -->
-
-            <h4>
-                Appointment Information
-            </h4>
-
-            <p>
-
-                <strong>
-                    Date:
-                </strong>
-
-                {{ appointment.appointment_date }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Time:
-                </strong>
-
-                {{ appointment.appointment_time }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Reason:
-                </strong>
-
-                {{ appointment.reason|default:"No reason provided." }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Status:
-                </strong>
-
-                {{ appointment.get_status_display }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Created:
-                </strong>
-
-                {{ appointment.created_at }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Last Updated:
-                </strong>
-
-                {{ appointment.updated_at }}
-
+                Medical departments available in MediConnect.
             </p>
 
         </div>
 
-        <hr>
 
-    {% endfor %}
+        <a href="{% url 'admin_dashboard' %}"
+           class="mc-btn mc-btn-outline">
 
-{% else %}
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
 
-    <p>
-        No appointments found.
-    </p>
+        </a>
 
-{% endif %}
+    </div>
 
-<!-- ==========================================
-     FOOTER NAVIGATION
-========================================== -->
 
-<p>
+    {% if departments %}
 
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
+    <div class="mc-grid mc-grid-2">
 
-</p>
+        {% for department in departments %}
 
-<p>
+        <div class="mc-card">
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
+            <h3>
+                <i class="bi bi-hospital"></i>
+                {{ department.name }}
+            </h3>
 
-</p>
+            <p>
 
-</body>
+                {% if department.description %}
+                    {{ department.description }}
+                {% else %}
+                    No description available.
+                {% endif %}
 
-</html>
+            </p>
+
+
+            <div style="margin-top: 15px;">
+
+                {% if department.is_active %}
+
+                <span class="mc-badge mc-badge-success">
+                    Active
+                </span>
+
+                {% else %}
+
+                <span class="mc-badge mc-badge-danger">
+                    Inactive
+                </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="mc-empty">
+
+        <i class="bi bi-building"></i>
+
+        <h3>No Departments Found</h3>
+
+        <p>
+            No departments are currently available.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

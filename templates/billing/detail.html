@@ -1,138 +1,452 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+MediConnect - Payment Details
+{% endblock %}
 
-    <title>MediConnect - Payment Details</title>
+{% block content %}
 
-</head>
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
 
-<body>
+<div class="mc-page-header">
 
-    <h1>MediConnect</h1>
+    <h1 class="mc-page-title">
+        Payment Details
+    </h1>
 
-    <h2>Payment / Bill</h2>
-
-    <hr>
-
-
-    <!-- ==========================================
-         PATIENT
-         ========================================== -->
-
-    <h3>Patient Information</h3>
-
-    <p>
-        <strong>Name:</strong>
-        {{ payment.patient.name }}
+    <p class="mc-page-subtitle">
+        View your consultation billing information.
     </p>
 
-    <p>
-        <strong>Phone:</strong>
-        {{ payment.patient.phone }}
-    </p>
+</div>
 
 
-    <hr>
+<!-- ==========================================
+     PAYMENT STATUS
+========================================== -->
 
+<div class="mc-card payment-status-card">
 
-    <!-- ==========================================
-         APPOINTMENT
-         ========================================== -->
+    {% if payment.status == "PAID" %}
 
-    <h3>Appointment Information</h3>
+        <div class="payment-status-icon success">
 
-    <p>
-        <strong>Date:</strong>
-        {{ payment.appointment.appointment_date }}
-    </p>
+            <i class="bi bi-check-circle"></i>
 
-    <p>
-        <strong>Doctor:</strong>
-        {{ payment.appointment.doctor.user.name }}
-    </p>
+        </div>
 
-
-    <hr>
-
-
-    <!-- ==========================================
-         BILL DETAILS
-         ========================================== -->
-
-    <h3>Bill Details</h3>
-
-    <p>
-        <strong>Consultation Fee:</strong>
-        ₹{{ payment.consultation_fee }}
-    </p>
-
-    <p>
-        <strong>Additional Charges:</strong>
-        ₹{{ payment.additional_charges }}
-    </p>
-
-    <p>
-        <strong>Total Amount:</strong>
-        ₹{{ payment.total_amount }}
-    </p>
-
-
-    <hr>
-
-
-    <!-- ==========================================
-         PAYMENT DETAILS
-         ========================================== -->
-
-    <h3>Payment Information</h3>
-
-    <p>
-        <strong>Status:</strong>
-        {{ payment.get_status_display }}
-    </p>
-
-    <p>
-        <strong>Payment Method:</strong>
-        {{ payment.get_payment_method_display|default:"Not selected" }}
-    </p>
-
-    <p>
-        <strong>Transaction ID:</strong>
-        {{ payment.transaction_id|default:"Not available" }}
-    </p>
-
-    {% if payment.payment_date %}
+        <h2>
+            Payment Successful
+        </h2>
 
         <p>
-            <strong>Payment Date:</strong>
-            {{ payment.payment_date }}
+            Your payment has been successfully recorded.
         </p>
 
+    {% elif payment.status == "PENDING" %}
+
+        <div class="payment-status-icon warning">
+
+            <i class="bi bi-hourglass-split"></i>
+
+        </div>
+
+        <h2>
+            Payment Pending
+        </h2>
+
+        <p>
+            This payment is currently pending.
+        </p>
+
+    {% else %}
+
+        <div class="payment-status-icon danger">
+
+            <i class="bi bi-x-circle"></i>
+
+        </div>
+
+        <h2>
+            {{ payment.get_status_display }}
+        </h2>
+
     {% endif %}
 
+</div>
 
-    <hr>
+
+<!-- ==========================================
+     BILLING INFORMATION
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-receipt"></i>
+
+        Billing Information
+
+    </h2>
 
 
-    <!-- ==========================================
-         NAVIGATION
-         ========================================== -->
+    <div class="billing-grid">
 
-    {% if request.user.role == 'DOCTOR' %}
 
-        <a href="{% url 'doctor_appointments' %}">
-            Doctor Appointments
-        </a>
+        <div class="billing-item">
 
-    {% elif request.user.role == 'PATIENT' %}
+            <span>Patient</span>
 
-        <a href="{% url 'patient_payments' %}">
-            My Payments
-        </a>
+            <strong>
+                {{ payment.patient.name }}
+            </strong>
 
-    {% endif %}
+        </div>
 
-</body>
 
-</html>
+        <div class="billing-item">
+
+            <span>Doctor</span>
+
+            <strong>
+                {{ payment.appointment.doctor.user.name }}
+            </strong>
+
+        </div>
+
+
+        <div class="billing-item">
+
+            <span>Appointment Date</span>
+
+            <strong>
+                {{ payment.appointment.appointment_date }}
+            </strong>
+
+        </div>
+
+
+        <div class="billing-item">
+
+            <span>Appointment Time</span>
+
+            <strong>
+                {{ payment.appointment.appointment_time }}
+            </strong>
+
+        </div>
+
+
+        <div class="billing-item">
+
+            <span>Consultation Fee</span>
+
+            <strong>
+                ₹{{ payment.consultation_fee }}
+            </strong>
+
+        </div>
+
+
+        <div class="billing-item">
+
+            <span>Additional Charges</span>
+
+            <strong>
+                ₹{{ payment.additional_charges }}
+            </strong>
+
+        </div>
+
+
+        <div class="billing-item total">
+
+            <span>Total Amount</span>
+
+            <strong>
+                ₹{{ payment.total_amount }}
+            </strong>
+
+        </div>
+
+
+        <div class="billing-item">
+
+            <span>Payment Method</span>
+
+            <strong>
+
+                {% if payment.payment_method %}
+
+                    {{ payment.get_payment_method_display }}
+
+                {% else %}
+
+                    Not selected
+
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        {% if payment.transaction_id %}
+
+            <div class="billing-item">
+
+                <span>Transaction ID</span>
+
+                <strong>
+                    {{ payment.transaction_id }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<div class="payment-navigation">
+
+    <a
+        href="{% url 'patient_payments' %}"
+        class="mc-btn mc-btn-outline"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        My Payments
+
+    </a>
+
+
+    <a
+        href="{% url 'patient_dashboard' %}"
+        class="mc-btn mc-btn-outline"
+    >
+
+        <i class="bi bi-grid"></i>
+
+        Patient Dashboard
+
+    </a>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   PAYMENT STATUS
+========================================== */
+
+.payment-status-card {
+
+    text-align: center;
+
+}
+
+
+.payment-status-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.payment-status-icon i {
+
+    font-size: 42px;
+
+}
+
+
+.payment-status-icon.success {
+
+    background: #E8F7F0;
+
+    color: var(--success);
+
+}
+
+
+.payment-status-icon.warning {
+
+    background: #FFF4DF;
+
+    color: var(--warning);
+
+}
+
+
+.payment-status-icon.danger {
+
+    background: #FCECEC;
+
+    color: var(--danger);
+
+}
+
+
+.payment-status-card h2 {
+
+    margin-bottom: 6px;
+
+}
+
+
+.payment-status-card p {
+
+    margin: 0;
+
+    color: var(--text-medium);
+
+}
+
+
+/* ==========================================
+   BILLING GRID
+========================================== */
+
+.billing-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.billing-item {
+
+    padding: 16px;
+
+    border-radius: var(--radius-small);
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+}
+
+
+.billing-item span {
+
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--text-light);
+
+    margin-bottom: 5px;
+
+}
+
+
+.billing-item strong {
+
+    color: var(--text-dark);
+
+}
+
+
+.billing-item.total {
+
+    background: var(--purple-light);
+
+    border-color: #E7CDEB;
+
+}
+
+
+.billing-item.total strong {
+
+    color: var(--purple);
+
+    font-size: 20px;
+
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.payment-navigation {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+
+.payment-navigation .mc-btn {
+
+    width: auto;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .billing-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .payment-navigation {
+
+        flex-direction: column;
+
+    }
+
+    .payment-navigation .mc-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

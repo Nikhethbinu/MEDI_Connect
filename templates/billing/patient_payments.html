@@ -1,80 +1,439 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+MediConnect - My Payments
+{% endblock %}
 
-    <title>MediConnect - My Payments</title>
+{% block content %}
 
-</head>
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
 
-<body>
+<div class="mc-page-header">
 
-    <h1>MediConnect</h1>
+    <h1 class="mc-page-title">
+        My Payments
+    </h1>
 
-    <h2>My Payments</h2>
+    <p class="mc-page-subtitle">
+        View your consultation bills and payment history.
+    </p>
 
-    <hr>
+</div>
+
+
+<!-- ==========================================
+     PAYMENT LIST
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-credit-card"></i>
+
+        Payment History
+
+    </h2>
 
 
     {% if payments %}
 
-        {% for payment in payments %}
+        <div class="payment-list">
 
-            <div>
+            {% for payment in payments %}
 
-                <h3>
-                    Payment {{ forloop.counter }}
-                </h3>
+                <div class="payment-card">
 
-                <p>
-                    <strong>Date:</strong>
-                    {{ payment.appointment.appointment_date }}
-                </p>
+                    <!-- ==========================================
+                         PAYMENT ICON
+                    ========================================== -->
 
-                <p>
-                    <strong>Doctor:</strong>
-                    {{ payment.appointment.doctor.user.name }}
-                </p>
+                    <div class="payment-icon">
 
-                <p>
-                    <strong>Total:</strong>
-                    ₹{{ payment.total_amount }}
-                </p>
+                        <i class="bi bi-receipt"></i>
 
-                <p>
-                    <strong>Status:</strong>
-                    {{ payment.get_status_display }}
-                </p>
+                    </div>
 
-                <p>
-                    <a
-                        href="{% url 'payment_detail' payment.id %}"
-                    >
-                        View Bill
-                    </a>
-                </p>
 
-                <hr>
+                    <!-- ==========================================
+                         PAYMENT INFORMATION
+                    ========================================== -->
 
-            </div>
+                    <div class="payment-content">
 
-        {% endfor %}
+                        <h3>
+
+                            {{ payment.appointment.doctor.user.name }}
+
+                        </h3>
+
+
+                        <p>
+
+                            {{ payment.appointment.appointment_date }}
+
+                        </p>
+
+
+                        <div class="payment-details">
+
+                            <div>
+
+                                <span>Amount</span>
+
+                                <strong class="payment-amount">
+
+                                    ₹{{ payment.total_amount }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>Method</span>
+
+                                <strong>
+
+                                    {% if payment.payment_method %}
+
+                                        {{ payment.get_payment_method_display }}
+
+                                    {% else %}
+
+                                        Not selected
+
+                                    {% endif %}
+
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>Status</span>
+
+                                {% if payment.status == "PAID" %}
+
+                                    <span class="mc-badge mc-badge-success">
+
+                                        <i class="bi bi-check-circle"></i>
+
+                                        Paid
+
+                                    </span>
+
+                                {% elif payment.status == "PENDING" %}
+
+                                    <span class="mc-badge mc-badge-warning">
+
+                                        <i class="bi bi-hourglass-split"></i>
+
+                                        Pending
+
+                                    </span>
+
+                                {% elif payment.status == "FAILED" %}
+
+                                    <span class="mc-badge mc-badge-danger">
+
+                                        <i class="bi bi-x-circle"></i>
+
+                                        Failed
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="mc-badge mc-badge-danger">
+
+                                        {{ payment.get_status_display }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'payment_detail' payment.id %}"
+                            class="mc-btn payment-view-btn"
+                        >
+
+                            <i class="bi bi-eye"></i>
+
+                            View Payment
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
 
     {% else %}
 
-        <p>
-            No payment records found.
-        </p>
+        <!-- ==========================================
+             EMPTY STATE
+        ========================================== -->
+
+        <div class="mc-empty">
+
+            <i
+                class="bi bi-credit-card-2-front"
+                style="font-size:45px;color:var(--purple);"
+            ></i>
+
+            <h3>
+                No Payments
+            </h3>
+
+            <p>
+                You don't have any payment records yet.
+            </p>
+
+        </div>
 
     {% endif %}
 
+</div>
 
-    <br>
 
-    <a href="{% url 'dashboard' %}">
-        Back to Dashboard
+<!-- ==========================================
+     BACK
+========================================== -->
+
+<div style="margin-top:20px;">
+
+    <a
+        href="{% url 'patient_dashboard' %}"
+        class="mc-btn mc-btn-outline"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Patient Dashboard
+
     </a>
 
-</body>
+</div>
 
-</html>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   PAYMENT LIST
+========================================== */
+
+.payment-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+
+/* ==========================================
+   PAYMENT CARD
+========================================== */
+
+.payment-card {
+
+    display: flex;
+
+    gap: 18px;
+
+    padding: 20px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+    background: var(--white);
+
+}
+
+
+.payment-card:hover {
+
+    box-shadow: var(--shadow-small);
+
+}
+
+
+/* ==========================================
+   PAYMENT ICON
+========================================== */
+
+.payment-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    border-radius: 50%;
+
+    background: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.payment-icon i {
+
+    color: var(--purple);
+
+    font-size: 28px;
+
+}
+
+
+/* ==========================================
+   PAYMENT CONTENT
+========================================== */
+
+.payment-content {
+
+    flex: 1;
+
+}
+
+
+.payment-content h3 {
+
+    margin: 0 0 4px;
+
+    color: var(--text-dark);
+
+}
+
+
+.payment-content > p {
+
+    margin: 0 0 16px;
+
+    color: var(--text-medium);
+
+    font-size: 13px;
+
+}
+
+
+/* ==========================================
+   PAYMENT DETAILS
+========================================== */
+
+.payment-details {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    padding: 15px 0;
+
+    border-top: 1px solid var(--border);
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+.payment-details span {
+
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--text-light);
+
+    margin-bottom: 5px;
+
+}
+
+
+.payment-details strong {
+
+    color: var(--text-dark);
+
+}
+
+
+.payment-amount {
+
+    color: var(--purple) !important;
+
+    font-size: 17px;
+
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.payment-view-btn {
+
+    width: auto;
+
+    margin-top: 15px;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .payment-card {
+
+        flex-direction: column;
+
+    }
+
+    .payment-details {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .payment-view-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

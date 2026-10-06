@@ -1,79 +1,197 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
 
-    <title>MediConnect - Patient Dashboard</title>
+{% block title %}
 
-</head>
+    MediConnect - Patient Dashboard
 
-<body>
+{% endblock %}
 
-    <!-- ==========================================
-         PATIENT DASHBOARD
-         ========================================== -->
 
-    <h1>MediConnect</h1>
+{% block content %}
 
-    <h2>Patient Dashboard</h2>
 
-    <p>
-        Welcome, {{ user.name }}
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+
+        Patient Dashboard
+
+    </h1>
+
+
+    <p class="mc-page-subtitle">
+
+        Welcome,
+        <strong>{{ request.user.name }}</strong>
+
     </p>
 
+</div>
+
+
+<!-- ==========================================
+     QUICK ACTIONS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-grid"></i>
+
+        Quick Actions
+
+    </h2>
+
+
+    <div class="mc-grid-2">
+
+
+        <!-- ==========================================
+             FIND DOCTOR
+        ========================================== -->
+
+        <a
+            href="{% url 'doctor_search' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-person-plus"></i>
+
+            Find a Doctor
+
+        </a>
+
+
+        <!-- ==========================================
+             APPOINTMENTS
+        ========================================== -->
+
+        <a
+            href="{% url 'appointment_history' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-calendar-check"></i>
+
+            My Appointments
+
+        </a>
+
+
+        <!-- ==========================================
+             MEDICAL RECORDS
+        ========================================== -->
+
+        <a
+            href="{% url 'patient_medical_records' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-file-medical"></i>
+
+            My Medical Records
+
+        </a>
+
+
+        <!-- ==========================================
+             PAYMENTS
+        ========================================== -->
+
+        <a
+            href="{% url 'patient_payments' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-credit-card"></i>
+
+            My Payments
+
+        </a>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     MY HEALTHCARE
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-heart-pulse"></i>
+
+        My Healthcare
+
+    </h2>
+
+
+    <div class="mc-grid-2">
+
+
+        <!-- ==========================================
+             PATIENT PROFILE
+        ========================================== -->
+
+        <a
+            href="{% url 'patient_profile' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-person-circle"></i>
+
+            My Profile
+
+        </a>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     HEALTHCARE INFORMATION
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-info-circle"></i>
+
+        MediConnect
+
+    </h2>
+
+
     <p>
-        You are logged in as a Patient.
+
+        Manage your appointments, medical records,
+        prescriptions and payments from one place.
+
     </p>
 
 
-    <!-- ==========================================
-         PATIENT FEATURES
-         ========================================== -->
+    <p>
 
-    <h3>Patient Services</h3>
+        Find the right doctor and book your
+        appointment easily through MediConnect.
 
-    <ul>
-
-        <li>
-            <a href="{% url 'patient_profile' %}">
-                My Profile
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'doctor_search' %}">
-                Find Doctors
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'appointment_history' %}">
-                My Appointments
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'patient_medical_records' %}">
-                My Medical Records
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'patient_payments' %}">
-                My Payments
-            </a>
-        </li>
-
-    </ul>
+    </p>
 
 
-    <!-- ==========================================
-         ACCOUNT ACTIONS
-         ========================================== -->
+</div>
 
-    <br>
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
-   
-
-</body>
-
-</html>
+{% endblock %}

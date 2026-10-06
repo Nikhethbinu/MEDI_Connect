@@ -1,182 +1,177 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}MediConnect - Manage Doctors{% endblock %}
 
-    <title>MediConnect - Doctor Management</title>
+{% block content %}
 
-</head>
+<div class="mc-page-header">
 
-<body>
+    <h1 class="mc-page-title">
+        Manage Doctors
+    </h1>
 
-<h1>MediConnect</h1>
+    <p class="mc-page-subtitle">
+        View and manage registered doctors.
+    </p>
 
-<h2>Doctor Management</h2>
+</div>
 
-<hr>
 
-<!-- ==========================================
-     NAVIGATION
-========================================== -->
+<!-- Doctor Statistics -->
 
-<p>
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-</p>
+<div class="mc-grid mc-grid-3">
 
-<hr>
+    <div class="mc-stat-card">
 
-<!-- ==========================================
-     SEARCH DOCTORS
-========================================== -->
+        <div class="mc-stat-label">
+            <i class="bi bi-person-badge"></i>
+            Total Doctors
+        </div>
 
-<h3>Search Doctors</h3>
+        <div class="mc-stat-value">
+            {{ doctors|length }}
+        </div>
 
-<form method="GET">
+    </div>
 
-    <input
-        type="text"
-        name="search"
-        value="{{ search_query }}"
-        placeholder="Search by name, specialization, department..."
-    >
+</div>
 
-    <button type="submit">
-        Search
-    </button>
 
-    {% if search_query %}
+<!-- Doctor List -->
 
-        <a href="{% url 'admin_doctors' %}">
-            Clear Search
-        </a>
+<div class="mc-card">
 
-    {% endif %}
-
-</form>
-
-<hr>
-
-<!-- ==========================================
-     DOCTOR COUNT
-========================================== -->
-
-<h3>
-    Total Doctors: {{ doctors|length }}
-</h3>
-
-<!-- ==========================================
-     DOCTOR LIST
-========================================== -->
-
-{% if doctors %}
-
-    {% for doctor in doctors %}
+    <div class="mc-section-header">
 
         <div>
 
-            <h3>
-                Doctor {{ forloop.counter }}
-            </h3>
+            <h2>
+                <i class="bi bi-person-badge"></i>
+                Doctor List
+            </h2>
 
             <p>
-                <strong>Name:</strong>
-                {{ doctor.user.name }}
-            </p>
-
-            <p>
-                <strong>Username:</strong>
-                {{ doctor.user.username }}
-            </p>
-
-            <p>
-                <strong>Phone:</strong>
-                {{ doctor.user.phone }}
-            </p>
-
-            <p>
-                <strong>Email:</strong>
-                {{ doctor.user.email }}
-            </p>
-
-            <p>
-                <strong>Specialization:</strong>
-                {{ doctor.specialization|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Qualification:</strong>
-                {{ doctor.qualification|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Experience:</strong>
-                {{ doctor.experience_years }} years
-            </p>
-
-            <p>
-                <strong>Department:</strong>
-
-                {% if doctor.department %}
-                    {{ doctor.department.name }}
-                {% else %}
-                    Not assigned
-                {% endif %}
-
-            </p>
-
-            <p>
-                <strong>Consultation Fee:</strong>
-                ₹{{ doctor.consultation_fee }}
-            </p>
-
-            <p>
-                <strong>Available:</strong>
-
-                {% if doctor.is_available %}
-                    Yes
-                {% else %}
-                    No
-                {% endif %}
-
-            </p>
-
-            <p>
-                <strong>Bio:</strong>
-                {{ doctor.bio|default:"Not provided" }}
+                Doctors registered in the MediConnect system.
             </p>
 
         </div>
 
-        <hr>
+        <a href="{% url 'admin_dashboard' %}"
+           class="mc-btn mc-btn-outline">
 
-    {% endfor %}
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
 
-{% else %}
+        </a>
 
-    <p>
-        No doctors found.
-    </p>
+    </div>
 
-{% endif %}
 
-<!-- ==========================================
-     FOOTER
-========================================== -->
+    {% if doctors %}
 
-<p>
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-</p>
+    <div class="mc-table-wrapper">
 
-<p>
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
-</p>
+        <table class="mc-table">
 
-</body>
+            <thead>
 
-</html>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Specialization</th>
+                    <th>Department</th>
+                    <th>Experience</th>
+                    <th>Consultation Fee</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for doctor in doctors %}
+
+                <tr>
+
+                    <td>
+
+                        <strong>
+                            {{ doctor.user.name }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+                        {{ doctor.specialization }}
+                    </td>
+
+
+                    <td>
+
+                        {% if doctor.department %}
+                            {{ doctor.department.name }}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ doctor.experience_years }} years
+                    </td>
+
+
+                    <td>
+                        ₹{{ doctor.consultation_fee }}
+                    </td>
+
+
+                    <td>
+
+                        {% if doctor.is_available %}
+
+                        <span class="mc-badge mc-badge-success">
+                            Available
+                        </span>
+
+                        {% else %}
+
+                        <span class="mc-badge mc-badge-danger">
+                            Unavailable
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="mc-empty">
+
+        <i class="bi bi-person-badge"></i>
+
+        <h3>No Doctors Found</h3>
+
+        <p>
+            No doctors are currently registered.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

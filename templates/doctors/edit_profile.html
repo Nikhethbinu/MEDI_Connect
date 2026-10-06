@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}
+MediConnect - Edit Doctor Profile
+{% endblock %}
+
+{% block content %}
+
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+        Edit Profile
+    </h1>
+
+    <p class="mc-page-subtitle">
+        Update your professional information.
+    </p>
+
+</div>
+
+
+<!-- ==========================================
+     PROFILE FORM
+========================================== -->
+
+<div class="mc-form-card">
+
+    <h2>
+
+        <i class="bi bi-person-gear"></i>
+
+        Professional Information
+
+    </h2>
+
+
+    {% if form.non_field_errors %}
+
+        <div class="form-error-box">
+
+            {{ form.non_field_errors }}
+
+        </div>
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- ==========================================
+             SPECIALIZATION
+        ========================================== -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+
+                Specialization
+
+            </label>
+
+            {{ form.specialization }}
+
+            {% for error in form.specialization.errors %}
+
+                <small class="form-error">
+
+                    {{ error }}
+
+                </small>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             QUALIFICATION
+        ========================================== -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+
+                Qualification
+
+            </label>
+
+            {{ form.qualification }}
+
+            {% for error in form.qualification.errors %}
+
+                <small class="form-error">
+
+                    {{ error }}
+
+                </small>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             EXPERIENCE
+        ========================================== -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+
+                Experience (Years)
+
+            </label>
+
+            {{ form.experience_years }}
+
+            {% for error in form.experience_years.errors %}
+
+                <small class="form-error">
+
+                    {{ error }}
+
+                </small>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             DEPARTMENT
+        ========================================== -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+
+                Department
+
+            </label>
+
+            {{ form.department }}
+
+            {% for error in form.department.errors %}
+
+                <small class="form-error">
+
+                    {{ error }}
+
+                </small>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             CONSULTATION FEE
+        ========================================== -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+
+                Consultation Fee
+
+            </label>
+
+            {{ form.consultation_fee }}
+
+            {% for error in form.consultation_fee.errors %}
+
+                <small class="form-error">
+
+                    {{ error }}
+
+                </small>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             BIO
+        ========================================== -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+
+                Professional Bio
+
+            </label>
+
+            {{ form.bio }}
+
+            {% for error in form.bio.errors %}
+
+                <small class="form-error">
+
+                    {{ error }}
+
+                </small>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ==========================================
+             AVAILABILITY
+        ========================================== -->
+
+        <div class="availability-toggle">
+
+            {{ form.is_available }}
+
+            <label>
+
+                Doctor is currently available
+
+            </label>
+
+        </div>
+
+
+        <!-- ==========================================
+             BUTTONS
+        ========================================== -->
+
+        <div class="edit-profile-actions">
+
+            <button
+                type="submit"
+                class="mc-btn"
+            >
+
+                <i class="bi bi-check-circle"></i>
+
+                Save Changes
+
+            </button>
+
+
+            <a
+                href="{% url 'doctor_profile' %}"
+                class="mc-btn mc-btn-outline"
+            >
+
+                <i class="bi bi-x-circle"></i>
+
+                Cancel
+
+            </a>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   FORM
+========================================== */
+
+.mc-form-card {
+
+    max-width: 800px;
+
+    margin: 0 auto;
+
+}
+
+
+/* ==========================================
+   FORM ERROR
+========================================== */
+
+.form-error-box {
+
+    padding: 12px 15px;
+
+    margin-bottom: 20px;
+
+    border-radius: var(--radius-small);
+
+    background: #FCECEC;
+
+    color: var(--danger);
+
+}
+
+
+/* ==========================================
+   AVAILABILITY
+========================================== */
+
+.availability-toggle {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 15px;
+
+    margin: 10px 0 25px;
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-small);
+
+}
+
+
+.availability-toggle input {
+
+    width: 18px;
+
+    height: 18px;
+
+    accent-color: var(--purple);
+
+}
+
+
+.availability-toggle label {
+
+    color: var(--text-dark);
+
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.edit-profile-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+
+.edit-profile-actions .mc-btn {
+
+    width: auto;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .edit-profile-actions {
+
+        flex-direction: column;
+
+    }
+
+
+    .edit-profile-actions .mc-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

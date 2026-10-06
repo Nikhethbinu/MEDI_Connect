@@ -12,8 +12,13 @@ urlpatterns = [
     # DOCTOR PROFILE
     # ------------------------------------------
 
-    path(
+path(
         'profile/',views.doctor_profile,name='doctor_profile'
+    ),
+    path(
+        'profile/edit/',
+        views.edit_doctor_profile,
+        name='edit_doctor_profile'
     ),
     # ------------------------------------------
 # DOCTOR AVAILABILITY

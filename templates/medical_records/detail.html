@@ -1,0 +1,460 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+    MediConnect - Medical Record
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+
+        Medical Record
+
+    </h1>
+
+    <p class="mc-page-subtitle">
+
+        Medical information and treatment details.
+
+    </p>
+
+</div>
+
+
+<!-- ==========================================
+     PATIENT / DOCTOR SUMMARY
+========================================== -->
+
+<div class="mc-grid-2">
+
+
+    <!-- ==========================================
+         PATIENT INFORMATION
+    ========================================== -->
+
+    <div class="mc-card">
+
+        <h2>
+
+            <i class="bi bi-person-circle"></i>
+
+            Patient Information
+
+        </h2>
+
+
+        <div class="record-summary-item">
+
+            <span>Name</span>
+
+            <strong>
+
+                {{ record.patient.name }}
+
+            </strong>
+
+        </div>
+
+
+        <div class="record-summary-item">
+
+            <span>Phone</span>
+
+            <strong>
+
+                {{ record.patient.phone }}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         APPOINTMENT INFORMATION
+    ========================================== -->
+
+    <div class="mc-card">
+
+        <h2>
+
+            <i class="bi bi-calendar-check"></i>
+
+            Appointment
+
+        </h2>
+
+
+        <div class="record-summary-item">
+
+            <span>Date</span>
+
+            <strong>
+
+                {{ record.appointment.appointment_date }}
+
+            </strong>
+
+        </div>
+
+
+        <div class="record-summary-item">
+
+            <span>Doctor</span>
+
+            <strong>
+
+                {{ record.appointment.doctor.user.name }}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- ==========================================
+     MEDICAL INFORMATION
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-clipboard2-pulse"></i>
+
+        Medical Information
+
+    </h2>
+
+
+    <!-- ==========================================
+         SYMPTOMS
+    ========================================== -->
+
+    <div class="medical-detail-section">
+
+        <h3>
+
+            <i class="bi bi-thermometer-half"></i>
+
+            Symptoms
+
+        </h3>
+
+
+        <p>
+
+            {{ record.symptoms|default:"No symptoms recorded." }}
+
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         DIAGNOSIS
+    ========================================== -->
+
+    <div class="medical-detail-section">
+
+        <h3>
+
+            <i class="bi bi-clipboard2-check"></i>
+
+            Diagnosis
+
+        </h3>
+
+
+        <p>
+
+            {{ record.diagnosis|default:"No diagnosis recorded." }}
+
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         TREATMENT
+    ========================================== -->
+
+    <div class="medical-detail-section">
+
+        <h3>
+
+            <i class="bi bi-capsule"></i>
+
+            Treatment
+
+        </h3>
+
+
+        <p>
+
+            {{ record.treatment|default:"No treatment recorded." }}
+
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         NOTES
+    ========================================== -->
+
+    <div class="medical-detail-section">
+
+        <h3>
+
+            <i class="bi bi-journal-text"></i>
+
+            Additional Notes
+
+        </h3>
+
+
+        <p>
+
+            {{ record.notes|default:"No additional notes." }}
+
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<div class="record-navigation">
+
+
+    {% if request.user.role == 'DOCTOR' %}
+
+
+        <a
+            href="{% url 'edit_medical_record' record.id %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-pencil"></i>
+
+            Edit Medical Record
+
+        </a>
+
+
+        <a
+            href="{% url 'doctor_appointments' %}"
+            class="mc-btn mc-btn-outline"
+        >
+
+            <i class="bi bi-calendar-check"></i>
+
+            Doctor Appointments
+
+        </a>
+
+
+    {% elif request.user.role == 'PATIENT' %}
+
+
+        <a
+            href="{% url 'patient_medical_records' %}"
+            class="mc-btn mc-btn-outline"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+
+            My Medical Records
+
+        </a>
+
+
+        <a
+            href="{% url 'patient_dashboard' %}"
+            class="mc-btn mc-btn-outline"
+        >
+
+            <i class="bi bi-grid"></i>
+
+            Patient Dashboard
+
+        </a>
+
+
+    {% endif %}
+
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+
+<style>
+
+/* ==========================================
+   SUMMARY ITEM
+========================================== */
+
+.record-summary-item {
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+.record-summary-item:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.record-summary-item span {
+
+    display: block;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.record-summary-item strong {
+
+    color: var(--text-dark);
+
+    font-size: 15px;
+
+}
+
+
+/* ==========================================
+   MEDICAL DETAIL SECTION
+========================================== */
+
+.medical-detail-section {
+
+    padding: 18px;
+
+    margin-top: 15px;
+
+    border-radius: var(--radius-medium);
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+}
+
+
+.medical-detail-section h3 {
+
+    margin: 0 0 10px;
+
+    color: var(--text-dark);
+
+    font-size: 17px;
+
+}
+
+
+.medical-detail-section h3 i {
+
+    color: var(--purple);
+
+    margin-right: 6px;
+
+}
+
+
+.medical-detail-section p {
+
+    margin: 0;
+
+    color: var(--text-medium);
+
+    line-height: 1.7;
+
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.record-navigation {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+
+.record-navigation .mc-btn {
+
+    width: auto;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .record-navigation {
+
+        flex-direction: column;
+
+    }
+
+
+    .record-navigation .mc-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+
+{% endblock %}

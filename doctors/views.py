@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from accounts.decorators import role_required
@@ -362,5 +362,52 @@ def doctor_detail(request, doctor_id):
         {
             'doctor': doctor,
             'availabilities': availabilities
+        }
+    )
+
+# ==========================================
+# EDIT DOCTOR PROFILE
+# ==========================================
+
+@login_required
+@role_required('DOCTOR')
+def edit_doctor_profile(request):
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+
+    if request.method == 'POST':
+
+        form = DoctorProfileForm(
+            request.POST,
+            instance=doctor
+        )
+
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect(
+                'doctor_profile'
+            )
+
+
+    else:
+
+        form = DoctorProfileForm(
+            instance=doctor
+        )
+
+
+    return render(
+        request,
+        'doctors/edit_profile.html',
+        {
+            'form': form,
+            'doctor': doctor,
         }
     )

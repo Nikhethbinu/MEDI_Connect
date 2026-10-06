@@ -1,65 +1,339 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+MediConnect - Doctor Dashboard
+{% endblock %}
 
-    <title>MediConnect - Doctor Dashboard</title>
+{% block content %}
 
-</head>
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
 
-<body>
+<div class="mc-page-header">
 
-    <!-- ==========================================
-         DOCTOR DASHBOARD
-         ========================================== -->
+    <h1 class="mc-page-title">
+        Doctor Dashboard
+    </h1>
 
-    <h1>MediConnect</h1>
-
-    <h2>Doctor Dashboard</h2>
-
-    <p>
-        Welcome, {{ user.name }}
+    <p class="mc-page-subtitle">
+        Welcome, <strong>{{ request.user.name }}</strong>.
+        Manage your patients and appointments from here.
     </p>
 
-    
-
-    <!-- ==========================================
-         DOCTOR FEATURES
-         ========================================== -->
-
-    <h3>Doctor Services</h3>
-
-    <ul>
-
-        <li>
-            <a href="{% url 'doctor_profile' %}">
-                My Profile
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'doctor_availability' %}">
-                Manage Availability
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'doctor_appointments' %}">
-                My Appointments
-            </a>
-        </li>
-       
-    </ul>
+</div>
 
 
-    <!-- ==========================================
-         ACCOUNT ACTIONS
-         ========================================== -->
+<!-- ==========================================
+     QUICK ACTIONS
+========================================== -->
 
-    <br>
+<div class="mc-card">
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
+    <h2>
+        <i class="bi bi-grid"></i>
+        Quick Actions
+    </h2>
 
-</body>
+    <div class="mc-grid-2">
 
-</html>
+        <a
+            href="{% url 'doctor_appointments' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-calendar-check"></i>
+
+            My Appointments
+
+        </a>
+
+
+        <a
+            href="{% url 'doctor_profile' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-person-circle"></i>
+
+            My Profile
+
+        </a>
+
+
+        <a
+            href="{% url 'doctor_availability' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-clock"></i>
+
+            Manage Availability
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     DOCTOR INFORMATION
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-person-badge"></i>
+
+        Professional Information
+
+    </h2>
+
+
+    <div class="mc-grid-3">
+
+
+        <div class="doctor-dashboard-stat">
+
+            <i class="bi bi-heart-pulse"></i>
+
+            <span>Specialization</span>
+
+            <strong>
+                {{ doctor.specialization }}
+            </strong>
+
+        </div>
+
+
+        <div class="doctor-dashboard-stat">
+
+            <i class="bi bi-hospital"></i>
+
+            <span>Department</span>
+
+            <strong>
+
+                {% if doctor.department %}
+
+                    {{ doctor.department.name }}
+
+                {% else %}
+
+                    Not Assigned
+
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div class="doctor-dashboard-stat">
+
+            <i class="bi bi-briefcase"></i>
+
+            <span>Experience</span>
+
+            <strong>
+
+                {{ doctor.experience_years }} Years
+
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     CONSULTATION INFORMATION
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-currency-rupee"></i>
+
+        Consultation
+
+    </h2>
+
+
+    <div class="consultation-box">
+
+
+        <div>
+
+            <span>Consultation Fee</span>
+
+            <strong>
+
+                ₹{{ doctor.consultation_fee }}
+
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>Availability Status</span>
+
+
+            {% if doctor.is_available %}
+
+                <span class="mc-badge mc-badge-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Available
+
+                </span>
+
+            {% else %}
+
+                <span class="mc-badge mc-badge-danger">
+
+                    <i class="bi bi-x-circle"></i>
+
+                    Not Available
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   DOCTOR DASHBOARD STAT
+========================================== */
+
+.doctor-dashboard-stat {
+
+    padding: 20px;
+
+    border-radius: var(--radius-medium);
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+}
+
+
+.doctor-dashboard-stat i {
+
+    font-size: 25px;
+
+    color: var(--purple);
+
+    display: block;
+
+    margin-bottom: 12px;
+
+}
+
+
+.doctor-dashboard-stat span {
+
+    display: block;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.doctor-dashboard-stat strong {
+
+    color: var(--text-dark);
+
+}
+
+
+/* ==========================================
+   CONSULTATION
+========================================== */
+
+.consultation-box {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+
+}
+
+
+.consultation-box > div {
+
+    padding: 20px;
+
+    background: var(--page-background);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+}
+
+
+.consultation-box span:first-child {
+
+    display: block;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+
+    margin-bottom: 7px;
+
+}
+
+
+.consultation-box strong {
+
+    color: var(--purple);
+
+    font-size: 21px;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .consultation-box {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

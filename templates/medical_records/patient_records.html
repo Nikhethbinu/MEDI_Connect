@@ -1,74 +1,535 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
 
-    <title>MediConnect - My Medical Records</title>
+{% block title %}
 
-</head>
+    MediConnect - My Medical Records
 
-<body>
+{% endblock %}
 
-    <h1>MediConnect</h1>
 
-    <h2>My Medical Records</h2>
+{% block content %}
 
-    <hr>
+
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+
+        My Medical Records
+
+    </h1>
+
+    <p class="mc-page-subtitle">
+
+        View your diagnosis, treatment, symptoms and
+        other medical information.
+
+    </p>
+
+</div>
+
+
+<!-- ==========================================
+     MEDICAL RECORDS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-file-medical"></i>
+
+        Medical History
+
+    </h2>
+
 
     {% if records %}
 
-        {% for record in records %}
+        <div class="medical-record-list">
 
-            <div>
 
-                <h3>
-                    Record {{ forloop.counter }}
-                </h3>
+            {% for record in records %}
 
-                <p>
-                    <strong>Date:</strong>
-                    {{ record.appointment.appointment_date }}
-                </p>
 
-                <p>
-                    <strong>Doctor:</strong>
-                    {{ record.appointment.doctor.user.name }}
-                </p>
+                <!-- ==========================================
+                     MEDICAL RECORD CARD
+                ========================================== -->
 
-                <p>
-                    <strong>Diagnosis:</strong>
-                    {{ record.diagnosis|default:"Not recorded" }}
-                </p>
+                <div class="medical-record-card">
 
-                <p>
-                    <a
-                        href="{% url 'medical_record_detail' record.id %}"
-                    >
-                        View Full Medical Record
-                    </a>
-                </p>
 
-                <hr>
+                    <!-- ==========================================
+                         HEADER
+                    ========================================== -->
 
-            </div>
+                    <div class="medical-record-header">
 
-        {% endfor %}
+
+                        <div class="medical-record-icon">
+
+                            <i class="bi bi-file-medical"></i>
+
+                        </div>
+
+
+                        <div class="medical-record-title">
+
+                            <h3>
+
+                                Medical Record #{{ forloop.counter }}
+
+                            </h3>
+
+
+                            <p>
+
+                                {{ record.appointment.appointment_date }}
+
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         DOCTOR INFORMATION
+                    ========================================== -->
+
+                    <div class="medical-record-doctor">
+
+
+                        <i class="bi bi-person-badge"></i>
+
+
+                        <div>
+
+                            <span>Doctor</span>
+
+                            <strong>
+
+                                {{ record.appointment.doctor.user.name }}
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         DIAGNOSIS
+                    ========================================== -->
+
+                    <div class="medical-record-section">
+
+
+                        <span class="medical-record-label">
+
+                            <i class="bi bi-clipboard2-pulse"></i>
+
+                            Diagnosis
+
+                        </span>
+
+
+                        <p>
+
+                            {{ record.diagnosis|default:"No diagnosis recorded." }}
+
+                        </p>
+
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         SYMPTOMS
+                    ========================================== -->
+
+                    <div class="medical-record-section">
+
+
+                        <span class="medical-record-label">
+
+                            <i class="bi bi-thermometer-half"></i>
+
+                            Symptoms
+
+                        </span>
+
+
+                        <p>
+
+                            {{ record.symptoms|default:"No symptoms recorded." }}
+
+                        </p>
+
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         VIEW RECORD
+                    ========================================== -->
+
+                    <div class="medical-record-action">
+
+
+                        <a
+                            href="{% url 'medical_record_detail' record.id %}"
+                            class="mc-btn"
+                        >
+
+                            <i class="bi bi-eye"></i>
+
+                            View Full Record
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
 
     {% else %}
 
-        <p>
-            No medical records available.
-        </p>
+
+        <!-- ==========================================
+             EMPTY STATE
+        ========================================== -->
+
+        <div class="mc-empty">
+
+
+            <i
+                class="bi bi-file-earmark-medical"
+                style="font-size: 48px; color: var(--purple);"
+            ></i>
+
+
+            <h3>
+
+                No Medical Records
+
+            </h3>
+
+
+            <p>
+
+                You don't have any medical records yet.
+
+                Medical records will appear here after
+                your completed appointments.
+
+            </p>
+
+
+            <a
+                href="{% url 'doctor_search' %}"
+                class="mc-btn"
+            >
+
+                <i class="bi bi-person-plus"></i>
+
+                Find a Doctor
+
+            </a>
+
+
+        </div>
+
 
     {% endif %}
 
 
-    <br>
+</div>
 
-    <a href="{% url 'dashboard' %}">
-        Back to Dashboard
+
+<!-- ==========================================
+     BACK TO DASHBOARD
+========================================== -->
+
+<div style="margin-top: 20px;">
+
+    <a
+        href="{% url 'patient_dashboard' %}"
+        class="mc-btn mc-btn-outline"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Patient Dashboard
+
     </a>
 
-</body>
+</div>
 
-</html>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+
+<style>
+
+/* ==========================================
+   RECORD LIST
+========================================== */
+
+.medical-record-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+
+}
+
+
+/* ==========================================
+   RECORD CARD
+========================================== */
+
+.medical-record-card {
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+    padding: 22px;
+
+    background: var(--white);
+
+    transition: 0.2s ease;
+
+}
+
+
+.medical-record-card:hover {
+
+    box-shadow: var(--shadow-small);
+
+}
+
+
+/* ==========================================
+   RECORD HEADER
+========================================== */
+
+.medical-record-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+.medical-record-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    border-radius: 50%;
+
+    background: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.medical-record-icon i {
+
+    font-size: 30px;
+
+    color: var(--purple);
+
+}
+
+
+.medical-record-title h3 {
+
+    margin: 0 0 5px;
+
+    color: var(--text-dark);
+
+}
+
+
+.medical-record-title p {
+
+    margin: 0;
+
+    color: var(--text-medium);
+
+    font-size: 14px;
+
+}
+
+
+/* ==========================================
+   DOCTOR
+========================================== */
+
+.medical-record-doctor {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 17px 0;
+
+}
+
+
+.medical-record-doctor > i {
+
+    font-size: 22px;
+
+    color: var(--teal);
+
+}
+
+
+.medical-record-doctor span {
+
+    display: block;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+
+    margin-bottom: 3px;
+
+}
+
+
+.medical-record-doctor strong {
+
+    color: var(--text-dark);
+
+    font-size: 15px;
+
+}
+
+
+/* ==========================================
+   RECORD INFORMATION
+========================================== */
+
+.medical-record-section {
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+    border-radius: var(--radius-small);
+
+    background: var(--page-background);
+
+}
+
+
+.medical-record-label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--text-dark);
+
+    font-weight: 600;
+
+}
+
+
+.medical-record-label i {
+
+    color: var(--purple);
+
+    margin-right: 5px;
+
+}
+
+
+.medical-record-section p {
+
+    margin: 0;
+
+    color: var(--text-medium);
+
+    line-height: 1.6;
+
+}
+
+
+/* ==========================================
+   ACTION
+========================================== */
+
+.medical-record-action {
+
+    margin-top: 18px;
+
+}
+
+
+.medical-record-action .mc-btn {
+
+    width: auto;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .medical-record-action .mc-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+
+{% endblock %}

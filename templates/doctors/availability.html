@@ -1,114 +1,383 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+MediConnect - Doctor Availability
+{% endblock %}
 
-    <title>
-        MediConnect - Doctor Availability
-    </title>
+{% block content %}
 
-</head>
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
 
-<body>
+<div class="mc-page-header">
 
-    <!-- ==========================================
-         DOCTOR AVAILABILITY
-         ========================================== -->
+    <h1 class="mc-page-title">
+        My Availability
+    </h1>
 
-    <h1>MediConnect</h1>
-
-    <h2>Manage Availability</h2>
-
-    <p>
-        Welcome, {{ user.name }}
+    <p class="mc-page-subtitle">
+        Manage the days and times when patients can book appointments.
     </p>
 
+</div>
 
-    <!-- ==========================================
-         ADD AVAILABILITY
-         ========================================== -->
 
-    <h3>Add Availability</h3>
+<!-- ==========================================
+     ADD AVAILABILITY
+========================================== -->
+
+<div class="mc-form-card">
+
+    <h2>
+
+        <i class="bi bi-calendar-plus"></i>
+
+        Add Availability
+
+    </h2>
+
 
     <form method="POST">
 
         {% csrf_token %}
 
-        {{ form.non_field_errors }}
 
-        {{ form.as_p }}
+        {% for field in form %}
 
-        <button type="submit">
+            <div class="mc-form-group">
+
+                <label class="mc-form-label">
+
+                    {{ field.label }}
+
+                </label>
+
+                {{ field }}
+
+                {% for error in field.errors %}
+
+                    <small class="form-error">
+
+                        {{ error }}
+
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+
+        <button
+            type="submit"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-plus-circle"></i>
+
             Add Availability
+
         </button>
 
     </form>
 
+</div>
 
-    <!-- ==========================================
-         EXISTING AVAILABILITY
-         ========================================== -->
 
-    <h3>My Availability</h3>
+<!-- ==========================================
+     EXISTING AVAILABILITY
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-calendar-week"></i>
+
+        Current Availability
+
+    </h2>
+
 
     {% if availabilities %}
 
-        <ul>
+        <div class="availability-management-list">
+
 
             {% for availability in availabilities %}
 
-                <li>
 
-                    {{ availability.get_day_display }}
+                <div class="availability-management-card">
 
-                    :
 
-                    {{ availability.start_time }}
+                    <div class="availability-main">
 
-                    -
 
-                    {{ availability.end_time }}
+                        <div class="availability-icon">
 
-                    |
-                    <a href="{% url 'edit_availability' availability.id %}">
-                        Edit
-                    </a>
-                    |
-                    <a href="{% url 'delete_availability' availability.id %}">
-                        Delete
-                    </a>
+                            <i class="bi bi-calendar3"></i>
 
-                </li>
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+
+                                {{ availability.get_day_display }}
+
+                            </h3>
+
+
+                            <p>
+
+                                <i class="bi bi-clock"></i>
+
+                                {{ availability.start_time }}
+
+                                -
+
+                                {{ availability.end_time }}
+
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div>
+
+
+                        {% if availability.is_active %}
+
+                            <span class="mc-badge mc-badge-success">
+
+                                Active
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="mc-badge mc-badge-danger">
+
+                                Inactive
+
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <div class="availability-actions">
+
+                        <a
+                            href="{% url 'edit_availability' availability.id %}"
+                            class="mc-btn"
+                        >
+
+                            <i class="bi bi-pencil"></i>
+
+                            Edit
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'delete_availability' availability.id %}"
+                            class="mc-btn mc-btn-danger"
+                            onclick="return confirm('Delete this availability?');"
+                        >
+
+                            <i class="bi bi-trash"></i>
+
+                            Delete
+
+                        </a>
+
+                    </div>
+
+
+                </div>
+
 
             {% endfor %}
 
-        </ul>
+
+        </div>
+
 
     {% else %}
 
-        <p>
-            No availability slots added yet.
-        </p>
+        <div class="mc-empty">
+
+            <i
+                class="bi bi-calendar-x"
+                style="font-size:45px;color:var(--purple);"
+            ></i>
+
+            <h3>
+                No Availability Added
+            </h3>
+
+            <p>
+                Add your available consultation timings above.
+            </p>
+
+        </div>
 
     {% endif %}
 
+</div>
 
-    <!-- ==========================================
-         NAVIGATION
-         ========================================== -->
 
-    <br>
+<!-- ==========================================
+     BACK
+========================================== -->
 
-    <a href="{% url 'doctor_dashboard' %}">
-        Back to Dashboard
-    </a>
+<a
+    href="{% url 'doctor_dashboard' %}"
+    class="mc-btn mc-btn-outline"
+>
 
-    <br><br>
+    <i class="bi bi-arrow-left"></i>
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
+    Doctor Dashboard
 
-</body>
+</a>
 
-</html>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   AVAILABILITY LIST
+========================================== */
+
+.availability-management-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+}
+
+
+.availability-management-card {
+
+    display: grid;
+
+    grid-template-columns: 1fr auto auto;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+    background: var(--page-background);
+
+}
+
+
+/* ==========================================
+   MAIN
+========================================== */
+
+.availability-main {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+}
+
+
+.availability-icon {
+
+    width: 50px;
+
+    height: 50px;
+
+    border-radius: 50%;
+
+    background: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.availability-icon i {
+
+    color: var(--purple);
+
+    font-size: 24px;
+
+}
+
+
+.availability-main h3 {
+
+    margin: 0 0 4px;
+
+}
+
+
+.availability-main p {
+
+    margin: 0;
+
+    color: var(--text-medium);
+
+}
+
+
+.availability-main p i {
+
+    color: var(--teal);
+
+}
+
+
+.mc-btn-danger {
+
+    background: var(--danger);
+
+}
+
+
+@media (max-width: 768px) {
+
+    .availability-management-card {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

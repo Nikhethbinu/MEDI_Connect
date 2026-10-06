@@ -1,218 +1,674 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
 
-    <title>MediConnect - Admin Dashboard</title>
+{% block title %}
 
-</head>
+    MediConnect - Admin Dashboard
 
-<body>
+{% endblock %}
 
-    <!-- ==========================================
-         HEADER
-         ========================================== -->
 
-    <h1>MediConnect</h1>
+{% block content %}
 
-    <h2>Admin Dashboard</h2>
 
-    <p>
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+
+        Admin Dashboard
+
+    </h1>
+
+
+    <p class="mc-page-subtitle">
+
         Welcome,
         <strong>{{ request.user.name }}</strong>
+
     </p>
 
-    <hr>
-    <hr>    
+</div>
 
-    <!-- ==========================================
-         MANAGEMENT
-         ========================================== -->
 
-    <h3>Management</h3>
+<!-- ==========================================
+     MANAGEMENT
+========================================== -->
 
-    <p>
-        <a href="/admin/">
+<div class="mc-card">
+
+    <h2>
+
+        Management
+
+    </h2>
+
+
+    <div class="mc-grid-3">
+
+
+        <!-- ==========================================
+             DJANGO ADMIN
+        ========================================== -->
+
+        <a
+            href="/admin/"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-gear"></i>
+
             Django Admin Panel
+
         </a>
-    </p>
-    <p>
-        <a href="{% url 'admin_patients' %}">
+
+
+        <!-- ==========================================
+             PATIENTS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_patients' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-people"></i>
+
             Manage Patients
+
         </a>
-    </p>
-    <p>
-        <a href="{% url 'admin_doctors' %}">
+
+
+        <!-- ==========================================
+             DOCTORS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_doctors' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-person-badge"></i>
+
             Manage Doctors
+
         </a>
 
-    </p>
-    <p>
-        <a href="{% url 'admin_departments' %}">
+
+        <!-- ==========================================
+             DEPARTMENTS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_departments' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-building"></i>
+
             Manage Departments
-        </a>  
-    </p>
-    <p>
-        <a href="{% url 'admin_appointments' %}">
+
+        </a>
+
+
+        <!-- ==========================================
+             APPOINTMENTS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_appointments' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-calendar-check"></i>
+
             Manage Appointments
-        </a>                
-    </p> 
-    <p>
-        <a href="{% url 'admin_prescriptions' %}">
+
+        </a>
+
+
+        <!-- ==========================================
+             PRESCRIPTIONS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_prescriptions' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-capsule"></i>
+
             Manage Prescriptions
-        </a> 
-    </p> 
-    <p>
-        <a href="{% url 'admin_medical_records' %}">
+
+        </a>
+
+
+        <!-- ==========================================
+             MEDICAL RECORDS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_medical_records' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-file-medical"></i>
+
             Manage Medical Records
-        </a>        
-    </p>
-    <p>
-        <a href="{% url 'admin_payments' %}">
+
+        </a>
+
+
+        <!-- ==========================================
+             PAYMENTS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_payments' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-credit-card"></i>
+
             Manage Payments
+
         </a>
-    </p>
-    <p>
-        <a href="{% url 'admin_reports' %}">
+
+
+        <!-- ==========================================
+             REPORTS
+        ========================================== -->
+
+        <a
+            href="{% url 'admin_reports' %}"
+            class="mc-btn"
+        >
+
+            <i class="bi bi-bar-chart"></i>
+
             View Reports
-        </a>    
-    </p>    
-    <hr>
 
-    <hr>
-
-    <!-- ==========================================
-         USER STATISTICS
-         ========================================== -->
-
-    <h3>Users</h3>
-
-    <p>
-        <strong>Total Patients:</strong>
-        {{ total_patients }}
-    </p>
-
-    <p>
-        <strong>Total Doctors:</strong>
-        {{ total_doctors }}
-    </p>
-
-    <p>
-        <strong>Total Departments:</strong>
-        {{ total_departments }}
-    </p>
-
-
-    <hr>
-
-
-    <!-- ==========================================
-         APPOINTMENT STATISTICS
-         ========================================== -->
-
-    <h3>Appointments</h3>
-
-    <p>
-        <strong>Total Appointments:</strong>
-        {{ total_appointments }}
-    </p>
-
-    <p>
-        <strong>Pending:</strong>
-        {{ pending_appointments }}
-    </p>
-
-    <p>
-        <strong>Confirmed:</strong>
-        {{ confirmed_appointments }}
-    </p>
-
-    <p>
-        <strong>Completed:</strong>
-        {{ completed_appointments }}
-    </p>
-
-    <p>
-        <strong>Cancelled:</strong>
-        {{ cancelled_appointments }}
-    </p>
-
-    <p>
-        <strong>Rejected:</strong>
-        {{ rejected_appointments }}
-    </p>
-
-
-    <hr>
-
-
-    <!-- ==========================================
-         PRESCRIPTION & MEDICAL RECORDS
-         ========================================== -->
-
-    <h3>Medical Activity</h3>
-
-    <p>
-        <strong>Total Prescriptions:</strong>
-        {{ total_prescriptions }}
-    </p>
-
-    <p>
-        <strong>Total Medical Records:</strong>
-        {{ total_medical_records }}
-    </p>
-
-
-    <hr>
-
-
-    <!-- ==========================================
-         PAYMENT STATISTICS
-         ========================================== -->
-
-    <h3>Payments</h3>
-
-    <p>
-        <strong>Total Payments:</strong>
-        {{ total_payments }}
-    </p>
-
-    <p>
-        <strong>Paid Payments:</strong>
-        {{ paid_payments }}
-    </p>
-
-    <p>
-        <strong>Pending Payments:</strong>
-        {{ pending_payments }}
-    </p>
-
-    <p>
-        <strong>Total Revenue:</strong>
-        ₹{{ total_revenue }}
-    </p>
-
-    
-    <p>
-        <a href="{% url 'admin_prescriptions' %}">
-            Manage Prescriptions
-        </a> 
-    </p>
-
-
-
-    <!-- ==========================================
-         LOGOUT
-         ========================================== -->
-
-    <p>
-
-        <a href="{% url 'logout' %}">
-            Logout
         </a>
 
-    </p>
 
-</body>
+    </div>
 
-</html>
+</div>
+
+
+<!-- ==========================================
+     USER STATISTICS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-people"></i>
+
+        Users
+
+    </h2>
+
+
+    <div class="mc-grid-3">
+
+
+        <!-- ==========================================
+             TOTAL PATIENTS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-people"></i>
+
+                Total Patients
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_patients }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             TOTAL DOCTORS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-person-badge"></i>
+
+                Total Doctors
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_doctors }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             TOTAL DEPARTMENTS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-building"></i>
+
+                Total Departments
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_departments }}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     APPOINTMENT STATISTICS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-calendar-check"></i>
+
+        Appointments
+
+    </h2>
+
+
+    <div class="mc-grid">
+
+
+        <!-- ==========================================
+             TOTAL APPOINTMENTS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-calendar2-week"></i>
+
+                Total Appointments
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_appointments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             PENDING
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-hourglass-split"></i>
+
+                Pending
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ pending_appointments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             CONFIRMED
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-check-circle"></i>
+
+                Confirmed
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ confirmed_appointments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             COMPLETED
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-check2-all"></i>
+
+                Completed
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ completed_appointments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             CANCELLED
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-x-circle"></i>
+
+                Cancelled
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ cancelled_appointments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             REJECTED
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-x-octagon"></i>
+
+                Rejected
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ rejected_appointments }}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     MEDICAL ACTIVITY
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-file-medical"></i>
+
+        Medical Activity
+
+    </h2>
+
+
+    <div class="mc-grid-2">
+
+
+        <!-- ==========================================
+             PRESCRIPTIONS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-capsule"></i>
+
+                Total Prescriptions
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_prescriptions }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             MEDICAL RECORDS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-file-medical"></i>
+
+                Total Medical Records
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_medical_records }}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     PAYMENT STATISTICS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-credit-card"></i>
+
+        Payments
+
+    </h2>
+
+
+    <div class="mc-grid">
+
+
+        <!-- ==========================================
+             TOTAL PAYMENTS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-wallet2"></i>
+
+                Total Payments
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ total_payments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             PAID PAYMENTS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-check-circle"></i>
+
+                Paid Payments
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ paid_payments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             PENDING PAYMENTS
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-hourglass-split"></i>
+
+                Pending Payments
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                {{ pending_payments }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             TOTAL REVENUE
+        ========================================== -->
+
+        <div class="mc-stat-card">
+
+            <div class="mc-stat-label">
+
+                <i class="bi bi-currency-rupee"></i>
+
+                Total Revenue
+
+            </div>
+
+
+            <div class="mc-stat-value">
+
+                ₹{{ total_revenue }}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     LOGOUT
+========================================== -->
+
+<div class="text-center mt-4 mb-4">
+
+    <a
+        href="{% url 'logout' %}"
+        class="mc-logout-btn"
+    >
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        Logout
+
+    </a>
+
+</div>
+
+
+{% endblock %}

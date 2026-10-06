@@ -1,0 +1,1857 @@
+/* ==========================================
+   MEDICONNECT
+   MODERN HEALTHCARE UI
+========================================== */
+
+
+/* ==========================================
+   COLOR SYSTEM
+========================================== */
+
+:root {
+
+    /* ==========================================
+       MAIN BRAND COLORS
+    ========================================== */
+
+    --teal: #286A76;
+
+    --teal-dark: #205864;
+
+    --teal-light: #E7F3F5;
+
+
+    /* ==========================================
+       PAGE BACKGROUND
+    ========================================== */
+
+    --page-background: #F3F8FC;
+
+
+    /* ==========================================
+       WHITE
+    ========================================== */
+
+    --white: #FFFFFF;
+
+
+    /* ==========================================
+       TEXT COLORS
+    ========================================== */
+
+    --text-dark: #163D46;
+
+    --text-medium: #5F737A;
+
+    --text-light: #8A9AA0;
+
+
+    /* ==========================================
+       PURPLE ACCENT
+    ========================================== */
+
+    --purple: #B56BC4;
+
+    --purple-dark: #A05BB0;
+
+    --purple-light: #F5EAF7;
+
+
+    /* ==========================================
+       BORDERS
+    ========================================== */
+
+    --border: #E2EBEF;
+
+
+    /* ==========================================
+       STATUS COLORS
+    ========================================== */
+
+    --success: #42B883;
+
+    --warning: #E6A23C;
+
+    --danger: #D9534F;
+
+
+    /* ==========================================
+       SHADOWS
+    ========================================== */
+
+    --shadow-small:
+        0 3px 12px rgba(22, 61, 70, 0.08);
+
+    --shadow-medium:
+        0 8px 25px rgba(22, 61, 70, 0.12);
+
+
+    /* ==========================================
+       BORDER RADIUS
+    ========================================== */
+
+    --radius-small: 8px;
+
+    --radius-medium: 12px;
+
+    --radius-large: 18px;
+
+}
+
+
+/* ==========================================
+   GLOBAL RESET
+========================================== */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+/* ==========================================
+   HTML
+========================================== */
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+/* ==========================================
+   BODY
+========================================== */
+
+/* ==========================================
+   GLOBAL MODERN SERIF FONT
+========================================== */
+
+body {
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    background-color:
+        var(--page-background);
+
+    color:
+        var(--text-dark);
+
+    min-height:
+        100vh;
+
+    line-height:
+        1.6;
+
+}
+
+
+/* ==========================================
+   LINKS
+========================================== */
+
+a {
+
+    color:
+        var(--teal);
+
+    text-decoration:
+        none;
+
+}
+
+
+a:hover {
+
+    color:
+        var(--teal-dark);
+
+}
+
+
+/* ==========================================
+   HEADINGS
+========================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+    color:
+        var(--text-dark);
+
+    font-weight:
+        700;
+
+}
+
+
+/* ==========================================
+   PARAGRAPHS
+========================================== */
+
+p {
+
+    color:
+        var(--text-medium);
+
+}
+
+
+/* ==========================================
+   NAVBAR
+========================================== */
+
+.mc-navbar {
+
+    width:
+        100%;
+
+    min-height:
+        72px;
+
+    background-color:
+        var(--teal);
+
+    padding:
+        0 36px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        1000;
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+/* ==========================================
+   MEDICONNECT BRAND
+========================================== */
+
+.mc-brand {
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    color:
+        var(--white);
+
+    font-size:
+        28px;
+
+    font-weight:
+        400;
+
+    letter-spacing:
+        0.2px;
+
+    line-height:
+        1;
+
+}
+
+
+.mc-brand:hover {
+
+    color:
+        var(--white);
+
+}
+
+
+/* ==========================================
+   NAVBAR RIGHT
+========================================== */
+
+.mc-navbar-right {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        18px;
+
+}
+
+
+/* ==========================================
+   USER NAME
+========================================== */
+
+.mc-user-name {
+
+    color:
+        var(--white);
+
+    font-size:
+        15px;
+
+    font-weight:
+        600;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+}
+
+
+/* ==========================================
+   LOGOUT BUTTON
+========================================== */
+
+.mc-logout-btn {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    min-height:
+        46px;
+
+    padding:
+        9px 20px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.75);
+
+    border-radius:
+        25px;
+
+    background-color:
+        transparent;
+
+    color:
+        var(--white);
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    transition:
+        all 0.2s ease;
+
+}
+
+
+.mc-logout-btn:hover {
+
+    background-color:
+        var(--white);
+
+    color:
+        var(--teal);
+
+    border-color:
+        var(--white);
+
+}
+
+
+/* ==========================================
+   MAIN LAYOUT
+========================================== */
+
+.mc-layout {
+
+    width:
+        100%;
+
+    min-height:
+        calc(100vh - 72px);
+
+}
+
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.mc-main {
+
+    width:
+        100%;
+
+    max-width:
+        1250px;
+
+    margin:
+        0 auto;
+
+    padding:
+        38px 28px;
+
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.mc-page-header {
+
+    margin-bottom:
+        30px;
+
+}
+
+
+.mc-page-title {
+
+    color:
+        var(--text-dark);
+
+    font-size:
+        34px;
+
+    font-weight:
+        700;
+
+    margin-bottom:
+        8px;
+
+}
+
+
+.mc-page-subtitle {
+
+    color:
+        var(--text-medium);
+
+    font-size:
+        16px;
+
+}
+
+
+.mc-page-subtitle strong {
+
+    color:
+        var(--text-dark);
+
+}
+
+
+/* ==========================================
+   WHITE SECTION CARD
+========================================== */
+
+.mc-card {
+
+    background-color:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-large);
+
+    padding:
+        30px;
+
+    margin-bottom:
+        26px;
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+/* ==========================================
+   SECTION HEADING
+========================================== */
+
+.mc-card h2 {
+
+    color:
+        var(--text-dark);
+
+    font-size:
+        22px;
+
+    font-weight:
+        700;
+
+    margin-bottom:
+        22px;
+
+}
+
+
+/* ==========================================
+   SECTION HEADING ICON
+========================================== */
+
+.mc-card h2 i {
+
+    color:
+        var(--purple);
+
+}
+
+
+/* ==========================================
+   GRID - 4 COLUMNS
+========================================== */
+
+.mc-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap:
+        18px;
+
+}
+
+
+/* ==========================================
+   GRID - 3 COLUMNS
+========================================== */
+
+.mc-grid-3 {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        18px;
+
+}
+
+
+/* ==========================================
+   GRID - 2 COLUMNS
+========================================== */
+
+.mc-grid-2 {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:
+        18px;
+
+}
+
+
+/* ==========================================
+   STAT CARD
+========================================== */
+
+.mc-stat-card {
+
+    background-color:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    padding:
+        24px;
+
+    min-height:
+        125px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    box-shadow:
+        var(--shadow-small);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+
+}
+
+
+/* ==========================================
+   STAT CARD HOVER
+========================================== */
+
+.mc-stat-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        var(--shadow-medium);
+
+    border-color:
+        var(--purple);
+
+}
+
+
+/* ==========================================
+   STAT LABEL
+========================================== */
+
+.mc-stat-label {
+
+    color:
+        var(--purple);
+
+    font-size:
+        15px;
+
+    font-weight:
+        600;
+
+    margin-bottom:
+        9px;
+
+}
+
+
+/* ==========================================
+   STAT LABEL ICON
+========================================== */
+
+.mc-stat-label i {
+
+    color:
+        var(--purple);
+
+    margin-right:
+        5px;
+
+}
+
+
+/* ==========================================
+   STAT VALUE
+========================================== */
+
+.mc-stat-value {
+
+    color:
+        var(--purple);
+
+    font-size:
+        32px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.1;
+
+}
+
+
+/* ==========================================
+   MANAGEMENT BUTTON
+========================================== */
+
+.mc-btn {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        9px;
+
+    width:
+        100%;
+
+    min-height:
+        52px;
+
+    padding:
+        12px 18px;
+
+    border:
+        none;
+
+    border-radius:
+        var(--radius-small);
+
+    background-color:
+        var(--purple);
+
+    color:
+        var(--white);
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    text-align:
+        center;
+
+    transition:
+        all 0.2s ease;
+
+}
+
+
+/* ==========================================
+   MANAGEMENT BUTTON ICON
+========================================== */
+
+.mc-btn i {
+
+    color:
+        var(--white);
+
+}
+
+
+/* ==========================================
+   MANAGEMENT BUTTON HOVER
+========================================== */
+
+.mc-btn:hover {
+
+    background-color:
+        var(--purple-dark);
+
+    color:
+        var(--white);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 5px 14px rgba(181, 107, 196, 0.25);
+
+}
+
+
+/* ==========================================
+   LARGE BUTTON
+========================================== */
+
+.mc-btn-large {
+
+    min-height:
+        50px;
+
+    padding:
+        12px 24px;
+
+}
+
+
+/* ==========================================
+   FULL WIDTH BUTTON
+========================================== */
+
+.mc-btn-full {
+
+    width:
+        100%;
+
+}
+
+
+/* ==========================================
+   OUTLINE BUTTON
+========================================== */
+
+.mc-btn-outline {
+
+    background-color:
+        transparent;
+
+    color:
+        var(--teal);
+
+    border:
+        1px solid var(--teal);
+
+}
+
+
+.mc-btn-outline:hover {
+
+    background-color:
+        var(--teal);
+
+    color:
+        var(--white);
+
+}
+
+
+/* ==========================================
+   FORM CARD
+========================================== */
+
+.mc-form-card {
+
+    width:
+        100%;
+
+    max-width:
+        700px;
+
+    margin:
+        0 auto;
+
+    padding:
+        30px;
+
+    background-color:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-large);
+
+    box-shadow:
+        var(--shadow-medium);
+
+}
+
+
+/* ==========================================
+   FORM GROUP
+========================================== */
+
+.mc-form-group {
+
+    margin-bottom:
+        20px;
+
+}
+
+
+/* ==========================================
+   FORM LABEL
+========================================== */
+
+.mc-form-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    color:
+        var(--text-dark);
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+}
+
+
+/* ==========================================
+   INPUT
+========================================== */
+
+.mc-input,
+.mc-select,
+.mc-textarea {
+
+    width:
+        100%;
+
+    padding:
+        12px 14px;
+
+    background-color:
+        var(--white);
+
+    color:
+        var(--text-dark);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-small);
+
+    outline:
+        none;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+            14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+/* ==========================================
+   INPUT FOCUS
+========================================== */
+
+.mc-input:focus,
+.mc-select:focus,
+.mc-textarea:focus {
+
+    border-color:
+        var(--teal);
+
+    box-shadow:
+        0 0 0 3px rgba(40, 106, 118, 0.10);
+
+}
+
+
+/* ==========================================
+   TEXTAREA
+========================================== */
+
+.mc-textarea {
+
+    min-height:
+        120px;
+
+    resize:
+        vertical;
+
+}
+
+
+/* ==========================================
+   SEARCH BOX
+========================================== */
+
+.mc-search-box {
+
+    background-color:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    padding:
+        20px;
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+/* ==========================================
+   SEARCH ROW
+========================================== */
+
+.mc-search {
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+}
+
+
+/* ==========================================
+   SEARCH INPUT
+========================================== */
+
+.mc-search > * {
+
+    flex:
+        1;
+
+}
+
+
+/* ==========================================
+   DOCTOR CARD
+========================================== */
+
+.mc-doctor-card {
+
+    background-color:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    padding:
+        22px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        var(--shadow-small);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.mc-doctor-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        var(--shadow-medium);
+
+}
+
+
+/* ==========================================
+   DOCTOR IMAGE
+========================================== */
+
+.mc-doctor-image {
+
+    width:
+        72px;
+
+    height:
+        72px;
+
+    object-fit:
+        cover;
+
+    border-radius:
+        50%;
+
+    margin:
+        0 auto 12px;
+
+}
+
+
+/* ==========================================
+   DOCTOR NAME
+========================================== */
+
+.mc-doctor-name {
+
+    color:
+        var(--text-dark);
+
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+
+    margin-bottom:
+        5px;
+
+}
+
+
+/* ==========================================
+   DOCTOR SPECIALIZATION
+========================================== */
+
+.mc-doctor-specialization {
+
+    color:
+        var(--purple);
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+/* ==========================================
+   BADGE
+========================================== */
+
+.mc-badge {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        5px 11px;
+
+    border-radius:
+        20px;
+
+    background-color:
+        var(--teal-light);
+
+    color:
+        var(--teal);
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+}
+
+
+/* ==========================================
+   SUCCESS BADGE
+========================================== */
+
+.mc-badge-success {
+
+    background-color:
+        #E8F7F0;
+
+    color:
+        var(--success);
+
+}
+
+
+/* ==========================================
+   WARNING BADGE
+========================================== */
+
+.mc-badge-warning {
+
+    background-color:
+        #FFF5E4;
+
+    color:
+        var(--warning);
+
+}
+
+
+/* ==========================================
+   DANGER BADGE
+========================================== */
+
+.mc-badge-danger {
+
+    background-color:
+        #FCECEC;
+
+    color:
+        var(--danger);
+
+}
+
+
+/* ==========================================
+   TABLE WRAPPER
+========================================== */
+
+.mc-table-wrapper {
+
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.mc-table {
+
+    width:
+        100%;
+
+    border-collapse:
+        collapse;
+
+    background-color:
+        var(--white);
+
+}
+
+
+/* ==========================================
+   TABLE HEADER
+========================================== */
+
+.mc-table th {
+
+    padding:
+        14px;
+
+    background-color:
+        var(--teal-light);
+
+    color:
+        var(--text-dark);
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    text-align:
+        left;
+
+}
+
+
+/* ==========================================
+   TABLE DATA
+========================================== */
+
+.mc-table td {
+
+    padding:
+        14px;
+
+    color:
+        var(--text-medium);
+
+    border-top:
+        1px solid var(--border);
+
+    font-size:
+        14px;
+
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.mc-empty {
+
+    background-color:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    padding:
+        45px 20px;
+
+    text-align:
+        center;
+
+}
+
+
+.mc-empty h3 {
+
+    color:
+        var(--text-dark);
+
+}
+
+
+.mc-empty p {
+
+    color:
+        var(--text-medium);
+
+}
+
+
+/* ==========================================
+   HIGHLIGHT TEXT
+========================================== */
+
+.mc-highlight {
+
+    color:
+        var(--purple);
+
+    font-weight:
+        700;
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.mc-footer {
+
+    background-color:
+        var(--white);
+
+    border-top:
+        1px solid var(--border);
+
+    padding:
+        24px;
+
+    text-align:
+        center;
+
+}
+
+
+.mc-footer p {
+
+    color:
+        var(--text-light);
+
+    font-size:
+        13px;
+
+}
+
+
+/* ==========================================
+   MOBILE - TABLET
+========================================== */
+
+@media (max-width: 992px) {
+
+    .mc-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .mc-grid-3 {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+
+    /* ==========================================
+       NAVBAR
+    ========================================== */
+
+    .mc-navbar {
+
+        min-height:
+            64px;
+
+        padding:
+            0 18px;
+
+    }
+
+
+    .mc-brand {
+
+        font-size:
+            24px;
+
+    }
+
+
+    .mc-user-name {
+
+        display:
+            none;
+
+    }
+
+
+    .mc-logout-btn {
+
+        min-height:
+            40px;
+
+        padding:
+            7px 15px;
+
+        font-size:
+            13px;
+
+    }
+
+
+    /* ==========================================
+       MAIN
+    ========================================== */
+
+    .mc-main {
+
+        padding:
+            25px 15px;
+
+    }
+
+
+    /* ==========================================
+       PAGE TITLE
+    ========================================== */
+
+    .mc-page-title {
+
+        font-size:
+            27px;
+
+    }
+
+
+    .mc-page-subtitle {
+
+        font-size:
+            14px;
+
+    }
+
+
+    /* ==========================================
+       GRIDS
+    ========================================== */
+
+    .mc-grid,
+    .mc-grid-2,
+    .mc-grid-3 {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            14px;
+
+    }
+
+
+    /* ==========================================
+       SECTION CARD
+    ========================================== */
+
+    .mc-card {
+
+        padding:
+            20px;
+
+        border-radius:
+            14px;
+
+    }
+
+
+    /* ==========================================
+       SECTION HEADING
+    ========================================== */
+
+    .mc-card h2 {
+
+        font-size:
+            20px;
+
+    }
+
+
+    /* ==========================================
+       STAT CARD
+    ========================================== */
+
+    .mc-stat-card {
+
+        min-height:
+            105px;
+
+        padding:
+            20px;
+
+    }
+
+
+    /* ==========================================
+       STAT VALUE
+    ========================================== */
+
+    .mc-stat-value {
+
+        font-size:
+            28px;
+
+    }
+
+
+    /* ==========================================
+       SEARCH
+    ========================================== */
+
+    .mc-search {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    /* ==========================================
+       BUTTON
+    ========================================== */
+
+    .mc-btn {
+
+        min-height:
+            48px;
+
+    }
+
+
+    /* ==========================================
+       FORM CARD
+    ========================================== */
+
+    .mc-form-card {
+
+        padding:
+            20px;
+
+    }
+
+}
+
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+
+    .mc-main {
+
+        padding:
+            20px 12px;
+
+    }
+
+
+    .mc-brand {
+
+        font-size:
+            22px;
+
+    }
+
+
+    .mc-page-title {
+
+        font-size:
+            24px;
+
+    }
+
+
+    .mc-card {
+
+        padding:
+            16px;
+
+    }
+
+
+    .mc-stat-card {
+
+        padding:
+            18px;
+
+    }
+
+
+    .mc-btn {
+
+        font-size:
+            13px;
+
+    }
+
+}
+/* ==========================================
+   PATIENT DASHBOARD
+========================================== */
+
+
+/* ==========================================
+   PATIENT ACTION CARD
+========================================== */
+
+.patient-action-card {
+
+    background:
+        var(--white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    padding:
+        24px;
+
+    box-shadow:
+        var(--shadow-small);
+
+    transition:
+        all 0.2s ease;
+
+}
+
+
+.patient-action-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        var(--shadow-medium);
+
+    border-color:
+        var(--purple);
+
+}
+
+
+/* ==========================================
+   PATIENT ACTION ICON
+========================================== */
+
+.patient-action-icon {
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        14px;
+
+    border-radius:
+        12px;
+
+    background:
+        var(--purple-light);
+
+    color:
+        var(--purple);
+
+    font-size:
+        22px;
+
+}
+
+
+/* ==========================================
+   PATIENT ACTION TITLE
+========================================== */
+
+.patient-action-title {
+
+    color:
+        var(--text-dark);
+
+    font-size:
+        18px;
+
+    font-weight:
+        700;
+
+    margin-bottom:
+        6px;
+
+}
+
+
+/* ==========================================
+   PATIENT ACTION DESCRIPTION
+========================================== */
+
+.patient-action-description {
+
+    color:
+        var(--text-medium);
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        18px;
+
+}
+
+
+/* ==========================================
+   PATIENT DASHBOARD MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .patient-action-card {
+
+        padding:
+            20px;
+
+    }
+}
+
+/* ==========================================
+   AVAILABILITY ACTIONS
+========================================== */
+
+.availability-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.availability-actions .mc-btn {
+
+    width: auto;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .availability-actions {
+
+        flex-direction: column;
+
+    }
+
+    .availability-actions .mc-btn {
+
+        width: 100%;
+
+    }
+
+}

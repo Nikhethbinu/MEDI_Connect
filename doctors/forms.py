@@ -4,7 +4,7 @@ from .models import Doctor,DoctorAvailability,Department
 
 # ==========================================
 # DOCTOR PROFILE FORM
-# ==========================================
+
 
 class DoctorProfileForm(forms.ModelForm):
 
@@ -21,6 +21,48 @@ class DoctorProfileForm(forms.ModelForm):
             'bio',
             'is_available',
         ]
+
+        widgets = {
+
+            'specialization': forms.TextInput(
+                attrs={
+                    'placeholder': 'Example: Cardiologist'
+                }
+            ),
+
+            'qualification': forms.TextInput(
+                attrs={
+                    'placeholder': 'Example: MBBS, MD Cardiology'
+                }
+            ),
+
+            'experience_years': forms.NumberInput(
+                attrs={
+                    'min': 0,
+                    'placeholder': 'Years of experience'
+                }
+            ),
+
+            'department': forms.Select(),
+
+            'consultation_fee': forms.NumberInput(
+                attrs={
+                    'min': 0,
+                    'step': '0.01',
+                    'placeholder': 'Consultation fee'
+                }
+            ),
+
+            'bio': forms.Textarea(
+                attrs={
+                    'rows': 5,
+                    'placeholder': 'Write a short professional biography...'
+                }
+            ),
+
+            'is_available': forms.CheckboxInput(),
+
+        }
 
 # ==========================================
 # DOCTOR AVAILABILITY FORM

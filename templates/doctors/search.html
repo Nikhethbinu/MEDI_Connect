@@ -1,160 +1,486 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
 
-    <title>
-        MediConnect - Find Doctors
-    </title>
+{% block title %}
 
-</head>
+    MediConnect - Find a Doctor
 
-<body>
+{% endblock %}
 
-    <!-- ==========================================
-         DOCTOR SEARCH
-         ========================================== -->
 
-    <h1>MediConnect</h1>
+{% block content %}
 
-    <h2>Find a Doctor</h2>
 
-    <p>
-        Welcome, {{ user.name }}
+<!-- ==========================================
+     PAGE HEADER
+========================================== -->
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+
+        Find a Doctor
+
+    </h1>
+
+
+    <p class="mc-page-subtitle">
+
+        Search for the right doctor for your healthcare needs.
+
     </p>
 
+</div>
 
-    <!-- ==========================================
-         DEPARTMENT FILTER
-         ========================================== -->
 
-    <h3>Search by Department</h3>
+<!-- ==========================================
+     SEARCH / FILTER
+========================================== -->
+
+<div class="mc-search-box">
 
     <form method="GET">
 
-        <label for="department">
-            Department:
-        </label>
+        <div class="mc-search">
 
-        <select
-            name="department"
-            id="department"
-        >
 
-            <option value="">
-                All Departments
-            </option>
+            <!-- ==========================================
+                 DEPARTMENT
+            ========================================== -->
 
-            {% for department in departments %}
+            <select
+                name="department"
+                id="department"
+                class="mc-select"
+            >
 
-                <option
-                    value="{{ department.id }}"
-                    {% if selected_department == department.id|stringformat:"s" %}
-                        selected
-                    {% endif %}
-                >
-                    {{ department.name }}
+                <option value="">
+
+                    All Departments
+
                 </option>
 
-            {% endfor %}
 
-        </select>
+                {% for department in departments %}
 
-        <button type="submit">
-            Search
-        </button>
+                    <option
+                        value="{{ department.id }}"
+
+                        {% if selected_department == department.id|stringformat:"s" %}
+
+                            selected
+
+                        {% endif %}
+                    >
+
+                        {{ department.name }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <!-- ==========================================
+                 SEARCH BUTTON
+            ========================================== -->
+
+            <button
+                type="submit"
+                class="mc-btn"
+            >
+
+                <i class="bi bi-search"></i>
+
+                Search Doctors
+
+            </button>
+
+
+        </div>
 
     </form>
 
+</div>
 
-    <!-- ==========================================
-         DOCTOR RESULTS
-         ========================================== -->
 
-    <h3>Available Doctors</h3>
+<!-- ==========================================
+     DOCTOR RESULTS
+========================================== -->
+
+<div class="mc-card">
+
+    <h2>
+
+        <i class="bi bi-heart-pulse"></i>
+
+        Available Doctors
+
+    </h2>
+
 
     {% if doctors %}
 
-        <ul>
+
+        <div class="mc-grid-3">
+
 
             {% for doctor in doctors %}
 
-                <li>
 
-                    <h4>
-                         {{ doctor.user.name }}
-                    </h4>
+                <!-- ==========================================
+                     DOCTOR CARD
+                ========================================== -->
 
-                    <p>
-                        Specialization:
+                <div class="mc-doctor-card">
+
+
+                    <!-- ==========================================
+                         DOCTOR ICON
+                    ========================================== -->
+
+                    <div
+                        class="doctor-icon"
+                    >
+
+                        <i class="bi bi-person-circle"></i>
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         DOCTOR NAME
+                    ========================================== -->
+
+                    <h3 class="mc-doctor-name">
+
+                        {{ doctor.user.name }}
+
+                    </h3>
+
+
+                    <!-- ==========================================
+                         SPECIALIZATION
+                    ========================================== -->
+
+                    <p class="mc-doctor-specialization">
+
                         {{ doctor.specialization }}
+
                     </p>
 
-                    <p>
-                        Qualification:
-                        {{ doctor.qualification }}
-                    </p>
 
-                    <p>
-                        Department:
-                        {{ doctor.department.name }}
-                    </p>
+                    <!-- ==========================================
+                         DEPARTMENT
+                    ========================================== -->
 
-                    <p>
-                        Experience:
-                        {{ doctor.experience_years }}
-                        years
-                    </p>
+                    {% if doctor.department %}
 
-                    <p>
-                        Consultation Fee:
-                        ₹{{ doctor.consultation_fee }}
-                    </p>
+                        <span class="mc-badge">
 
-                    <p>
-                        {% if doctor.is_available %}
+                            <i class="bi bi-hospital"></i>
+
+                            {{ doctor.department.name }}
+
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- ==========================================
+                         DOCTOR INFORMATION
+                    ========================================== -->
+
+                    <div class="doctor-info">
+
+
+                        <div>
+
+                            <i class="bi bi-mortarboard"></i>
+
+                            <span>
+
+                                {{ doctor.qualification }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="bi bi-briefcase"></i>
+
+                            <span>
+
+                                {{ doctor.experience_years }}
+                                years experience
+
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="bi bi-currency-rupee"></i>
+
+                            <span>
+
+                                ₹{{ doctor.consultation_fee }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         AVAILABILITY
+                    ========================================== -->
+
+                    <div class="doctor-status">
+
+
+                        <span class="mc-badge mc-badge-success">
+
+                            <i class="bi bi-check-circle"></i>
+
                             Available
-                        {% else %}
-                            Not Available
-                        {% endif %}
-                    </p>
-                    <a href="{% url 'doctor_detail' doctor.id %}">
-                        View Details
+
+                        </span>
+
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         VIEW DOCTOR
+                    ========================================== -->
+
+                    <a
+                        href="{% url 'doctor_detail' doctor.id %}"
+                        class="mc-btn doctor-view-btn"
+                    >
+
+                        <i class="bi bi-eye"></i>
+
+                        View Doctor
+
                     </a>
 
-                    <hr>
 
-                </li>
+                </div>
+
 
             {% endfor %}
 
-        </ul>
+
+        </div>
+
 
     {% else %}
 
-        <p>
-            No doctors found for the selected department.
-        </p>
+
+        <!-- ==========================================
+             NO DOCTORS
+        ========================================== -->
+
+        <div class="mc-empty">
+
+
+            <i
+                class="bi bi-person-x"
+                style="font-size: 42px; color: var(--purple);"
+            ></i>
+
+
+            <h3>
+
+                No Doctors Found
+
+            </h3>
+
+
+            <p>
+
+                No available doctors were found
+                for the selected department.
+
+            </p>
+
+
+            <a
+                href="{% url 'doctor_search' %}"
+                class="mc-btn"
+                style="max-width: 250px; margin: 20px auto 0;"
+            >
+
+                <i class="bi bi-arrow-clockwise"></i>
+
+                View All Doctors
+
+            </a>
+
+
+        </div>
+
 
     {% endif %}
 
 
-    <!-- ==========================================
-         NAVIGATION
-         ========================================== -->
+</div>
 
-    <br>
 
-    <a href="{% url 'patient_dashboard' %}">
-        Back to Dashboard
+<!-- ==========================================
+     BACK TO DASHBOARD
+========================================== -->
+
+<div style="margin-top: 20px;">
+
+    <a
+        href="{% url 'patient_dashboard' %}"
+        class="mc-btn mc-btn-outline"
+        style="max-width: 250px;"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Patient Dashboard
+
     </a>
 
-    <br><br>
+</div>
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
 
-</body>
+{% endblock %}
 
-</html>
+
+{% block extra_css %}
+
+
+<style>
+
+/* ==========================================
+   DOCTOR ICON
+========================================== */
+
+.doctor-icon {
+
+    width: 72px;
+
+    height: 72px;
+
+    margin: 0 auto 14px;
+
+    border-radius: 50%;
+
+    background-color: var(--purple-light);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.doctor-icon i {
+
+    font-size: 42px;
+
+    color: var(--purple);
+
+}
+
+
+/* ==========================================
+   DOCTOR INFORMATION
+========================================== */
+
+.doctor-info {
+
+    margin-top: 20px;
+
+    margin-bottom: 18px;
+
+    text-align: left;
+
+}
+
+
+.doctor-info div {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.doctor-info i {
+
+    color: var(--teal);
+
+    margin-top: 4px;
+
+}
+
+
+.doctor-info span {
+
+    color: var(--text-medium);
+
+    font-size: 13px;
+
+}
+
+
+/* ==========================================
+   DOCTOR STATUS
+========================================== */
+
+.doctor-status {
+
+    margin-bottom: 18px;
+
+}
+
+
+/* ==========================================
+   VIEW BUTTON
+========================================== */
+
+.doctor-view-btn {
+
+    min-height: 46px;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .doctor-info {
+
+        text-align: left;
+
+    }
+
+}
+
+</style>
+
+
+{% endblock %}
