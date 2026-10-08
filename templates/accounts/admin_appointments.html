@@ -1,237 +1,196 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>MediConnect - Appointment Management</title>
-</head>
+{% block title %}MediConnect - Manage Appointments{% endblock %}
 
-<body>
+{% block content %}
 
-<h1>MediConnect</h1>
+<div class="mc-page-header">
 
-<h2>Appointment Management</h2>
+    <h1 class="mc-page-title">
+        Manage Appointments
+    </h1>
 
-<hr>
-
-<!-- ==========================================
-     NAVIGATION
-========================================== -->
-
-<p>
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-</p>
-
-<hr>
-
-<!-- ==========================================
-     SEARCH AND FILTER
-========================================== -->
-
-<h3>Search and Filter Appointments</h3>
-
-<form method="GET">
-
-    <p>
-        <label>Search:</label>
-
-        <input
-            type="text"
-            name="search"
-            value="{{ search_query }}"
-            placeholder="Patient, doctor, phone, specialization..."
-        >
+    <p class="mc-page-subtitle">
+        View and monitor all patient appointments.
     </p>
 
-    <p>
-        <label>Status:</label>
+</div>
 
-        <select name="status">
 
-            <option value="">
-                All Statuses
-            </option>
+<!-- Appointment Statistics -->
 
-            <option value="PENDING"
-                {% if status_filter == 'PENDING' %}selected{% endif %}>
-                Pending
-            </option>
+<div class="mc-grid mc-grid-3">
 
-            <option value="CONFIRMED"
-                {% if status_filter == 'CONFIRMED' %}selected{% endif %}>
-                Confirmed
-            </option>
+    <div class="mc-stat-card">
 
-            <option value="REJECTED"
-                {% if status_filter == 'REJECTED' %}selected{% endif %}>
-                Rejected
-            </option>
+        <div class="mc-stat-label">
+            <i class="bi bi-calendar-check"></i>
+            Total Appointments
+        </div>
 
-            <option value="CANCELLED"
-                {% if status_filter == 'CANCELLED' %}selected{% endif %}>
-                Cancelled
-            </option>
+        <div class="mc-stat-value">
+            {{ appointments|length }}
+        </div>
 
-            <option value="COMPLETED"
-                {% if status_filter == 'COMPLETED' %}selected{% endif %}>
-                Completed
-            </option>
+    </div>
 
-        </select>
-    </p>
+</div>
 
-    <p>
-        <label>Appointment Date:</label>
 
-        <input
-            type="date"
-            name="date"
-            value="{{ date_filter }}"
-        >
-    </p>
+<!-- Appointment List -->
 
-    <button type="submit">
-        Apply Filters
-    </button>
+<div class="mc-card">
 
-    {% if search_query or status_filter or date_filter %}
-
-        <a href="{% url 'admin_appointments' %}">
-            Clear Filters
-        </a>
-
-    {% endif %}
-
-</form>
-
-<hr>
-
-<!-- ==========================================
-     APPOINTMENT COUNT
-========================================== -->
-
-<h3>
-    Total Appointments: {{ appointments|length }}
-</h3>
-
-<!-- ==========================================
-     APPOINTMENTS
-========================================== -->
-
-{% if appointments %}
-
-    {% for appointment in appointments %}
+    <div class="mc-section-header">
 
         <div>
 
-            <h3>
-                Appointment {{ forloop.counter }}
-            </h3>
-
-            <h4>Patient Information</h4>
-
-            <p>
-                <strong>Name:</strong>
-                {{ appointment.patient.name }}
-            </p>
+            <h2>
+                <i class="bi bi-calendar-check"></i>
+                Appointment List
+            </h2>
 
             <p>
-                <strong>Username:</strong>
-                {{ appointment.patient.username }}
-            </p>
-
-            <p>
-                <strong>Phone:</strong>
-                {{ appointment.patient.phone }}
-            </p>
-
-            <p>
-                <strong>Email:</strong>
-                {{ appointment.patient.email }}
-            </p>
-
-            <h4>Doctor Information</h4>
-
-            <p>
-                <strong>Doctor:</strong>
-                {{ appointment.doctor.user.name }}
-            </p>
-
-            <p>
-                <strong>Specialization:</strong>
-                {{ appointment.doctor.specialization }}
-            </p>
-
-            <p>
-                <strong>Department:</strong>
-
-                {% if appointment.doctor.department %}
-                    {{ appointment.doctor.department.name }}
-                {% else %}
-                    Not assigned
-                {% endif %}
-
-            </p>
-
-            <h4>Appointment Information</h4>
-
-            <p>
-                <strong>Date:</strong>
-                {{ appointment.appointment_date }}
-            </p>
-
-            <p>
-                <strong>Time:</strong>
-                {{ appointment.appointment_time }}
-            </p>
-
-            <p>
-                <strong>Reason:</strong>
-                {{ appointment.reason|default:"No reason provided." }}
-            </p>
-
-            <p>
-                <strong>Status:</strong>
-                {{ appointment.get_status_display }}
-            </p>
-
-            <p>
-                <strong>Created:</strong>
-                {{ appointment.created_at }}
-            </p>
-
-            <p>
-                <strong>Last Updated:</strong>
-                {{ appointment.updated_at }}
+                All appointments registered in MediConnect.
             </p>
 
         </div>
 
-        <hr>
+    </div>
 
-    {% endfor %}
 
-{% else %}
+    {% if appointments %}
 
-    <p>
-        No appointments found.
-    </p>
+    <div class="mc-table-wrapper">
 
-{% endif %}
+        <table class="mc-table">
 
-<p>
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
+            <thead>
+
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for appointment in appointments %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ appointment.patient.name }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        {{ appointment.doctor.user.name }}
+                    </td>
+
+
+                    <td>
+
+                        {% if appointment.doctor.department %}
+                            {{ appointment.doctor.department.name }}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ appointment.appointment_date|date:"d M Y" }}
+                    </td>
+
+
+                    <td>
+                        {{ appointment.appointment_time|time:"h:i A" }}
+                    </td>
+
+
+                    <td>
+
+                        {% if appointment.status == "CONFIRMED" %}
+
+                            <span class="mc-badge mc-badge-success">
+                                Confirmed
+                            </span>
+
+                        {% elif appointment.status == "PENDING" %}
+
+                            <span class="mc-badge mc-badge-warning">
+                                Pending
+                            </span>
+
+                        {% elif appointment.status == "COMPLETED" %}
+
+                            <span class="mc-badge mc-badge-success">
+                                Completed
+                            </span>
+
+                        {% elif appointment.status == "CANCELLED" %}
+
+                            <span class="mc-badge mc-badge-danger">
+                                Cancelled
+                            </span>
+
+                        {% elif appointment.status == "REJECTED" %}
+
+                            <span class="mc-badge mc-badge-danger">
+                                Rejected
+                            </span>
+
+                        {% else %}
+
+                            <span class="mc-badge">
+                                {{ appointment.get_status_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="mc-empty">
+
+        <i class="bi bi-calendar-x"></i>
+
+        <h3>No Appointments Found</h3>
+
+        <p>
+            There are currently no appointments in the system.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+<div>
+    <a href="{% url 'admin_dashboard' %}" class="mc-btn mc-btn-outline">
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
     </a>
-</p>
-
-<p>
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
-</p>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

@@ -285,28 +285,24 @@
         </form>
 
 
-        <!-- ==========================================
-             BACK TO DOCTOR
-        ========================================== -->
-
-        <a
-            href="{% url 'doctor_detail' doctor.id %}"
-            class="mc-btn mc-btn-outline appointment-back-btn"
-        >
-
-            <i class="bi bi-arrow-left"></i>
-
-            Back to Doctor
-
-        </a>
+       
 
 
     </div>
 
 
 </div>
+<div style="margin-top: 24px;">
 
+    <a href="{% url 'doctor_search' %}"
+       class="mc-btn mc-btn-outline">
 
+        <i class="bi bi-arrow-left"></i>
+        Back to Doctors
+
+    </a>
+
+</div>
 {% endblock %}
 
 

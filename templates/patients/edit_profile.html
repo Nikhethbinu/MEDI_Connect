@@ -1,41 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}MediConnect - Edit Doctor Profile{% endblock %}
+{% block title %}MediConnect - Edit Patient Profile{% endblock %}
 
 {% block content %}
 
 <div class="mc-page-header">
 
     <h1 class="mc-page-title">
-        Edit Doctor Profile
+        Edit Patient Profile
     </h1>
 
     <p class="mc-page-subtitle">
-        Update your professional information.
+        Update your personal and healthcare information.
     </p>
 
 </div>
 
 
 <div class="mc-card">
-
-    <div class="mc-section-header">
-
-        <div>
-
-            <h2>
-                <i class="bi bi-person-gear"></i>
-                Professional Information
-            </h2>
-
-            <p>
-                Keep your doctor profile information up to date.
-            </p>
-
-        </div>
-
-    </div>
-
 
     <form method="POST">
 
@@ -44,13 +26,13 @@
 
         {% if form.non_field_errors %}
 
-            <div class="mc-alert mc-alert-danger">
+        <div class="mc-alert mc-alert-danger">
 
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
 
-            </div>
+        </div>
 
         {% endif %}
 
@@ -58,17 +40,15 @@
         <div class="mc-grid mc-grid-2">
 
 
-            <!-- Specialization -->
-
             <div class="mc-form-group">
 
                 <label class="mc-form-label">
-                    Specialization
+                    Date of Birth
                 </label>
 
-                {{ form.specialization }}
+                {{ form.date_of_birth }}
 
-                {% for error in form.specialization.errors %}
+                {% for error in form.date_of_birth.errors %}
                     <small class="mc-form-error">
                         {{ error }}
                     </small>
@@ -77,17 +57,15 @@
             </div>
 
 
-            <!-- Qualification -->
-
             <div class="mc-form-group">
 
                 <label class="mc-form-label">
-                    Qualification
+                    Gender
                 </label>
 
-                {{ form.qualification }}
+                {{ form.gender }}
 
-                {% for error in form.qualification.errors %}
+                {% for error in form.gender.errors %}
                     <small class="mc-form-error">
                         {{ error }}
                     </small>
@@ -96,17 +74,15 @@
             </div>
 
 
-            <!-- Experience -->
-
             <div class="mc-form-group">
 
                 <label class="mc-form-label">
-                    Experience (Years)
+                    Blood Group
                 </label>
 
-                {{ form.experience_years }}
+                {{ form.blood_group }}
 
-                {% for error in form.experience_years.errors %}
+                {% for error in form.blood_group.errors %}
                     <small class="mc-form-error">
                         {{ error }}
                     </small>
@@ -115,17 +91,15 @@
             </div>
 
 
-            <!-- Department -->
-
             <div class="mc-form-group">
 
                 <label class="mc-form-label">
-                    Department
+                    Emergency Contact Name
                 </label>
 
-                {{ form.department }}
+                {{ form.emergency_contact_name }}
 
-                {% for error in form.department.errors %}
+                {% for error in form.emergency_contact_name.errors %}
                     <small class="mc-form-error">
                         {{ error }}
                     </small>
@@ -134,55 +108,34 @@
             </div>
 
 
-            <!-- Consultation Fee -->
-
             <div class="mc-form-group">
 
                 <label class="mc-form-label">
-                    Consultation Fee
+                    Emergency Contact Phone
                 </label>
 
-                {{ form.consultation_fee }}
+                {{ form.emergency_contact_phone }}
 
-                {% for error in form.consultation_fee.errors %}
+                {% for error in form.emergency_contact_phone.errors %}
                     <small class="mc-form-error">
                         {{ error }}
                     </small>
                 {% endfor %}
-
-            </div>
-
-
-            <!-- Availability -->
-
-            <div class="mc-form-group mc-checkbox-group">
-
-                <label class="mc-checkbox-label">
-
-                    {{ form.is_available }}
-
-                    <span>
-                        Currently accepting appointments
-                    </span>
-
-                </label>
 
             </div>
 
         </div>
 
 
-        <!-- Biography -->
-
         <div class="mc-form-group">
 
             <label class="mc-form-label">
-                Professional Bio
+                Address
             </label>
 
-            {{ form.bio }}
+            {{ form.address }}
 
-            {% for error in form.bio.errors %}
+            {% for error in form.address.errors %}
                 <small class="mc-form-error">
                     {{ error }}
                 </small>
@@ -190,8 +143,6 @@
 
         </div>
 
-
-        <!-- Buttons -->
 
         <div class="mc-form-actions">
 
@@ -203,7 +154,7 @@
             </button>
 
 
-            <a href="{% url 'doctor_profile' %}"
+            <a href="{% url 'patient_profile' %}"
                class="mc-btn mc-btn-outline">
 
                 <i class="bi bi-x-circle"></i>
@@ -218,11 +169,9 @@
 </div>
 
 
-<!-- Dashboard -->
-
 <div style="margin-top: 24px;">
 
-    <a href="{% url 'doctor_dashboard' %}"
+    <a href="{% url 'patient_dashboard' %}"
        class="mc-btn mc-btn-outline">
 
         <i class="bi bi-arrow-left"></i>

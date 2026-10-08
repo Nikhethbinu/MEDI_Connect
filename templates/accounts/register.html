@@ -1,74 +1,100 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>MediConnect - Register</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}MediConnect - Create Account{% endblock %}
 
-    <h1>MediConnect</h1>
+{% block content %}
 
-    <h2>Create Account</h2>
+<div class="mc-auth-container">
 
-    <form method="POST">
+    <div class="mc-form-card">
 
-        {% csrf_token %}
+        <div class="mc-auth-header">
 
-        {{ form.non_field_errors }}
+            <h1>
+                Create Account
+            </h1>
 
-        <div>
-            <label>Username</label>
-            {{ form.username }}
-            {{ form.username.errors }}
+            <p>
+                Register as a patient with MediConnect.
+            </p>
+
         </div>
 
-        <br>
 
-        <div>
-            <label>Full Name</label>
-            {{ form.name }}
-            {{ form.name.errors }}
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+            <div class="mc-alert mc-alert-danger">
+
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+
+            {% for field in form %}
+
+            <div class="mc-form-group">
+
+                <label class="mc-form-label">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+
+                {% for error in field.errors %}
+
+                    <small class="mc-form-error">
+                        {{ error }}
+                    </small>
+
+                {% endfor %}
+
+
+                {% if field.help_text %}
+
+                    <small class="mc-form-help">
+                        {{ field.help_text }}
+                    </small>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+
+            <button type="submit"
+                    class="mc-btn mc-btn-large mc-btn-full">
+
+                <i class="bi bi-person-plus"></i>
+                Create Account
+
+            </button>
+
+        </form>
+
+
+        <div class="mc-auth-footer">
+
+            Already have an account?
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
         </div>
 
-        <br>
+    </div>
 
-        <div>
-            <label>Phone Number</label>
-            {{ form.phone }}
-            {{ form.phone.errors }}
-        </div>
+</div>
 
-        <br>
-
-        <div>
-            <label>Email</label>
-            {{ form.email }}
-            {{ form.email.errors }}
-        </div>
-
-        <br>
-
-        <div>
-            <label>Password</label>
-            {{ form.password1 }}
-            {{ form.password1.errors }}
-        </div>
-
-        <br>
-
-        <div>
-            <label>Confirm Password</label>
-            {{ form.password2 }}
-            {{ form.password2.errors }}
-        </div>
-
-        <br>
-
-        <button type="submit">
-            Create Account
-        </button>
-
-    </form>
-
-</body>
-</html>
+{% endblock %}

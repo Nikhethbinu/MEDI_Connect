@@ -1,67 +1,191 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}MediConnect - Medical Record{% endblock %}
 
-    <title>MediConnect - Medical Record</title>
+{% block content %}
 
-</head>
+<div class="mc-page-header">
 
-<body>
+    <h1 class="mc-page-title">
+        Medical Record
+    </h1>
 
-    <h1>MediConnect</h1>
-
-    <h2>Create Medical Record</h2>
-
-    <hr>
-
-    <!-- ==========================================
-         PATIENT INFORMATION
-         ========================================== -->
-
-    <h3>Patient Information</h3>
-
-    <p>
-        <strong>Name:</strong>
-        {{ appointment.patient.name }}
+    <p class="mc-page-subtitle">
+        Record the patient's clinical information.
     </p>
 
-    <p>
-        <strong>Phone:</strong>
-        {{ appointment.patient.phone }}
-    </p>
+</div>
 
-    <p>
-        <strong>Appointment Date:</strong>
-        {{ appointment.appointment_date }}
-    </p>
 
-    <hr>
+<!-- Appointment -->
 
-    <!-- ==========================================
-         MEDICAL RECORD FORM
-         ========================================== -->
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-calendar-check"></i>
+        Appointment Information
+    </h2>
+
+
+    <div class="mc-grid mc-grid-3">
+
+        <div>
+            <strong>Patient</strong>
+            <p>{{ appointment.patient.name }}</p>
+        </div>
+
+        <div>
+            <strong>Doctor</strong>
+            <p>{{ appointment.doctor.user.name }}</p>
+        </div>
+
+        <div>
+            <strong>Date</strong>
+            <p>{{ appointment.appointment_date|date:"d M Y" }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Medical Record Form -->
+
+<div class="mc-card">
 
     <form method="POST">
 
         {% csrf_token %}
 
-        {{ form.as_p }}
 
-        <br>
+        {% if form.non_field_errors %}
 
-        <button type="submit">
-            Save Medical Record
-        </button>
+        <div class="mc-alert mc-alert-danger">
+
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Symptoms -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Symptoms
+            </label>
+
+            {{ form.symptoms }}
+
+            {% for error in form.symptoms.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Diagnosis -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Diagnosis
+            </label>
+
+            {{ form.diagnosis }}
+
+            {% for error in form.diagnosis.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Treatment -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Treatment
+            </label>
+
+            {{ form.treatment }}
+
+            {% for error in form.treatment.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Notes -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Additional Notes
+            </label>
+
+            {{ form.notes }}
+
+            {% for error in form.notes.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="mc-form-actions">
+
+            <button type="submit" class="mc-btn">
+
+                <i class="bi bi-check-circle"></i>
+                Save Medical Record
+
+            </button>
+
+
+            <a href="{% url 'doctor_appointments' %}"
+               class="mc-btn mc-btn-outline">
+
+                <i class="bi bi-x-circle"></i>
+                Cancel
+
+            </a>
+
+        </div>
 
     </form>
 
-    <br>
+</div>
 
-    <a href="{% url 'doctor_appointments' %}">
-        Back to Doctor Appointments
+
+<!-- Dashboard -->
+
+<div style="margin-top: 24px;">
+
+    <a href="{% url 'doctor_dashboard' %}"
+       class="mc-btn mc-btn-outline">
+
+        <i class="bi bi-arrow-left"></i>
+        Dashboard
+
     </a>
 
-</body>
+</div>
 
-</html>
+{% endblock %}

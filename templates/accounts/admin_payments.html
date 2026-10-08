@@ -1,470 +1,206 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}MediConnect - Manage Payments{% endblock %}
 
-    <title>
-        MediConnect - Payment Management
-    </title>
+{% block content %}
 
-</head>
+<div class="mc-page-header">
 
-<body>
+    <h1 class="mc-page-title">
+        Manage Payments
+    </h1>
 
-<h1>
-    MediConnect
-</h1>
-
-<h2>
-    Payment Management
-</h2>
-
-<hr>
-
-<!-- ==========================================
-     NAVIGATION
-========================================== -->
-
-<p>
-
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
-    </a>
-
-</p>
-
-<hr>
-
-<!-- ==========================================
-     SEARCH AND FILTER
-========================================== -->
-
-<h3>
-    Search and Filter Payments
-</h3>
-
-<form method="GET">
-
-    <!-- ==========================================
-         SEARCH
-    ========================================== -->
-
-    <p>
-
-        <label>
-            Search:
-        </label>
-
-        <input
-            type="text"
-            name="search"
-            value="{{ search_query }}"
-            placeholder="Patient, doctor, transaction ID..."
-        >
-
+    <p class="mc-page-subtitle">
+        Monitor consultation payments and billing information.
     </p>
 
-    <!-- ==========================================
-         STATUS
-    ========================================== -->
+</div>
 
-    <p>
 
-        <label>
-            Payment Status:
-        </label>
+<!-- Payment Statistics -->
 
-        <select name="status">
+<div class="mc-grid mc-grid-3">
 
-            <option value="">
-                All Statuses
-            </option>
+    <div class="mc-stat-card">
 
-            <option
-                value="PENDING"
-                {% if status_filter == 'PENDING' %}selected{% endif %}
-            >
-                Pending
-            </option>
+        <div class="mc-stat-label">
+            <i class="bi bi-credit-card"></i>
+            Total Payments
+        </div>
 
-            <option
-                value="PAID"
-                {% if status_filter == 'PAID' %}selected{% endif %}
-            >
-                Paid
-            </option>
+        <div class="mc-stat-value">
+            {{ payments|length }}
+        </div>
 
-            <option
-                value="FAILED"
-                {% if status_filter == 'FAILED' %}selected{% endif %}
-            >
-                Failed
-            </option>
+    </div>
 
-            <option
-                value="CANCELLED"
-                {% if status_filter == 'CANCELLED' %}selected{% endif %}
-            >
-                Cancelled
-            </option>
+</div>
 
-        </select>
 
-    </p>
+<!-- Payment List -->
 
-    <!-- ==========================================
-         PAYMENT METHOD
-    ========================================== -->
+<div class="mc-card">
 
-    <p>
-
-        <label>
-            Payment Method:
-        </label>
-
-        <select name="method">
-
-            <option value="">
-                All Methods
-            </option>
-
-            <option
-                value="CASH"
-                {% if method_filter == 'CASH' %}selected{% endif %}
-            >
-                Cash
-            </option>
-
-            <option
-                value="CARD"
-                {% if method_filter == 'CARD' %}selected{% endif %}
-            >
-                Card
-            </option>
-
-            <option
-                value="UPI"
-                {% if method_filter == 'UPI' %}selected{% endif %}
-            >
-                UPI
-            </option>
-
-            <option
-                value="NET_BANKING"
-                {% if method_filter == 'NET_BANKING' %}selected{% endif %}
-            >
-                Net Banking
-            </option>
-
-        </select>
-
-    </p>
-
-    <button type="submit">
-        Apply Filters
-    </button>
-
-    {% if search_query or status_filter or method_filter %}
-
-        <a href="{% url 'admin_payments' %}">
-            Clear Filters
-        </a>
-
-    {% endif %}
-
-</form>
-
-<hr>
-
-<!-- ==========================================
-     PAYMENT COUNT
-========================================== -->
-
-<h3>
-
-    Total Payments:
-    {{ payments|length }}
-
-</h3>
-
-<!-- ==========================================
-     PAYMENT LIST
-========================================== -->
-
-{% if payments %}
-
-    {% for payment in payments %}
+    <div class="mc-section-header">
 
         <div>
 
-            <h3>
-                Payment {{ forloop.counter }}
-            </h3>
-
-            <!-- ==========================================
-                 PATIENT INFORMATION
-            ========================================== -->
-
-            <h4>
-                Patient Information
-            </h4>
+            <h2>
+                <i class="bi bi-credit-card"></i>
+                Payment List
+            </h2>
 
             <p>
-
-                <strong>
-                    Name:
-                </strong>
-
-                {{ payment.patient.name }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Username:
-                </strong>
-
-                {{ payment.patient.username }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Phone:
-                </strong>
-
-                {{ payment.patient.phone }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Email:
-                </strong>
-
-                {{ payment.patient.email }}
-
-            </p>
-
-            <!-- ==========================================
-                 DOCTOR INFORMATION
-            ========================================== -->
-
-            <h4>
-                Doctor Information
-            </h4>
-
-            <p>
-
-                <strong>
-                    Doctor:
-                </strong>
-
-                {{ payment.appointment.doctor.user.name }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Specialization:
-                </strong>
-
-                {{ payment.appointment.doctor.specialization }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Department:
-                </strong>
-
-                {% if payment.appointment.doctor.department %}
-
-                    {{ payment.appointment.doctor.department.name }}
-
-                {% else %}
-
-                    Not assigned
-
-                {% endif %}
-
-            </p>
-
-            <!-- ==========================================
-                 APPOINTMENT INFORMATION
-            ========================================== -->
-
-            <h4>
-                Appointment Information
-            </h4>
-
-            <p>
-
-                <strong>
-                    Date:
-                </strong>
-
-                {{ payment.appointment.appointment_date }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Time:
-                </strong>
-
-                {{ payment.appointment.appointment_time }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Appointment Status:
-                </strong>
-
-                {{ payment.appointment.get_status_display }}
-
-            </p>
-
-            <!-- ==========================================
-                 PAYMENT INFORMATION
-            ========================================== -->
-
-            <h4>
-                Payment Information
-            </h4>
-
-            <p>
-
-                <strong>
-                    Consultation Fee:
-                </strong>
-
-                ₹{{ payment.consultation_fee }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Additional Charges:
-                </strong>
-
-                ₹{{ payment.additional_charges }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Total Amount:
-                </strong>
-
-                ₹{{ payment.total_amount }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Payment Method:
-                </strong>
-
-                {{ payment.get_payment_method_display|default:"Not selected" }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Payment Status:
-                </strong>
-
-                {{ payment.get_status_display }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Transaction ID:
-                </strong>
-
-                {{ payment.transaction_id|default:"Not available" }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Payment Date:
-                </strong>
-
-                {{ payment.payment_date|default:"Not paid yet" }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Created:
-                </strong>
-
-                {{ payment.created_at }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Last Updated:
-                </strong>
-
-                {{ payment.updated_at }}
-
+                All payment transactions recorded in MediConnect.
             </p>
 
         </div>
 
-        <hr>
+    </div>
 
-    {% endfor %}
 
-{% else %}
+    {% if payments %}
 
-    <p>
-        No payments found.
-    </p>
+    <div class="mc-table-wrapper">
 
-{% endif %}
+        <table class="mc-table">
 
-<!-- ==========================================
-     FOOTER
-========================================== -->
+            <thead>
 
-<p>
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Transaction ID</th>
+                </tr>
 
-    <a href="{% url 'admin_dashboard' %}">
-        Back to Admin Dashboard
+            </thead>
+
+
+            <tbody>
+
+                {% for payment in payments %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ payment.patient.name }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        {{ payment.appointment.doctor.user.name }}
+                    </td>
+
+
+                    <td>
+                        ₹{{ payment.total_amount }}
+                    </td>
+
+
+                    <td>
+
+                        {% if payment.payment_method %}
+
+                            {{ payment.get_payment_method_display }}
+
+                        {% else %}
+
+                            Not selected
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if payment.status == "PAID" %}
+
+                            <span class="mc-badge mc-badge-success">
+                                Paid
+                            </span>
+
+                        {% elif payment.status == "PENDING" %}
+
+                            <span class="mc-badge mc-badge-warning">
+                                Pending
+                            </span>
+
+                        {% elif payment.status == "FAILED" %}
+
+                            <span class="mc-badge mc-badge-danger">
+                                Failed
+                            </span>
+
+                        {% elif payment.status == "CANCELLED" %}
+
+                            <span class="mc-badge mc-badge-danger">
+                                Cancelled
+                            </span>
+
+                        {% else %}
+
+                            <span class="mc-badge">
+                                {{ payment.get_status_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if payment.transaction_id %}
+
+                            {{ payment.transaction_id }}
+
+                        {% else %}
+
+                            <span class="mc-text-muted">
+                                —
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="mc-empty">
+
+        <i class="bi bi-credit-card"></i>
+
+        <h3>No Payments Found</h3>
+
+        <p>
+            No payment records are currently available.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+<div>
+    <a href="{% url 'admin_dashboard' %}" class="mc-btn mc-btn-outline">
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
     </a>
-
-</p>
-
-<p>
-
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
-
-</p>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

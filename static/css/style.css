@@ -1855,3 +1855,163 @@ p {
     }
 
 }
+
+/* ==========================================
+   ADMIN MANAGEMENT SECTIONS
+========================================== */
+
+.mc-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.mc-section-header h2 {
+    margin-bottom: 6px;
+}
+
+.mc-section-header p {
+    margin: 0;
+    color: var(--text-medium);
+}
+
+.mc-text-muted {
+    color: var(--text-light);
+}
+
+
+@media (max-width: 768px) {
+
+    .mc-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}
+/* ==========================================
+   FORM VALIDATION & FORM ACTIONS
+========================================== */
+
+.mc-form-error {
+    display: block;
+    margin-top: 6px;
+    color: var(--danger);
+    font-size: 0.9rem;
+}
+
+.mc-alert {
+    padding: 14px 18px;
+    border-radius: var(--radius-small);
+    margin-bottom: 20px;
+}
+
+.mc-alert-danger {
+    background: #FDECEC;
+    color: var(--danger);
+    border: 1px solid #F3CACA;
+}
+
+.mc-alert-success {
+    background: #EAF8F1;
+    color: var(--success);
+    border: 1px solid #C7EBDD;
+}
+
+.mc-alert p {
+    margin: 0;
+}
+
+.mc-form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.mc-checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.mc-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.mc-checkbox-label input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--purple);
+}
+/* ==========================================
+   INFORMATION ITEMS
+========================================== */
+
+.mc-info-item {
+    padding: 16px;
+    background: var(--page-background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+}
+
+.mc-info-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-medium);
+    font-size: 0.9rem;
+}
+
+.mc-info-item strong {
+    color: var(--text-dark);
+}
+/* ==========================================
+   AUTHENTICATION PAGES
+========================================== */
+
+.mc-auth-container {
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.mc-auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mc-auth-header h1 {
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.mc-auth-header p {
+    color: var(--text-medium);
+    margin: 0;
+}
+
+.mc-auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    color: var(--text-medium);
+}
+
+.mc-auth-footer a {
+    color: var(--purple);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.mc-auth-footer a:hover {
+    color: var(--purple-dark);
+}
+
+.mc-form-help {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}

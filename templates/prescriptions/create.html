@@ -1,142 +1,266 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>MediConnect - Create Prescription</title>
-</head>
+{% block title %}MediConnect - Prescription{% endblock %}
 
-<body>
+{% block content %}
 
-    <!-- ==========================================
-         CREATE PRESCRIPTION
-         ========================================== -->
+<div class="mc-page-header">
 
-    <h1>MediConnect</h1>
+    <h1 class="mc-page-title">
+        Create Prescription
+    </h1>
 
-    <h2>Create Prescription</h2>
-
-    <!-- ==========================================
-         PATIENT INFORMATION
-         ========================================== -->
-
-    <h3>Patient Information</h3>
-
-    <p>
-        <strong>Name:</strong>
-        {{ appointment.patient.name }}
+    <p class="mc-page-subtitle">
+        Add diagnosis, medicines and treatment instructions.
     </p>
 
-    <p>
-        <strong>Phone:</strong>
-        {{ appointment.patient.phone }}
-    </p>
+</div>
 
-    <p>
-        <strong>Email:</strong>
-        {{ appointment.patient.email }}
-    </p>
 
-    <!-- ==========================================
-         APPOINTMENT INFORMATION
-         ========================================== -->
+<!-- Appointment Information -->
 
-    <h3>Appointment</h3>
+<div class="mc-card">
 
-    <p>
-        <strong>Date:</strong>
-        {{ appointment.appointment_date }}
-    </p>
+    <div class="mc-section-header">
 
-    <p>
-        <strong>Time:</strong>
-        {{ appointment.appointment_time }}
-    </p>
+        <div>
 
-    <p>
-        <strong>Reason:</strong>
-        {{ appointment.reason }}
-    </p>
+            <h2>
+                <i class="bi bi-calendar-check"></i>
+                Appointment
+            </h2>
 
-    <p>
-        <strong>Status:</strong>
-        {{ appointment.get_status_display }}
-    </p>
+        </div>
 
-    <!-- ==========================================
-         PRESCRIPTION FORM
-         ========================================== -->
+    </div>
 
-    <h3>Prescription Details</h3>
 
-    <form method="POST">
+    <div class="mc-grid mc-grid-3">
 
-        {% csrf_token %}
+        <div>
+            <strong>Patient</strong>
+            <p>{{ appointment.patient.name }}</p>
+        </div>
 
-        {{ prescription_form.non_field_errors }}
+        <div>
+            <strong>Date</strong>
+            <p>{{ appointment.appointment_date|date:"d M Y" }}</p>
+        </div>
 
-        {{ prescription_form.as_p }}
+        <div>
+            <strong>Time</strong>
+            <p>{{ appointment.appointment_time|time:"h:i A" }}</p>
+        </div>
 
-        <!-- ==========================================
-     MEDICINES
-     ========================================== -->
+    </div>
 
-        <h3>Medicines</h3>
+</div>
 
-        {{ item_formset.management_form }}
 
-        {% for item_form in item_formset %}
+<form method="POST">
 
-            <hr>
+    {% csrf_token %}
 
-            <h4>
+
+    <!-- Diagnosis -->
+
+    <div class="mc-card">
+
+        <h2>
+            <i class="bi bi-clipboard2-pulse"></i>
+            Diagnosis
+        </h2>
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Diagnosis
+            </label>
+
+            {{ form.diagnosis }}
+
+            {% for error in form.diagnosis.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Additional Notes
+            </label>
+
+            {{ form.notes }}
+
+            {% for error in form.notes.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Medicines -->
+
+    <div class="mc-card">
+
+        <div class="mc-section-header">
+
+            <div>
+
+                <h2>
+                    <i class="bi bi-capsule"></i>
+                    Medicines
+                </h2>
+
+                <p>
+                    Add medicines prescribed to the patient.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {{ formset.management_form }}
+
+
+        {% for item_form in formset %}
+
+        <div class="mc-card" style="background: var(--page-background);">
+
+            <h3>
                 Medicine {{ forloop.counter }}
-            </h4>
+            </h3>
 
-            {{ item_form.non_field_errors }}
 
-            <p>
-                {{ item_form.medicine.label_tag }}
-                {{ item_form.medicine }}
-            </p>
+            <div class="mc-grid mc-grid-2">
 
-            <p>
-                {{ item_form.dosage.label_tag }}
-                {{ item_form.dosage }}
-            </p>
 
-            <p>
-                {{ item_form.frequency.label_tag }}
-                {{ item_form.frequency }}
-            </p>
+                <div class="mc-form-group">
 
-            <p>
-                {{ item_form.duration.label_tag }}
-                {{ item_form.duration }}
-            </p>
+                    <label class="mc-form-label">
+                        Medicine
+                    </label>
 
-            <p>
-                {{ item_form.instructions.label_tag }}
+                    {{ item_form.medicine }}
+
+                </div>
+
+
+                <div class="mc-form-group">
+
+                    <label class="mc-form-label">
+                        Dosage
+                    </label>
+
+                    {{ item_form.dosage }}
+
+                </div>
+
+
+                <div class="mc-form-group">
+
+                    <label class="mc-form-label">
+                        Frequency
+                    </label>
+
+                    {{ item_form.frequency }}
+
+                </div>
+
+
+                <div class="mc-form-group">
+
+                    <label class="mc-form-label">
+                        Duration
+                    </label>
+
+                    {{ item_form.duration }}
+
+                </div>
+
+            </div>
+
+
+            <div class="mc-form-group">
+
+                <label class="mc-form-label">
+                    Instructions
+                </label>
+
                 {{ item_form.instructions }}
-            </p>
+
+            </div>
+
+
+            {% if item_form.DELETE %}
+
+            <div class="mc-checkbox-group">
+
+                <label class="mc-checkbox-label">
+
+                    {{ item_form.DELETE }}
+
+                    <span>
+                        Remove this medicine
+                    </span>
+
+                </label>
+
+            </div>
+
+            {% endif %}
+
+        </div>
 
         {% endfor %}
 
-        <!-- ==========================================
-             SUBMIT
-             ========================================== -->
+    </div>
 
-        <button type="submit">
-            Create Prescription
+
+    <!-- Actions -->
+
+    <div class="mc-form-actions">
+
+        <button type="submit" class="mc-btn">
+
+            <i class="bi bi-check-circle"></i>
+            Save Prescription
+
         </button>
 
-    </form>
 
-    <br>
+        <a href="{% url 'doctor_appointments' %}"
+           class="mc-btn mc-btn-outline">
 
-    <a href="{% url 'doctor_appointments' %}">
-        Back to Appointments
+            <i class="bi bi-x-circle"></i>
+            Cancel
+
+        </a>
+
+    </div>
+
+</form>
+
+
+<div style="margin-top: 24px;">
+
+    <a href="{% url 'doctor_dashboard' %}"
+       class="mc-btn mc-btn-outline">
+
+        <i class="bi bi-arrow-left"></i>
+        Dashboard
+
     </a>
 
-</body>
+</div>
 
-</html>
+{% endblock %}

@@ -1,62 +1,175 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}MediConnect - My Profile{% endblock %}
 
-    <title>MediConnect - Patient Profile</title>
+{% block content %}
 
-</head>
+<div class="mc-page-header">
 
-<body>
+    <h1 class="mc-page-title">
+        My Profile
+    </h1>
 
-    <!-- ==========================================
-         PATIENT PROFILE
-         ========================================== -->
-
-    <h1>MediConnect</h1>
-
-    <h2>Patient Profile</h2>
-
-    <p>
-        Welcome, {{ user.name }}
+    <p class="mc-page-subtitle">
+        View your personal and healthcare information.
     </p>
 
-
-    <!-- ==========================================
-         PROFILE FORM
-         ========================================== -->
-
-    <!-- ==========================================
-     PROFILE FORM
-     ========================================== -->
-
-<form method="POST">
-
-    {% csrf_token %}
-
-    {{ form.non_field_errors }}
-
-    {{ form.as_p }}
-
-    <button type="submit">
-        Save Profile
-    </button>
-
-</form>
+</div>
 
 
-    <br>
+<div class="mc-card">
 
-    <a href="{% url 'patient_dashboard' %}">
-        Back to Dashboard
+    <div class="mc-section-header">
+
+        <div>
+            <h2>
+                <i class="bi bi-person-circle"></i>
+                Personal Information
+            </h2>
+
+            <p>
+                Your registered account information.
+            </p>
+        </div>
+
+
+        <!-- EDIT PROFILE BUTTON -->
+
+        <a href="{% url 'edit_patient_profile' %}"
+        class="mc-btn">
+
+            <i class="bi bi-pencil"></i>
+            Edit Profile
+
+        </a>
+
+    </div>
+
+
+    <div class="mc-grid mc-grid-2">
+
+        <div class="mc-info-item">
+            <span class="mc-info-label">Name</span>
+            <strong>{{ request.user.name }}</strong>
+        </div>
+
+
+        <div class="mc-info-item">
+            <span class="mc-info-label">Username</span>
+            <strong>{{ request.user.username }}</strong>
+        </div>
+
+
+        <div class="mc-info-item">
+            <span class="mc-info-label">Email</span>
+            <strong>
+                {{ request.user.email|default:"Not provided" }}
+            </strong>
+        </div>
+
+
+        <div class="mc-info-item">
+            <span class="mc-info-label">Phone</span>
+            <strong>
+                {{ request.user.phone|default:"Not provided" }}
+            </strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-heart-pulse"></i>
+        Healthcare Information
+    </h2>
+
+
+    <div class="mc-grid mc-grid-2">
+
+        <div class="mc-info-item">
+
+            <span class="mc-info-label">
+                Date of Birth
+            </span>
+
+            <strong>
+                {{ patient.date_of_birth|date:"d M Y"|default:"Not provided" }}
+            </strong>
+
+        </div>
+
+
+        <div class="mc-info-item">
+
+            <span class="mc-info-label">
+                Gender
+            </span>
+
+            <strong>
+                {{ patient.gender|default:"Not provided" }}
+            </strong>
+
+        </div>
+
+
+        <div class="mc-info-item">
+
+            <span class="mc-info-label">
+                Blood Group
+            </span>
+
+            <strong>
+                {{ patient.blood_group|default:"Not provided" }}
+            </strong>
+
+        </div>
+
+
+        <div class="mc-info-item">
+
+            <span class="mc-info-label">
+                Emergency Contact
+            </span>
+
+            <strong>
+                {{ patient.emergency_contact_name|default:"Not provided" }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-geo-alt"></i>
+        Address
+    </h2>
+
+    <p>
+        {{ patient.address|default:"No address provided." }}
+    </p>
+
+</div>
+
+
+<div style="margin-top: 24px;">
+
+    <a href="{% url 'patient_dashboard' %}"
+       class="mc-btn mc-btn-outline">
+
+        <i class="bi bi-arrow-left"></i>
+        Dashboard
+
     </a>
 
-    <br><br>
+</div>
 
-    <a href="{% url 'logout' %}">
-        Logout
-    </a>
-
-</body>
-
-</html>
+{% endblock %}

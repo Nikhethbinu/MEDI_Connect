@@ -55,15 +55,6 @@
             </p>
 
         </div>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="mc-btn mc-btn-outline">
-
-            <i class="bi bi-arrow-left"></i>
-            Dashboard
-
-        </a>
-
     </div>
 
 
@@ -173,5 +164,10 @@
     {% endif %}
 
 </div>
-
+<div>
+    <a href="{% url 'admin_dashboard' %}" class="mc-btn mc-btn-outline">
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
+    </a>
+</div>
 {% endblock %}
