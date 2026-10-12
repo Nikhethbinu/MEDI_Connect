@@ -2015,3 +2015,946 @@ p {
     color: var(--text-light);
     font-size: 0.85rem;
 }
+/* ==========================================
+   PAYMENT SUMMARY
+========================================== */
+
+.mc-payment-total {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--purple-light);
+    border: 1px solid #E4CDE8;
+    border-radius: var(--radius-medium);
+    text-align: center;
+}
+
+.mc-payment-total-label {
+    display: block;
+    color: var(--text-medium);
+    margin-bottom: 5px;
+}
+
+.mc-payment-total-value {
+    display: block;
+    color: var(--purple-dark);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+/* ==========================================
+   AUTH ICON
+========================================== */
+
+.mc-auth-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--purple-light);
+    color: var(--purple);
+
+    border-radius: 50%;
+
+    font-size: 1.8rem;
+}
+/* ==========================================
+   AUTHENTICATION CARD
+========================================== */
+
+.mc-form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    padding: 36px;
+    box-shadow: var(--shadow-medium);
+}
+
+.mc-form-card .mc-form-group {
+    margin-bottom: 20px;
+}
+
+.mc-form-card input,
+.mc-form-card select,
+.mc-form-card textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+@media (max-width: 480px) {
+
+    .mc-form-card {
+        padding: 24px 18px;
+    }
+
+    .mc-auth-container {
+        margin: 20px auto;
+    }
+
+}
+/* ==========================================
+   MEDICONNECT LOGIN PAGE
+========================================== */
+
+.mc-login-form {
+    width: 100%;
+}
+
+
+/* ==========================================
+   LOGIN INPUTS
+========================================== */
+
+.mc-login-form input#id_username,
+.mc-login-form input#id_password {
+
+    display: block;
+
+    width: 100%;
+
+    height: 52px;
+
+    box-sizing: border-box;
+
+    padding: 12px 16px;
+
+    margin-top: 8px;
+    margin-bottom: 4px;
+
+    background: #ffffff;
+
+    color: #163D46;
+
+    border: 2px solid #E2EBEF;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+
+    line-height: normal;
+
+    cursor: text;
+
+    pointer-events: auto;
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* ==========================================
+   LOGIN INPUT FOCUS
+========================================== */
+
+.mc-login-form input#id_username:focus,
+.mc-login-form input#id_password:focus {
+
+    border-color: #B56BC4;
+
+    box-shadow:
+        0 0 0 4px rgba(181, 107, 196, 0.15);
+
+}
+
+
+/* ==========================================
+   LOGIN PLACEHOLDER
+========================================== */
+
+.mc-login-form input#id_username::placeholder,
+.mc-login-form input#id_password::placeholder {
+
+    color: #8A9AA0;
+
+    opacity: 1;
+
+}
+
+
+/* ==========================================
+   LOGIN BUTTON
+========================================== */
+
+.mc-login-btn {
+
+    display: block;
+
+    position: relative;
+
+    width: 100%;
+
+    height: 62px;
+
+    margin-top: 24px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #B56BC4;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+
+    box-shadow:
+        0 6px 18px rgba(181, 107, 196, 0.25);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* ==========================================
+   LOGIN BUTTON HOVER
+========================================== */
+
+.mc-login-btn:hover {
+
+    background: #A05BB0;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(181, 107, 196, 0.35);
+
+}
+
+
+/* ==========================================
+   LOGIN BUTTON CONTENT
+========================================== */
+
+.mc-login-content {
+
+    position: relative;
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    height: 100%;
+
+}
+
+
+/* ==========================================
+   HEARTBEAT
+========================================== */
+
+.mc-medical-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+
+    animation:
+        mc-heartbeat 1.2s ease-in-out infinite;
+
+}
+
+
+@keyframes mc-heartbeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    15% {
+        transform: scale(1.18);
+    }
+
+    30% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.12);
+    }
+
+    60% {
+        transform: scale(1);
+    }
+
+}
+
+
+/* ==========================================
+   MEDICAL CONNECTION
+========================================== */
+
+.mc-medical-connection {
+
+    position: relative;
+
+    display: block;
+
+    width: 55px;
+
+    height: 22px;
+
+    overflow: hidden;
+
+}
+
+
+/* ECG baseline */
+
+.mc-medical-connection::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 2px;
+
+    background: rgba(255, 255, 255, 0.4);
+
+    transform: translateY(-50%);
+
+}
+
+
+/* Moving pulse */
+
+.mc-pulse-line {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: -60px;
+
+    width: 70px;
+
+    height: 20px;
+
+    transform: translateY(-50%);
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            transparent 20%,
+            #ffffff 35%,
+            #ffffff 38%,
+            transparent 42%,
+            transparent 50%,
+            #ffffff 62%,
+            #ffffff 65%,
+            transparent 70%,
+            transparent 100%
+        );
+
+    animation:
+        mc-pulse-flow 1.4s linear infinite;
+
+}
+
+
+@keyframes mc-pulse-flow {
+
+    from {
+        left: -70px;
+    }
+
+    to {
+        left: 60px;
+    }
+
+}
+
+
+/* ==========================================
+   DOCTOR ICON
+========================================== */
+
+.mc-doctor-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 21px;
+
+    animation:
+        mc-doctor-pulse 1.5s ease-in-out infinite;
+
+}
+
+
+@keyframes mc-doctor-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+}
+
+
+/* ==========================================
+   LOGIN INPUT FIX
+========================================== */
+
+.mc-login-form input {
+    display: block !important;
+
+    width: 100% !important;
+    height: 52px !important;
+
+    padding: 12px 15px !important;
+    margin-top: 8px !important;
+
+    box-sizing: border-box !important;
+
+    background-color: #FFFFFF !important;
+    color: #163D46 !important;
+
+    border: 2px solid #E2EBEF !important;
+    border-radius: 8px !important;
+
+    outline: none !important;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        "Times New Roman",
+        serif !important;
+
+    font-size: 16px !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    cursor: text !important;
+    pointer-events: auto !important;
+}
+
+
+.mc-login-form input:focus {
+    border-color: #B56BC4 !important;
+
+    box-shadow:
+        0 0 0 4px rgba(181, 107, 196, 0.15) !important;
+}
+
+
+.mc-login-form input::placeholder {
+    color: #8A9AA0 !important;
+    opacity: 1 !important;
+}
+
+
+/* ==========================================
+   LOGIN BUTTON
+========================================== */
+
+.mc-login-btn {
+
+    display: block;
+
+    position: relative;
+
+    width: 100%;
+    height: 62px;
+
+    margin-top: 24px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #B56BC4;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+
+    box-shadow:
+        0 6px 18px rgba(181, 107, 196, 0.25);
+
+    /*
+     * IMPORTANT:
+     * The button itself NEVER moves.
+     */
+    transform: none !important;
+
+    opacity: 1;
+}
+
+
+/* ==========================================
+   LOGIN BUTTON HOVER
+   BUTTON STAYS FIXED
+========================================== */
+
+.mc-login-btn:hover {
+
+    background: #A05BB0;
+
+    box-shadow:
+        0 10px 25px rgba(181, 107, 196, 0.35);
+
+    transform: none !important;
+}
+
+
+/* ==========================================
+   LOGIN BUTTON ACTIVE / FOCUS
+   BUTTON STAYS FIXED
+========================================== */
+
+.mc-login-btn:active,
+.mc-login-btn:focus {
+
+    transform: none !important;
+
+}
+
+
+/* ==========================================
+   LOGIN ANIMATION
+   INSIDE BUTTON ONLY
+========================================== */
+
+/*
+ * This creates the moving light/pulse.
+ *
+ * The BUTTON itself does NOT move.
+ *
+ * The animation starts from the
+ * LEFT CORNER of the button and
+ * travels to the RIGHT CORNER.
+ */
+
+.mc-login-btn::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -45%;
+
+    width: 45%;
+
+    height: 100%;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.08) 15%,
+        rgba(255, 255, 255, 0.30) 40%,
+        rgba(255, 255, 255, 0.65) 50%,
+        rgba(255, 255, 255, 0.30) 60%,
+        rgba(255, 255, 255, 0.08) 85%,
+        transparent 100%
+    );
+
+    z-index: 10;
+
+}
+
+
+/* ==========================================
+   START ANIMATION AFTER LOGIN CLICK
+========================================== */
+
+.mc-login-btn.mc-login-loading::after {
+
+    animation:
+        mc-login-inside-left-right
+        0.65s
+        cubic-bezier(0.65, 0, 0.35, 1)
+        forwards;
+
+}
+
+
+/* ==========================================
+   LEFT → RIGHT
+   INSIDE BUTTON ONLY
+========================================== */
+
+@keyframes mc-login-inside-left-right {
+
+    /* --------------------------------------
+       START AT LEFT CORNER
+    -------------------------------------- */
+
+    0% {
+
+        left: -45%;
+
+        opacity: 0;
+
+    }
+
+
+    /* --------------------------------------
+       ENTER BUTTON
+    -------------------------------------- */
+
+    8% {
+
+        left: -20%;
+
+        opacity: 1;
+
+    }
+
+
+    /* --------------------------------------
+       MOVE QUICKLY
+    -------------------------------------- */
+
+    30% {
+
+        left: 5%;
+
+        opacity: 1;
+
+    }
+
+
+    50% {
+
+        left: 30%;
+
+        opacity: 1;
+
+    }
+
+
+    70% {
+
+        left: 55%;
+
+        opacity: 1;
+
+    }
+
+
+    88% {
+
+        left: 80%;
+
+        opacity: 0.9;
+
+    }
+
+
+    /* --------------------------------------
+       EXIT RIGHT CORNER
+    -------------------------------------- */
+
+    100% {
+
+        left: 105%;
+
+        opacity: 0;
+
+    }
+
+}
+
+
+/* ==========================================
+   LOGIN CONTENT
+========================================== */
+
+.mc-login-content {
+
+    position: relative;
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    height: 100%;
+
+}
+
+
+/* ==========================================
+   MEDICAL HEART ICON
+========================================== */
+
+.mc-medical-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+
+    animation:
+        mc-heartbeat
+        1.2s
+        ease-in-out
+        infinite;
+
+}
+
+
+/* ==========================================
+   MEDICAL CONNECTION
+========================================== */
+
+.mc-medical-connection {
+
+    position: relative;
+
+    display: block;
+
+    width: 55px;
+
+    height: 22px;
+
+    overflow: hidden;
+
+}
+
+
+/* ==========================================
+   CONNECTION BASE LINE
+========================================== */
+
+.mc-medical-connection::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 2px;
+
+    background: rgba(255, 255, 255, 0.4);
+
+    transform: translateY(-50%);
+
+}
+
+
+/* ==========================================
+   MEDICAL PULSE LINE
+========================================== */
+
+.mc-pulse-line {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: -60px;
+
+    width: 70px;
+
+    height: 20px;
+
+    transform: translateY(-50%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.9),
+        transparent
+    );
+
+    animation:
+        mc-pulse-flow
+        1.4s
+        linear
+        infinite;
+
+}
+
+
+/* ==========================================
+   PULSE FLOW
+========================================== */
+
+@keyframes mc-pulse-flow {
+
+    from {
+
+        left: -70px;
+
+    }
+
+    to {
+
+        left: 60px;
+
+    }
+
+}
+
+
+/* ==========================================
+   DOCTOR ICON
+========================================== */
+
+.mc-doctor-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 21px;
+
+    animation:
+        mc-doctor-pulse
+        1.5s
+        ease-in-out
+        infinite;
+
+}
+
+
+/* ==========================================
+   LOGIN TEXT
+========================================== */
+
+.mc-login-text {
+
+    margin-left: 3px;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+}
+
+
+/* ==========================================
+   LOGIN ERROR MESSAGE
+========================================== */
+
+.mc-login-error {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+
+    padding: 12px 15px;
+
+    border: 1px solid #D9534F;
+
+    border-radius: 8px;
+
+    background: #FDECEC;
+
+    color: #B52B27;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+}
+
+
+/* ==========================================
+   ERROR ICON
+========================================== */
+
+.mc-login-error i {
+
+    font-size: 18px;
+
+    flex-shrink: 0;
+
+}
