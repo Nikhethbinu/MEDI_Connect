@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 from .models import Doctor,DoctorAvailability,Department
 
 
@@ -64,58 +65,57 @@ class DoctorProfileForm(forms.ModelForm):
 
         }
 
+
 # ==========================================
 # DOCTOR AVAILABILITY FORM
 # ==========================================
 
+
+
+
 class DoctorAvailabilityForm(forms.ModelForm):
-
-    # ------------------------------------------
-    # FORM CONFIGURATION
-    # ------------------------------------------
-
     class Meta:
         model = DoctorAvailability
-
-        fields = [
-            'day',
-            'start_time',
-            'end_time',
-        ]
+        fields = ['availability_date', 'start_time', 'end_time']
 
         widgets = {
-            'start_time': forms.TimeInput(
-                attrs={
-                    'type': 'time'
-                }
-            ),
-
-            'end_time': forms.TimeInput(
-                attrs={
-                    'type': 'time'
-                }
-            ),
+            'availability_date': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'mc-input',
+            }),
+            'start_time': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'mc-input',
+            }),
+            'end_time': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'mc-input',
+            }),
         }
 
-    # ------------------------------------------
-    # TIME VALIDATION
-    # ------------------------------------------
+    def clean_availability_date(self):
+        availability_date = self.cleaned_data['availability_date']
+
+        if availability_date < timezone.localdate():
+            raise forms.ValidationError(
+                'Availability date cannot be in the past.'
+            )
+
+        return availability_date
 
     def clean(self):
-
         cleaned_data = super().clean()
-
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
 
-        if start_time and end_time:
-
-            if start_time >= end_time:
-                raise forms.ValidationError(
-                    'End time must be later than start time.'
-                )
+        if start_time and end_time and start_time >= end_time:
+            self.add_error(
+                'end_time',
+                'End time must be later than start time.'
+            )
 
         return cleaned_data
+
 
 class DepartmentForm(forms.ModelForm):
 

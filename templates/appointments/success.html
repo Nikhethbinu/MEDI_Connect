@@ -1,82 +1,341 @@
-<!DOCTYPE html>
-<html>
 
-<head>
+{% extends "base.html" %}
 
-    <title>
-        MediConnect - Appointment Booked
-    </title>
+{% block title %}
+    MediConnect - Appointment Booked
+{% endblock %}
 
-</head>
 
-<body>
+{% block content %}
 
-    <!-- ==========================================
-         APPOINTMENT SUCCESS
-         ========================================== -->
+<!-- ==========================================
+     APPOINTMENT SUCCESS PAGE
+========================================== -->
 
-    <h1>MediConnect</h1>
+<div class="mc-page-header">
+    <h1 class="mc-page-title">
+        Appointment Confirmation
+    </h1>
 
-    <h2>Appointment Request Submitted</h2>
+    <p class="mc-page-subtitle">
+        Your appointment booking details are shown below.
+    </p>
+</div>
 
-    <p>
-        Your appointment request has been successfully submitted.
+
+<!-- ==========================================
+     SUCCESS CARD
+========================================== -->
+
+<div class="mc-card mc-success-card">
+
+    <div class="mc-success-icon">
+        <i class="bi bi-check-circle-fill"></i>
+    </div>
+
+    <h2 class="mc-success-title">
+        Appointment Booked Successfully!
+    </h2>
+
+    <p class="mc-success-message">
+        Your appointment request has been submitted successfully.
+        Please keep the appointment details for your reference.
     </p>
 
 
     <!-- ==========================================
          APPOINTMENT DETAILS
-         ========================================== -->
+    ========================================== -->
 
-    <h3>Appointment Details</h3>
+    <div class="mc-appointment-details">
 
-    <p>
-        <strong>Doctor:</strong>
-        {{ appointment.doctor.user.name }}
-    </p>
+        <h3 class="mc-details-heading">
+            <i class="bi bi-calendar-check"></i>
+            Appointment Details
+        </h3>
 
-    <p>
-        <strong>Department:</strong>
-        {{ appointment.doctor.department.name }}
-    </p>
+        <div class="mc-info-item">
+            <span class="mc-info-label">Doctor</span>
+            <strong>
+                {{ appointment.doctor.user.name }}
+            </strong>
+        </div>
 
-    <p>
-        <strong>Date:</strong>
-        {{ appointment.appointment_date }}
-    </p>
+        <div class="mc-info-item">
+            <span class="mc-info-label">Department</span>
+            <strong>
+                {{ appointment.doctor.department }}
+            </strong>
+        </div>
 
-    <p>
-        <strong>Time:</strong>
-        {{ appointment.appointment_time }}
-    </p>
+        <div class="mc-info-item">
+            <span class="mc-info-label">Date</span>
+            <strong>
+                {{ appointment.appointment_date|date:"d M Y" }}
+            </strong>
+        </div>
 
-    <p>
-        <strong>Status:</strong>
-        {{ appointment.get_status_display }}
-    </p>
+        <div class="mc-info-item">
+            <span class="mc-info-label">Time</span>
+            <strong>
+                {{ appointment.appointment_time|time:"h:i A" }}
+            </strong>
+        </div>
 
-    <p>
-        <strong>Reason:</strong>
-        {{ appointment.reason }}
-    </p>
+        <div class="mc-info-item">
+            <span class="mc-info-label">Consultation Fee</span>
+            <strong>
+                {% if appointment.doctor.consultation_fee != None %}
+                    ₹{{ appointment.doctor.consultation_fee }}
+                {% else %}
+                    Not specified
+                {% endif %}
+            </strong>
+        </div>
+
+        <div class="mc-info-item">
+            <span class="mc-info-label">Appointment ID</span>
+            <strong>
+                #{{ appointment.id }}
+            </strong>
+        </div>
+
+        <div class="mc-info-item">
+            <span class="mc-info-label">Status</span>
+
+            {% if appointment.status == "CONFIRMED" %}
+                <span class="mc-badge mc-badge-success">
+                    {{ appointment.get_status_display }}
+                </span>
+            {% elif appointment.status == "REJECTED" or appointment.status == "CANCELLED" %}
+                <span class="mc-badge mc-badge-danger">
+                    {{ appointment.get_status_display }}
+                </span>
+            {% else %}
+                <span class="mc-badge mc-badge-warning">
+                    {{ appointment.get_status_display }}
+                </span>
+            {% endif %}
+        </div>
+
+    </div>
 
 
     <!-- ==========================================
-         NAVIGATION
-         ========================================== -->
+         INFORMATION NOTICE
+    ========================================== -->
 
-    <br>
+    <div class="mc-success-notice">
+        <i class="bi bi-info-circle-fill"></i>
 
-    <a href="{% url 'patient_dashboard' %}">
-        Patient Dashboard
-    </a>
+        <p>
+            Your appointment may require confirmation from the doctor.
+            You can check the latest status from My Appointments.
+        </p>
+    </div>
 
-    <br><br>
 
-    <a href="{% url 'doctor_search' %}">
-        Find Another Doctor
-    </a>
+    <!-- ==========================================
+         ACTION BUTTONS
+    ========================================== -->
 
-</body>
+    <div class="mc-success-actions">
 
-</html>
+        <a
+            href="{% url 'appointment_history' %}"
+            class="mc-btn mc-btn-large"
+        >
+            <i class="bi bi-calendar-check"></i>
+            My Appointments
+        </a>
+
+        <a
+            href="{% url 'doctor_search' %}"
+            class="mc-btn mc-btn-large"
+        >
+            <i class="bi bi-search"></i>
+            Find Another Doctor
+        </a>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================
+   SUCCESS CARD
+========================================== */
+
+.mc-success-card {
+    max-width: 850px;
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+
+/* ==========================================
+   SUCCESS ICON
+========================================== */
+
+.mc-success-icon {
+    margin-bottom: 16px;
+    color: var(--success);
+    font-size: 58px;
+    line-height: 1.2;
+}
+
+
+/* ==========================================
+   SUCCESS HEADING
+========================================== */
+
+.mc-success-title {
+    margin-bottom: 12px;
+    color: var(--text-dark);
+    font-size: 27px;
+    font-weight: 700;
+}
+
+
+.mc-success-message {
+    max-width: 600px;
+    margin: 0 auto 28px;
+    color: var(--text-medium);
+    font-size: 15px;
+}
+
+
+/* ==========================================
+   APPOINTMENT DETAILS
+========================================== */
+
+.mc-appointment-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+    text-align: left;
+}
+
+
+.mc-details-heading {
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
+    color: var(--text-dark);
+    font-size: 21px;
+}
+
+
+.mc-details-heading i {
+    margin-right: 7px;
+    color: var(--purple);
+}
+
+
+.mc-appointment-details .mc-info-item {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+
+.mc-appointment-details .mc-info-label {
+    font-size: 13px;
+}
+
+
+.mc-appointment-details .mc-info-item strong {
+    display: block;
+    font-size: 15px;
+}
+
+
+/* ==========================================
+   INFORMATION NOTICE
+========================================== */
+
+.mc-success-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--teal-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+    text-align: left;
+}
+
+
+.mc-success-notice > i {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--teal);
+    font-size: 18px;
+}
+
+
+.mc-success-notice p {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   ACTION BUTTONS
+========================================== */
+
+.mc-success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+
+.mc-success-actions .mc-btn {
+    width: auto;
+    flex: 1;
+    max-width: 280px;
+}
+
+
+/* ==========================================
+   RESPONSIVE LAYOUT
+========================================== */
+
+@media (max-width: 600px) {
+
+    .mc-success-card {
+        padding: 20px;
+    }
+
+    .mc-success-title {
+        font-size: 23px;
+    }
+
+    .mc-appointment-details {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-success-actions {
+        flex-direction: column;
+    }
+
+    .mc-success-actions .mc-btn {
+        width: 100%;
+        max-width: none;
+    }
+
+}
+
+</style>
+
+{% endblock %}

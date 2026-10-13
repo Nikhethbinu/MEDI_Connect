@@ -36,29 +36,22 @@ def user_login(request):
             password=password
         )
 
-        # ==========================================
-        # LOGIN SUCCESS
-        # ==========================================
-
+        # Login successful
         if user is not None:
-
             login(request, user)
-
             return redirect('dashboard')
 
-        # ==========================================
-        # INVALID USERNAME / PASSWORD
-        # ==========================================
+        # Login failed
+        return render(
+            request,
+            'accounts/login.html',
+            {
+                'error': 'Incorrect username or password. Please try again.'
+            }
+        )
 
-        else:
-
-            return render(
-                request,
-                'accounts/login.html',
-                {
-                    'error': 'Incorrect username or password. Please try again.'
-                }
-            )
+    # Normal page load or refresh: no error
+    return render(request, 'accounts/login.html')
 
     # ==========================================
     # NORMAL LOGIN PAGE

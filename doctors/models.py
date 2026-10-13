@@ -120,84 +120,55 @@ class Doctor(models.Model):
     def __str__(self):
         return f"Dr. {self.user.name} - {self.specialization}"
 
+
 # ==========================================
 # DOCTOR AVAILABILITY MODEL
 # ==========================================
 
 class DoctorAvailability(models.Model):
 
-    # ------------------------------------------
-    # DAYS OF THE WEEK
-    # ------------------------------------------
-
-    DAY_CHOICES = (
-        ('MONDAY', 'Monday'),
-        ('TUESDAY', 'Tuesday'),
-        ('WEDNESDAY', 'Wednesday'),
-        ('THURSDAY', 'Thursday'),
-        ('FRIDAY', 'Friday'),
-        ('SATURDAY', 'Saturday'),
-        ('SUNDAY', 'Sunday'),
-    )
-
-    # ------------------------------------------
     # DOCTOR
-    # ------------------------------------------
-
     doctor = models.ForeignKey(
         Doctor,
         on_delete=models.CASCADE,
         related_name='availabilities'
     )
 
-    # ------------------------------------------
-    # AVAILABILITY DAY
-    # ------------------------------------------
+    # SPECIFIC DATE
+    availability_date = models.DateField()
 
-    day = models.CharField(
-        max_length=10,
-        choices=DAY_CHOICES
-    )
-
-    # ------------------------------------------
-    # TIME
-    # ------------------------------------------
-
+    # TIME RANGE
     start_time = models.TimeField()
-
     end_time = models.TimeField()
 
-    # ------------------------------------------
     # STATUS
-    # ------------------------------------------
+    is_active = models.BooleanField(default=True)
 
-    is_active = models.BooleanField(
-        default=True
-    )
-    # ------------------------------------------
     # DATABASE CONSTRAINTS
-    # ------------------------------------------
-
     class Meta:
 
         constraints = [
             models.UniqueConstraint(
                 fields=[
                     'doctor',
-                    'day',
+                    'availability_date',
                     'start_time',
-                    'end_time'
+                    'end_time',
                 ],
                 name='unique_doctor_availability'
             )
         ]
-    # ------------------------------------------
-    # STRING REPRESENTATION
-    # ------------------------------------------
 
+        ordering = [
+            'availability_date',
+            'start_time',
+        ]
+
+    # STRING REPRESENTATION
     def __str__(self):
+
         return (
             f"{self.doctor.user.name} - "
-            f"{self.day} "
+            f"{self.availability_date} "
             f"{self.start_time} to {self.end_time}"
         )

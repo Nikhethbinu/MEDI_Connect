@@ -98,45 +98,32 @@ def doctor_availability(request):
 
     if request.method == 'POST':
 
-        form = DoctorAvailabilityForm(
-            request.POST
-        )
+        form = DoctorAvailabilityForm(request.POST)
 
         if form.is_valid():
 
-            # ------------------------------------------
-            # SAVE AVAILABILITY
-            # ------------------------------------------
-
-            availability = form.save(
-                commit=False
-            )
-
+            availability = form.save(commit=False)
             availability.doctor = doctor
-
             availability.save()
 
-            return redirect(
-                'doctor_availability'
-            )
-
-    # ------------------------------------------
-    # DISPLAY FORM
-    # ------------------------------------------
+            return redirect('doctor_availability')
 
     else:
 
         form = DoctorAvailabilityForm()
 
     # ------------------------------------------
-    # GET EXISTING AVAILABILITY
+    # GET UPCOMING AVAILABILITY
     # ------------------------------------------
+
+    from django.utils import timezone
 
     availabilities = DoctorAvailability.objects.filter(
         doctor=doctor,
-        is_active=True
+        is_active=True,
+        availability_date__gte=timezone.localdate()
     ).order_by(
-        'day',
+        'availability_date',
         'start_time'
     )
 
@@ -149,7 +136,7 @@ def doctor_availability(request):
         'doctors/availability.html',
         {
             'form': form,
-            'availabilities': availabilities
+            'availabilities': availabilities,
         }
     )
 # ==========================================
@@ -323,32 +310,35 @@ def doctor_search(request):
 # ==========================================
 # DOCTOR DETAILS
 # ==========================================
-
 @login_required
 @role_required('PATIENT')
 def doctor_detail(request, doctor_id):
+
+    from django.utils import timezone
 
     # ------------------------------------------
     # GET DOCTOR
     # ------------------------------------------
 
-    doctor = Doctor.objects.select_related(
-        'user',
-        'department'
-    ).get(
+    doctor = get_object_or_404(
+        Doctor.objects.select_related(
+            'user',
+            'department'
+        ),
         id=doctor_id,
         is_available=True
     )
 
     # ------------------------------------------
-    # GET DOCTOR AVAILABILITY
+    # GET UPCOMING AVAILABILITY DATES
     # ------------------------------------------
 
     availabilities = DoctorAvailability.objects.filter(
         doctor=doctor,
-        is_active=True
+        is_active=True,
+        availability_date__gte=timezone.localdate()
     ).order_by(
-        'day',
+        'availability_date',
         'start_time'
     )
 
@@ -361,10 +351,9 @@ def doctor_detail(request, doctor_id):
         'doctors/detail.html',
         {
             'doctor': doctor,
-            'availabilities': availabilities
+            'availabilities': availabilities,
         }
     )
-
 # ==========================================
 # EDIT DOCTOR PROFILE
 # ==========================================

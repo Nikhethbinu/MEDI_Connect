@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.utils import timezone
 from accounts.decorators import role_required
 
 from doctors.models import Doctor, DoctorAvailability
@@ -9,17 +9,21 @@ from .forms import AppointmentForm
 from .models import Appointment
 
 
+
 # ==========================================
-# BOOK APPOINTMENT
+# BOOK APPOINTMENT - DATE-BASED AVAILABILITY
 # ==========================================
+
+from django.utils import timezone
+
 
 @login_required
 @role_required('PATIENT')
 def book_appointment(request, doctor_id):
 
-    # ------------------------------------------
+    # ==========================================
     # GET DOCTOR
-    # ------------------------------------------
+    # ==========================================
 
     doctor = get_object_or_404(
         Doctor,
@@ -27,119 +31,123 @@ def book_appointment(request, doctor_id):
         is_available=True
     )
 
-    # ------------------------------------------
-    # GET DOCTOR AVAILABILITY
-    # ------------------------------------------
+    # ==========================================
+    # GET UPCOMING DOCTOR AVAILABILITY
+    # ==========================================
+
+    today = timezone.localdate()
 
     availabilities = DoctorAvailability.objects.filter(
         doctor=doctor,
+        availability_date__gte=today,
         is_active=True
     ).order_by(
-        'day',
+        'availability_date',
         'start_time'
     )
 
-    # ------------------------------------------
+    # ==========================================
     # HANDLE FORM SUBMISSION
-    # ------------------------------------------
+    # ==========================================
 
     if request.method == 'POST':
 
-        form = AppointmentForm(
-            request.POST
-        )
+        form = AppointmentForm(request.POST)
 
         if form.is_valid():
 
-            appointment_date = (
-                form.cleaned_data['appointment_date']
-            )
+            appointment_date = form.cleaned_data['appointment_date']
+            appointment_time = form.cleaned_data['appointment_time']
 
-            appointment_time = (
-                form.cleaned_data['appointment_time']
-            )
+            # ==========================================
+            # CHECK THAT APPOINTMENT IS NOT IN THE PAST
+            # ==========================================
 
-            # ------------------------------------------
-            # CHECK DOCTOR'S AVAILABLE DAY
-            # ------------------------------------------
+            current_time = timezone.localtime().time()
 
-            day_name = appointment_date.strftime(
-                '%A'
-            ).upper()
-
-            availability = (
-                DoctorAvailability.objects.filter(
-                    doctor=doctor,
-                    day=day_name,
-                    is_active=True
+            if (
+                appointment_date < today
+                or (
+                    appointment_date == today
+                    and appointment_time <= current_time
                 )
-                .filter(
-                    start_time__lte=appointment_time,
-                    end_time__gte=appointment_time
-                )
-                .first()
-            )
-
-            if not availability:
+            ):
 
                 form.add_error(
                     None,
-                    'Doctor is not available at the selected date and time.'
+                    'Please select a future appointment date and time.'
                 )
 
             else:
 
-                # ------------------------------------------
-                # CHECK DOUBLE BOOKING
-                # ------------------------------------------
+                # ==========================================
+                # CHECK DATE AND TIME AVAILABILITY
+                # ==========================================
 
-                existing_appointment = Appointment.objects.filter(
+                availability = DoctorAvailability.objects.filter(
                     doctor=doctor,
-                    appointment_date=appointment_date,
-                    appointment_time=appointment_time,
-                    status__in=[
-                        'PENDING',
-                        'CONFIRMED'
-                    ]
-                ).exists()
+                    availability_date=appointment_date,
+                    is_active=True,
+                    start_time__lte=appointment_time,
+                    end_time__gt=appointment_time
+                ).first()
 
-                if existing_appointment:
+                if not availability:
 
                     form.add_error(
                         None,
-                        'This appointment slot is already booked.'
+                        'The doctor is not available on the selected date and time.'
                     )
 
                 else:
 
-                    # ------------------------------------------
-                    # CREATE APPOINTMENT
-                    # ------------------------------------------
+                    # ==========================================
+                    # CHECK DOUBLE BOOKING
+                    # ==========================================
 
-                    appointment = form.save(
-                        commit=False
-                    )
+                    existing_appointment = Appointment.objects.filter(
+                        doctor=doctor,
+                        appointment_date=appointment_date,
+                        appointment_time=appointment_time,
+                        status__in=[
+                            'PENDING',
+                            'CONFIRMED'
+                        ]
+                    ).exists()
 
-                    appointment.patient = request.user
+                    if existing_appointment:
 
-                    appointment.doctor = doctor
+                        form.add_error(
+                            None,
+                            'This appointment slot is already booked. Please choose another time.'
+                        )
 
-                    appointment.status = 'PENDING'
+                    else:
 
-                    appointment.save()
+                        # ==========================================
+                        # CREATE APPOINTMENT
+                        # ==========================================
 
-                    return redirect(
-                        'appointment_success',
-                        appointment_id=appointment.id
-                    )
+                        appointment = form.save(commit=False)
+
+                        appointment.patient = request.user
+                        appointment.doctor = doctor
+                        appointment.status = 'PENDING'
+
+                        appointment.save()
+
+                        return redirect(
+                            'appointment_success',
+                            appointment_id=appointment.id
+                        )
 
     else:
 
         form = AppointmentForm()
 
-    # ------------------------------------------
+    # ==========================================
     # RENDER BOOKING PAGE
-    # ------------------------------------------
+    # ==========================================
 
     return render(
         request,
@@ -147,9 +155,10 @@ def book_appointment(request, doctor_id):
         {
             'form': form,
             'doctor': doctor,
-            'availabilities': availabilities,
+            'availabilities': availabilities
         }
     )
+
 # ==========================================
 # APPOINTMENT SUCCESS
 # ==========================================

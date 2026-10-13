@@ -23,13 +23,30 @@ load_dotenv()  # Load environment variables from .env file
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-f6oyg@gp(esej#f9y&dx3l9p^ye-y_6er)ly-)=bf%af#sdj^('
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# ==========================================
+# SECURITY SETTINGS
+# ==========================================
 
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+
+DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() in (
+    "true", "1", "yes"
+)
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1"
+    ).split(",")
+    if host.strip()
+]
+
+if not SECRET_KEY:
+    raise ValueError(
+        "DJANGO_SECRET_KEY is missing from the .env file."
+    )
 
 
 # Application definition
