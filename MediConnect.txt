@@ -1,0 +1,19 @@
+------------no css--------------
+MediConnect
+Edit Availability
+Availability date: 
+16-10-2026
+
+Start time: 
+10:00
+
+End time: 
+13:00
+
+Update Availability
+
+---------------------------------
+in doctor search the date is not present
+
+---------------------------------
+cannot edit doctor name etc.....

@@ -2,12 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from accounts.decorators import role_required
-
+from django.views.decorators.http import require_POST
 from doctors.models import Doctor, DoctorAvailability
 
 from .forms import AppointmentForm
 from .models import Appointment
-
+from django.db import IntegrityError, transaction
 
 
 # ==========================================
@@ -134,12 +134,23 @@ def book_appointment(request, doctor_id):
                         appointment.doctor = doctor
                         appointment.status = 'PENDING'
 
-                        appointment.save()
+                        try:
+                            with transaction.atomic():
+                                appointment.save()
 
-                        return redirect(
-                            'appointment_success',
-                            appointment_id=appointment.id
-                        )
+                        except IntegrityError:
+                            form.add_error(
+                                None,
+                                'This appointment slot is already booked. '
+                                'Please select another date or time.'
+                            )
+
+                        else:
+                            return redirect(
+                                'appointment_success',
+                                appointment_id=appointment.id
+                            )
+
 
     else:
 
@@ -250,6 +261,7 @@ def appointment_history(request):
 
 @login_required
 @role_required('PATIENT')
+@require_POST
 def cancel_appointment(request, appointment_id):
 
     # ------------------------------------------
@@ -407,6 +419,7 @@ def doctor_appointments(request):
 
 @login_required
 @role_required('DOCTOR')
+@require_POST
 def confirm_appointment(request, appointment_id):
 
     # ------------------------------------------
@@ -448,6 +461,7 @@ def confirm_appointment(request, appointment_id):
 
 @login_required
 @role_required('DOCTOR')
+@require_POST
 def reject_appointment(request, appointment_id):
 
     # ------------------------------------------
@@ -489,6 +503,7 @@ def reject_appointment(request, appointment_id):
 
 @login_required
 @role_required('DOCTOR')
+@require_POST
 def complete_appointment(request, appointment_id):
 
     # ------------------------------------------

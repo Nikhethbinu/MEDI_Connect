@@ -1,16 +1,17 @@
+
 from django import forms
 from django.utils import timezone
-from .models import Doctor,DoctorAvailability,Department
+
+from .models import Doctor, DoctorAvailability, Department
 
 
 # ==========================================
 # DOCTOR PROFILE FORM
-
+# ==========================================
 
 class DoctorProfileForm(forms.ModelForm):
 
     class Meta:
-
         model = Doctor
 
         fields = [
@@ -24,7 +25,6 @@ class DoctorProfileForm(forms.ModelForm):
         ]
 
         widgets = {
-
             'specialization': forms.TextInput(
                 attrs={
                     'placeholder': 'Example: Cardiologist'
@@ -62,36 +62,120 @@ class DoctorProfileForm(forms.ModelForm):
             ),
 
             'is_available': forms.CheckboxInput(),
-
         }
+
+    # ------------------------------------------
+    # SPECIALIZATION VALIDATION
+    # ------------------------------------------
+
+    def clean_specialization(self):
+        specialization = self.cleaned_data['specialization'].strip()
+
+        if not specialization:
+            raise forms.ValidationError(
+                'Specialization cannot be empty.'
+            )
+
+        return specialization
+
+    # ------------------------------------------
+    # QUALIFICATION VALIDATION
+    # ------------------------------------------
+
+    def clean_qualification(self):
+        qualification = self.cleaned_data['qualification'].strip()
+
+        if not qualification:
+            raise forms.ValidationError(
+                'Qualification cannot be empty.'
+            )
+
+        return qualification
+
+    # ------------------------------------------
+    # EXPERIENCE VALIDATION
+    # ------------------------------------------
+
+    def clean_experience_years(self):
+        experience_years = self.cleaned_data['experience_years']
+
+        if experience_years < 0:
+            raise forms.ValidationError(
+                'Experience years cannot be negative.'
+            )
+
+        return experience_years
+
+    # ------------------------------------------
+    # CONSULTATION FEE VALIDATION
+    # ------------------------------------------
+
+    def clean_consultation_fee(self):
+        consultation_fee = self.cleaned_data['consultation_fee']
+
+        if consultation_fee < 0:
+            raise forms.ValidationError(
+                'Consultation fee cannot be negative.'
+            )
+
+        return consultation_fee
+
+    # ------------------------------------------
+    # BIO VALIDATION
+    # ------------------------------------------
+
+    def clean_bio(self):
+        bio = self.cleaned_data.get('bio', '')
+
+        if bio and not bio.strip():
+            raise forms.ValidationError(
+                'Biography cannot contain only blank spaces.'
+            )
+
+        return bio.strip()
 
 
 # ==========================================
 # DOCTOR AVAILABILITY FORM
 # ==========================================
 
-
-
-
 class DoctorAvailabilityForm(forms.ModelForm):
+
     class Meta:
         model = DoctorAvailability
-        fields = ['availability_date', 'start_time', 'end_time']
+
+        fields = [
+            'availability_date',
+            'start_time',
+            'end_time',
+        ]
 
         widgets = {
-            'availability_date': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'mc-input',
-            }),
-            'start_time': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'mc-input',
-            }),
-            'end_time': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'mc-input',
-            }),
+            'availability_date': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'mc-input',
+                }
+            ),
+
+            'start_time': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': 'mc-input',
+                }
+            ),
+
+            'end_time': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': 'mc-input',
+                }
+            ),
         }
+
+    # ------------------------------------------
+    # AVAILABILITY DATE VALIDATION
+    # ------------------------------------------
 
     def clean_availability_date(self):
         availability_date = self.cleaned_data['availability_date']
@@ -103,10 +187,16 @@ class DoctorAvailabilityForm(forms.ModelForm):
 
         return availability_date
 
+    # ------------------------------------------
+    # AVAILABILITY TIME VALIDATION
+    # ------------------------------------------
+
     def clean(self):
         cleaned_data = super().clean()
+
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
+        availability_date = cleaned_data.get('availability_date')
 
         if start_time and end_time and start_time >= end_time:
             self.add_error(
@@ -114,8 +204,25 @@ class DoctorAvailabilityForm(forms.ModelForm):
                 'End time must be later than start time.'
             )
 
+        if (
+            availability_date == timezone.localdate()
+            and start_time
+            and end_time
+        ):
+            current_time = timezone.localtime().time()
+
+            if end_time <= current_time:
+                self.add_error(
+                    'end_time',
+                    'Availability must end in the future.'
+                )
+
         return cleaned_data
 
+
+# ==========================================
+# DEPARTMENT FORM
+# ==========================================
 
 class DepartmentForm(forms.ModelForm):
 
@@ -145,8 +252,11 @@ class DepartmentForm(forms.ModelForm):
             'is_active': forms.CheckboxInput(),
         }
 
-    def clean_name(self):
+    # ------------------------------------------
+    # DEPARTMENT NAME VALIDATION
+    # ------------------------------------------
 
+    def clean_name(self):
         name = self.cleaned_data['name'].strip()
 
         if not name:
