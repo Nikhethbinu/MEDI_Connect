@@ -171,6 +171,42 @@
 
         </div>
 
+        <!-- Lunch Break Start -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Lunch Break Start
+            </label>
+
+            {{ form.lunch_start_time }}
+
+            {% for error in form.lunch_start_time.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Lunch Break End -->
+
+        <div class="mc-form-group">
+
+            <label class="mc-form-label">
+                Lunch Break End
+            </label>
+
+            {{ form.lunch_end_time }}
+
+            {% for error in form.lunch_end_time.errors %}
+                <small class="mc-form-error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
 
         <!-- Biography -->
 

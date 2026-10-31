@@ -8,7 +8,8 @@ from doctors.models import Doctor, DoctorAvailability
 from .forms import AppointmentForm
 from .models import Appointment
 from django.db import IntegrityError, transaction
-
+from django.http import JsonResponse
+from datetime import datetime, timedelta
 
 # ==========================================
 # BOOK APPOINTMENT - DATE-BASED AVAILABILITY
@@ -16,7 +17,143 @@ from django.db import IntegrityError, transaction
 
 from django.utils import timezone
 
+# ==========================================
+# GET AVAILABLE 15-MINUTE SLOTS
+# ==========================================
 
+@login_required
+@role_required('PATIENT')
+def available_slots(request, doctor_id):
+
+    doctor = get_object_or_404(
+        Doctor,
+        id=doctor_id,
+        is_available=True
+    )
+
+    selected_date = request.GET.get('date')
+
+    if not selected_date:
+        return JsonResponse({
+            'slots': [],
+            'message': 'Please select an appointment date.'
+        })
+
+    try:
+        appointment_date = datetime.strptime(
+            selected_date,
+            '%Y-%m-%d'
+        ).date()
+    except ValueError:
+        return JsonResponse({
+            'slots': [],
+            'message': 'Invalid appointment date.'
+        }, status=400)
+
+    today = timezone.localdate()
+
+    if appointment_date < today:
+        return JsonResponse({
+            'slots': [],
+            'message': 'Appointment date cannot be in the past.'
+        })
+
+    # Check whether this patient already has an appointment
+    # with this doctor on the selected date.
+    existing_patient_booking = Appointment.objects.filter(
+        patient=request.user,
+        doctor=doctor,
+        appointment_date=appointment_date
+    ).exclude(
+        status__in=['CANCELLED', 'REJECTED']
+    ).exists()
+
+    if existing_patient_booking:
+        return JsonResponse({
+            'slots': [],
+            'message': 'You already have an appointment with this doctor on this date.'
+        })
+
+    # Get the doctor's active availability for this date.
+    availabilities = DoctorAvailability.objects.filter(
+        doctor=doctor,
+        availability_date=appointment_date,
+        is_active=True
+    ).order_by('start_time')
+
+    # Existing appointment times are unavailable.
+    booked_times = set(
+        Appointment.objects.filter(
+            doctor=doctor,
+            appointment_date=appointment_date
+        ).values_list(
+            'appointment_time',
+            flat=True
+        )
+    )
+
+    slots = []
+    now = timezone.localtime()
+
+    for availability in availabilities:
+
+        slot_start = datetime.combine(
+            appointment_date,
+            availability.start_time
+        )
+
+        availability_end = datetime.combine(
+            appointment_date,
+            availability.end_time
+        )
+
+        lunch_start = datetime.combine(
+            appointment_date,
+            doctor.lunch_start_time
+        )
+
+        lunch_end = datetime.combine(
+            appointment_date,
+            doctor.lunch_end_time
+        )
+
+        while slot_start + timedelta(minutes=15) <= availability_end:
+
+            slot_end = slot_start + timedelta(minutes=15)
+
+            # Exclude slots that overlap the lunch break.
+            overlaps_lunch = (
+                slot_start < lunch_end
+                and slot_end > lunch_start
+            )
+
+            # Exclude past slots.
+            is_past = (
+                appointment_date == today
+                and slot_start <= now.replace(tzinfo=None)
+            )
+
+            slot_time = slot_start.time()
+
+            if (
+                not overlaps_lunch
+                and not is_past
+                and slot_time not in booked_times
+            ):
+                slots.append(
+                    slot_time.strftime('%H:%M')
+                )
+
+            slot_start = slot_end
+
+    return JsonResponse({
+        'slots': sorted(set(slots)),
+        'message': (
+            'Available appointment slots.'
+            if slots
+            else 'No appointment slots are available for this date.'
+        )
+    })
 @login_required
 @role_required('PATIENT')
 def book_appointment(request, doctor_id):
@@ -78,79 +215,145 @@ def book_appointment(request, doctor_id):
                     'Please select a future appointment date and time.'
                 )
 
+            # ==========================================
+            # CHECK 15-MINUTE INTERVAL
+            # ==========================================
+
+            elif (
+                appointment_time.minute % 15 != 0
+                or appointment_time.second != 0
+            ):
+
+                form.add_error(
+                    'appointment_time',
+                    'Please select a valid 15-minute appointment slot.'
+                )
+
             else:
 
+                slot_start = datetime.combine(
+                    appointment_date,
+                    appointment_time
+                )
+
+                slot_end = slot_start + timedelta(minutes=15)
+
                 # ==========================================
-                # CHECK DATE AND TIME AVAILABILITY
+                # CHECK PATIENT DAILY BOOKING LIMIT
                 # ==========================================
 
-                availability = DoctorAvailability.objects.filter(
+                existing_patient_booking = Appointment.objects.filter(
+                    patient=request.user,
                     doctor=doctor,
-                    availability_date=appointment_date,
-                    is_active=True,
-                    start_time__lte=appointment_time,
-                    end_time__gt=appointment_time
-                ).first()
+                    appointment_date=appointment_date
+                ).exclude(
+                    status__in=['CANCELLED', 'REJECTED']
+                ).exists()
 
-                if not availability:
+                if existing_patient_booking:
 
                     form.add_error(
                         None,
-                        'The doctor is not available on the selected date and time.'
+                        'You already have an appointment with this doctor on this date.'
                     )
 
                 else:
 
                     # ==========================================
-                    # CHECK DOUBLE BOOKING
+                    # CHECK DOCTOR AVAILABILITY
                     # ==========================================
 
-                    existing_appointment = Appointment.objects.filter(
+                    availability = DoctorAvailability.objects.filter(
                         doctor=doctor,
-                        appointment_date=appointment_date,
-                        appointment_time=appointment_time,
-                        status__in=[
-                            'PENDING',
-                            'CONFIRMED'
-                        ]
-                    ).exists()
+                        availability_date=appointment_date,
+                        is_active=True,
+                        start_time__lte=appointment_time,
+                        end_time__gte=slot_end.time()
+                    ).first()
 
-                    if existing_appointment:
+                    if not availability:
 
                         form.add_error(
                             None,
-                            'This appointment slot is already booked. Please choose another time.'
+                            'The doctor is not available for the selected time.'
                         )
 
                     else:
 
                         # ==========================================
-                        # CREATE APPOINTMENT
+                        # CHECK LUNCH BREAK
                         # ==========================================
 
-                        appointment = form.save(commit=False)
+                        lunch_start = datetime.combine(
+                            appointment_date,
+                            doctor.lunch_start_time
+                        )
 
-                        appointment.patient = request.user
-                        appointment.doctor = doctor
-                        appointment.status = 'PENDING'
+                        lunch_end = datetime.combine(
+                            appointment_date,
+                            doctor.lunch_end_time
+                        )
 
-                        try:
-                            with transaction.atomic():
-                                appointment.save()
+                        if (
+                            slot_start < lunch_end
+                            and slot_end > lunch_start
+                        ):
 
-                        except IntegrityError:
                             form.add_error(
-                                None,
-                                'This appointment slot is already booked. '
-                                'Please select another date or time.'
+                                'appointment_time',
+                                'This time overlaps the doctor\'s lunch break.'
                             )
 
                         else:
-                            return redirect(
-                                'appointment_success',
-                                appointment_id=appointment.id
-                            )
 
+                            # ==========================================
+                            # CHECK DOUBLE BOOKING
+                            # ==========================================
+
+                            existing_appointment = Appointment.objects.filter(
+                                doctor=doctor,
+                                appointment_date=appointment_date,
+                                appointment_time=appointment_time
+                            ).exists()
+
+                            if existing_appointment:
+
+                                form.add_error(
+                                    'appointment_time',
+                                    'This appointment slot is already booked.'
+                                )
+
+                            else:
+
+                                # ==========================================
+                                # CREATE APPOINTMENT
+                                # ==========================================
+
+                                appointment = form.save(commit=False)
+
+                                appointment.patient = request.user
+                                appointment.doctor = doctor
+                                appointment.status = 'PENDING'
+
+                                try:
+
+                                    with transaction.atomic():
+                                        appointment.save()
+
+                                except IntegrityError:
+
+                                    form.add_error(
+                                        None,
+                                        'This appointment slot is already booked. '
+                                        'Please select another date or time.'
+                                    )
+
+                                else:
+
+                                    return redirect(
+                                        'appointment_success',
+                                        appointment_id=appointment.id
+                                    )
 
     else:
 
@@ -169,7 +372,6 @@ def book_appointment(request, doctor_id):
             'availabilities': availabilities
         }
     )
-
 # ==========================================
 # APPOINTMENT SUCCESS
 # ==========================================

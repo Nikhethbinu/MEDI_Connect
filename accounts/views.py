@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, models
-from .forms import RegistrationForm
+from .forms import RegistrationForm, AdminDoctorCreationForm
 from django.contrib.auth.decorators import login_required
 from accounts.decorators import role_required
-from django.db import models
+from django.db import models,transaction
+from django.contrib import messages
 from doctors.models import Doctor
 def register(request):
 
@@ -368,6 +369,76 @@ def admin_doctors(request):
         }
     )
 
+# ==========================================
+# ADMIN - ADD DOCTOR
+# ==========================================
+
+@login_required
+@role_required('ADMIN')
+def admin_doctor_create(request):
+
+    if request.method == 'POST':
+
+        form = AdminDoctorCreationForm(request.POST)
+
+        if form.is_valid():
+
+            try:
+                with transaction.atomic():
+
+                    # CREATE DOCTOR USER ACCOUNT
+
+                    from accounts.models import User
+
+                    user = User(
+                        username=form.cleaned_data['username'],
+                        name=form.cleaned_data['name'],
+                        phone=form.cleaned_data['phone'],
+                        role='DOCTOR'
+                    )
+
+                    user.set_password(
+                        form.cleaned_data['password1']
+                    )
+
+                    user.save()
+
+                    # CREATE DOCTOR PROFILE
+
+                    Doctor.objects.create(
+                        user=user,
+                        specialization=form.cleaned_data['specialization'],
+                        qualification=form.cleaned_data['qualification'],
+                        experience_years=form.cleaned_data['experience_years'],
+                        department=form.cleaned_data['department'],
+                        consultation_fee=form.cleaned_data['consultation_fee'],
+                        bio=form.cleaned_data['bio'],
+                        is_available=True
+                    )
+
+                messages.success(
+                    request,
+                    'Doctor account created successfully.'
+                )
+
+                return redirect('admin_doctors')
+
+            except Exception:
+                messages.error(
+                    request,
+                    'Unable to create doctor account. Please try again.'
+                )
+
+    else:
+        form = AdminDoctorCreationForm()
+
+    return render(
+        request,
+        'accounts/admin_doctor_form.html',
+        {
+            'form': form
+        }
+    )
 # ==========================================
 # ADMIN - DEPARTMENT MANAGEMENT
 # ==========================================

@@ -22,6 +22,8 @@ class DoctorProfileForm(forms.ModelForm):
             'consultation_fee',
             'bio',
             'is_available',
+            'lunch_start_time',
+            'lunch_end_time',
         ]
 
         widgets = {
@@ -58,8 +60,33 @@ class DoctorProfileForm(forms.ModelForm):
             ),
 
             'is_available': forms.CheckboxInput(),
-        }
+            'lunch_start_time': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': 'mc-input',
+                }
+            ),
 
+            'lunch_end_time': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': 'mc-input',
+                }
+            ),
+        }
+    def clean(self):
+        cleaned_data = super().clean()
+
+        lunch_start = cleaned_data.get('lunch_start_time')
+        lunch_end = cleaned_data.get('lunch_end_time')
+
+        if lunch_start and lunch_end and lunch_start >= lunch_end:
+            self.add_error(
+                'lunch_end_time',
+                'Lunch break end time must be later than start time.'
+            )
+
+        return cleaned_data
     # ------------------------------------------
     # SPECIALIZATION VALIDATION
     # ------------------------------------------

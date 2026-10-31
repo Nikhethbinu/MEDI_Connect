@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}
+MediConnect - Add Doctor
+{% endblock %}
+
+{% block content %}
+
+<div class="mc-page-header">
+
+    <h1 class="mc-page-title">
+        Add Doctor
+    </h1>
+
+    <p class="mc-page-subtitle">
+        Create a doctor account and professional profile.
+    </p>
+
+</div>
+
+<div class="mc-card">
+
+    <h2>
+        <i class="bi bi-person-plus"></i>
+        Doctor Registration
+    </h2>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="mc-alert mc-alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <h3>Login Details</h3>
+
+        {% for field in form %}
+
+            <div class="form-group">
+
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% for error in field.errors %}
+                    <p class="text-danger">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+        <div class="mc-section-actions">
+
+            <button type="submit" class="mc-btn">
+                <i class="bi bi-person-check"></i>
+                Create Doctor
+            </button>
+
+            <a href="{% url 'admin_doctors' %}"
+               class="mc-btn mc-btn-outline">
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

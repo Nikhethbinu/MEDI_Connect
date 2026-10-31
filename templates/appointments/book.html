@@ -202,31 +202,37 @@
             </div>
 
 
-            <!-- ==========================================
-                 APPOINTMENT TIME
+           <!-- ==========================================
+                APPOINTMENT TIME
             ========================================== -->
 
             <div class="mc-form-group">
 
                 <label
-                    for="{{ form.appointment_time.id_for_label }}"
+                    for="id_appointment_time"
                     class="mc-form-label"
                 >
-
                     Appointment Time
-
                 </label>
 
+                <select
+                    name="appointment_time"
+                    id="id_appointment_time"
+                    class="mc-form-control"
+                    required
+                    disabled
+                >
+                    <option value="">Select a date first</option>
+                </select>
 
-                {{ form.appointment_time }}
-
+                <p id="slot-message" class="form-description">
+                    Select an appointment date to view available slots.
+                </p>
 
                 {% for error in form.appointment_time.errors %}
 
                     <small class="form-error">
-
                         {{ error }}
-
                     </small>
 
                 {% endfor %}
@@ -307,7 +313,101 @@
 
 
 {% block extra_css %}
+{% block extra_js %}
 
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const dateInput = document.getElementById('id_appointment_date');
+    const timeSelect = document.getElementById('id_appointment_time');
+    const slotMessage = document.getElementById('slot-message');
+
+    dateInput.addEventListener('change', function () {
+
+        const selectedDate = dateInput.value;
+
+        timeSelect.innerHTML = '<option value="">Loading slots...</option>';
+        timeSelect.disabled = true;
+
+        if (!selectedDate) {
+            timeSelect.innerHTML = '<option value="">Select a date first</option>';
+            slotMessage.textContent = 'Please select an appointment date.';
+            return;
+        }
+
+        const url = "{% url 'available_slots' doctor.id %}?date="
+                    + encodeURIComponent(selectedDate);
+
+        fetch(url)
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error('Unable to retrieve available slots.');
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                timeSelect.innerHTML = '';
+
+                if (!data.slots || data.slots.length === 0) {
+
+                    timeSelect.innerHTML =
+                        '<option value="">No slots available</option>';
+
+                    slotMessage.textContent = data.message;
+                    return;
+
+                }
+
+                const defaultOption = document.createElement('option');
+
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select appointment time';
+
+                timeSelect.appendChild(defaultOption);
+
+                data.slots.forEach(function (slot) {
+
+                    const option = document.createElement('option');
+
+                    option.value = slot;
+                    option.textContent = slot;
+
+                    timeSelect.appendChild(option);
+
+                });
+
+                timeSelect.disabled = false;
+
+                slotMessage.textContent =
+                    'Select an available 15-minute appointment slot.';
+
+            })
+
+            .catch(error => {
+
+                timeSelect.innerHTML =
+                    '<option value="">Unable to load slots</option>';
+
+                slotMessage.textContent = error.message;
+
+                console.error(error);
+
+            });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}
 
 <style>
 

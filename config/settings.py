@@ -42,6 +42,12 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
+#For Mobile run
+# ALLOWED_HOSTS = [
+#     '127.0.0.1',
+#     'localhost',
+#     '192.168.220.36',
+# ]
 
 if not SECRET_KEY:
     raise ValueError(
@@ -101,17 +107,34 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+# Database
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_SSL_CA = os.getenv("DB_SSL_CA", "")
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'HOST': DB_HOST,
+        'PORT': os.getenv('DB_PORT', '3306'),
+        'CONN_MAX_AGE': 0,
     }
 }
 
+# Enable SSL only when a CA certificate path is configured.
+if DB_SSL_CA:
+    ca_path = Path(DB_SSL_CA)
+
+    if not ca_path.is_absolute():
+        ca_path = BASE_DIR / ca_path
+
+    DATABASES['default']['OPTIONS'] = {
+        'ssl': {
+            'ca': str(ca_path),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

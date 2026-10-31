@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import User
-
+from datetime import time
 # ==========================================
 # DEPARTMENT MODEL
 # ==========================================
@@ -99,7 +99,17 @@ class Doctor(models.Model):
     is_available = models.BooleanField(
         default=True
     )
+        # ------------------------------------------
+    # LUNCH BREAK SETTINGS
+    # ------------------------------------------
 
+    lunch_start_time = models.TimeField(
+        default=time(12, 0)
+    )
+
+    lunch_end_time = models.TimeField(
+        default=time(13, 30)
+    )
     # ------------------------------------------
     # TIMESTAMPS
     # ------------------------------------------

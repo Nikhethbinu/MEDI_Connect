@@ -1,3 +1,5 @@
 myvenv/
 .env
 .env.*
+# Aiven SSL certificate
+certs/

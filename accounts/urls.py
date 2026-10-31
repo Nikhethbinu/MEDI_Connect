@@ -129,6 +129,11 @@ urlpatterns = [
     path('administrator/medical-records/', views.admin_medical_records, name='admin_medical_records'),
     path('administrator/payments/', views.admin_payments, name='admin_payments'),
     path('administrator/reports/', views.admin_reports, name='admin_reports'),
+    path(
+    'administrator/doctors/add/',
+    views.admin_doctor_create,
+    name='admin_doctor_create'
+),
     # ------------------------------------------
     # LOGOUT
     # ------------------------------------------
