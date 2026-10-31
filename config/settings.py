@@ -124,18 +124,19 @@ DATABASES = {
 }
 
 # Enable SSL only when a CA certificate path is configured.
-if DB_SSL_CA:
-    ca_path = Path(DB_SSL_CA)
+DB_SSL_CA_CONTENT = os.getenv("DB_SSL_CA_CONTENT")
 
-    if not ca_path.is_absolute():
-        ca_path = BASE_DIR / ca_path
+if DB_SSL_CA_CONTENT:
+    ca_path = "/tmp/aiven-ca.pem"
+
+    with open(ca_path, "w") as ca_file:
+        ca_file.write(DB_SSL_CA_CONTENT)
 
     DATABASES['default']['OPTIONS'] = {
         'ssl': {
-            'ca': str(ca_path),
+            'ca': ca_path,
         }
     }
-
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
