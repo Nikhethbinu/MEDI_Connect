@@ -11,10 +11,6 @@ from .models import User
 
 class RegistrationFormTests(TestCase):
 
-    # ------------------------------------------
-    # TEST INVALID PHONE NUMBER
-    # ------------------------------------------
-
     def test_phone_with_letters_is_invalid(self):
         form = RegistrationForm(data={
             'username': 'testuser1',
@@ -28,10 +24,6 @@ class RegistrationFormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('phone', form.errors)
 
-    # ------------------------------------------
-    # TEST NAME CONTAINING ONLY SPACES
-    # ------------------------------------------
-
     def test_whitespace_only_name_is_invalid(self):
         form = RegistrationForm(data={
             'username': 'testuser2',
@@ -44,10 +36,6 @@ class RegistrationFormTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('name', form.errors)
-
-    # ------------------------------------------
-    # TEST DUPLICATE EMAIL
-    # ------------------------------------------
 
     def test_duplicate_email_is_invalid(self):
         User.objects.create_user(
@@ -69,10 +57,6 @@ class RegistrationFormTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('email', form.errors)
-
-    # ------------------------------------------
-    # TEST VALID REGISTRATION DATA
-    # ------------------------------------------
 
     def test_valid_registration_form(self):
         form = RegistrationForm(data={

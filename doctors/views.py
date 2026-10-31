@@ -13,23 +13,25 @@ from .models import (
     DoctorAvailability,
     Department
 )
+
 # ==========================================
 # DOCTOR PROFILE
 # ==========================================
 
 @login_required
+@role_required('DOCTOR')
 def doctor_profile(request):
 
     # ------------------------------------------
     # GET EXISTING DOCTOR PROFILE
     # ------------------------------------------
 
-    try:
-        doctor = request.user.doctor_profile
-
-    except Doctor.DoesNotExist:
-        doctor = None
-
+    doctor = Doctor.objects.filter(
+        user=request.user
+    ).select_related(
+        'user',
+        'department'
+    ).first()
 
     # ------------------------------------------
     # HANDLE FORM SUBMISSION
@@ -44,29 +46,18 @@ def doctor_profile(request):
 
         if form.is_valid():
 
-            # ------------------------------------------
-            # SAVE DOCTOR PROFILE
-            # ------------------------------------------
-
             doctor = form.save(commit=False)
-
             doctor.user = request.user
-
             doctor.save()
 
             return redirect('doctor_profile')
 
-
     # ------------------------------------------
-    # DISPLAY PROFILE FORM
+    # DISPLAY PROFILE
     # ------------------------------------------
 
     else:
-
-        form = DoctorProfileForm(
-            instance=doctor
-        )
-
+        form = DoctorProfileForm(instance=doctor)
 
     # ------------------------------------------
     # RENDER PROFILE PAGE
@@ -75,7 +66,10 @@ def doctor_profile(request):
     return render(
         request,
         'doctors/profile.html',
-        {'form': form}
+        {
+            'doctor': doctor,
+            'form': form,
+        }
     )
 
 # ==========================================

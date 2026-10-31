@@ -17,10 +17,14 @@ class PatientProfileForm(forms.ModelForm):
 
     date_of_birth = forms.DateField(
         widget=forms.DateInput(
-            attrs={
-                'type': 'date'
-            }
+            attrs={'type': 'date'}
         )
+    )
+
+    # Preserve whitespace so clean_address can validate it.
+    address = forms.CharField(
+        required=False,
+        strip=False
     )
 
     # ------------------------------------------
@@ -72,7 +76,9 @@ class PatientProfileForm(forms.ModelForm):
     # ------------------------------------------
 
     def clean_emergency_contact_name(self):
-        name = self.cleaned_data.get('emergency_contact_name', '')
+        name = self.cleaned_data.get(
+            'emergency_contact_name', ''
+        )
 
         if name and not name.strip():
             raise forms.ValidationError(

@@ -4,6 +4,7 @@ from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from accounts.decorators import role_required
 from django.db import models
+from doctors.models import Doctor
 def register(request):
 
     if request.method == 'POST':
@@ -107,12 +108,34 @@ def patient_dashboard(request):
     )
 
 
+
+# ==========================================
+# DOCTOR DASHBOARD
+# ==========================================
+
 @login_required
 @role_required('DOCTOR')
 def doctor_dashboard(request):
+
+    # ------------------------------------------
+    # GET DOCTOR PROFILE
+    # ------------------------------------------
+
+    doctor = get_object_or_404(
+        Doctor,
+        user=request.user
+    )
+
+    # ------------------------------------------
+    # RENDER DASHBOARD
+    # ------------------------------------------
+
     return render(
         request,
-        'accounts/doctor_dashboard.html'
+        'accounts/doctor_dashboard.html',
+        {
+            'doctor': doctor,
+        }
     )
 
 

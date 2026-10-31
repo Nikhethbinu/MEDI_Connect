@@ -1,4 +1,4 @@
-```html
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -197,13 +197,9 @@ MediConnect - Doctor Availability
                             Edit
                         </a>
 
-                        <a
-                            href="{% url 'delete_availability' availability.id %}"
-                            class="mc-btn mc-btn-danger"
-                            onclick="return confirm('Delete this availability?');"
-                        >
-                            <i class="bi bi-trash"></i>
-                            Delete
+                        <a href="{% url 'delete_availability' availability.id %}"
+                            class="mc-btn">
+                                Delete
                         </a>
 
                     </div>

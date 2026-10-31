@@ -1,48 +1,167 @@
-<!DOCTYPE html>
-<html>
 
-<head>
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>
-        MediConnect - Edit Availability
-    </title>
+{% block title %}MediConnect - Edit Availability{% endblock %}
 
-</head>
+{% block extra_css %}
+<style>
+    /* ==========================================
+       EDIT AVAILABILITY
+       ========================================== */
 
-<body>
+    .availability-page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+    }
+
+    .availability-header {
+        margin-bottom: 24px;
+    }
+
+    .availability-header h1 {
+        color: var(--teal);
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+
+    .availability-header h2 {
+        color: var(--text-dark);
+        font-size: 1.4rem;
+        margin: 0;
+    }
+
+    /* ==========================================
+       FORM CARD
+       ========================================== */
+
+    .availability-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: var(--shadow-small);
+    }
+
+    .availability-card p {
+        margin: 0 0 20px;
+    }
+
+    .availability-card label {
+        display: block;
+        color: var(--text-dark);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .availability-card input,
+    .availability-card select,
+    .availability-card textarea {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .availability-card input:not([type="checkbox"]),
+    .availability-card select,
+    .availability-card textarea {
+        padding: 11px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-dark);
+        background: var(--white);
+        font: inherit;
+    }
+
+    .availability-card input:focus,
+    .availability-card select:focus,
+    .availability-card textarea:focus {
+        outline: none;
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px var(--teal-light);
+    }
+
+    .availability-card .errorlist,
+    .availability-card .errorlist li {
+        color: var(--danger);
+        margin: 6px 0;
+        padding-left: 18px;
+    }
+
+    .availability-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .availability-actions .mc-btn,
+    .availability-actions .mc-btn-outline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        cursor: pointer;
+        font: inherit;
+    }
+
+    @media (max-width: 480px) {
+        .availability-card {
+            padding: 20px 16px;
+        }
+
+        .availability-actions {
+            flex-direction: column;
+        }
+
+        .availability-actions .mc-btn,
+        .availability-actions .mc-btn-outline {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="availability-page">
 
     <!-- ==========================================
-         EDIT AVAILABILITY
+         EDIT AVAILABILITY HEADER
          ========================================== -->
 
-    <h1>MediConnect</h1>
-
-    <h2>Edit Availability</h2>
+    <div class="availability-header">
+        <h1>MediConnect</h1>
+        <h2>Edit Availability</h2>
+    </div>
 
     <!-- ==========================================
          AVAILABILITY FORM
          ========================================== -->
 
-    <form method="POST">
+    <div class="availability-card">
 
-        {% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
 
-        {{ form.non_field_errors }}
+            {{ form.non_field_errors }}
 
-        {{ form.as_p }}
+            {{ form.as_p }}
 
-        <button type="submit">
-            Update Availability
-        </button>
+            <div class="availability-actions">
+                <button type="submit" class="mc-btn">
+                    Update Availability
+                </button>
 
-    </form>
+                <a href="{% url 'doctor_availability' %}"
+                   class="mc-btn-outline">
+                    Cancel
+                </a>
+            </div>
+        </form>
 
-    <br>
+    </div>
 
-    <a href="{% url 'doctor_availability' %}">
-        Cancel
-    </a>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

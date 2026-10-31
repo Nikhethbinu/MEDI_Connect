@@ -198,144 +198,84 @@ MediConnect - Doctor Appointments
 
                     <div class="doctor-appointment-actions">
 
-
                         {% if appointment.status == "PENDING" %}
 
+                            <form method="POST"
+                                action="{% url 'confirm_appointment' appointment.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="mc-btn">
+                                    <i class="bi bi-check-circle"></i>
+                                    Confirm
+                                </button>
+                            </form>
 
-                            <a
-                                href="{% url 'confirm_appointment' appointment.id %}"
-                                class="mc-btn"
-                            >
-
-                                <i class="bi bi-check-circle"></i>
-
-                                Confirm
-
-                            </a>
-
-
-                            <a
-                                href="{% url 'reject_appointment' appointment.id %}"
-                                class="mc-btn mc-btn-danger"
-                            >
-
-                                <i class="bi bi-x-circle"></i>
-
-                                Reject
-
-                            </a>
-
+                            <form method="POST"
+                                action="{% url 'reject_appointment' appointment.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="mc-btn mc-btn-danger">
+                                    <i class="bi bi-x-circle"></i>
+                                    Reject
+                                </button>
+                            </form>
 
                         {% elif appointment.status == "CONFIRMED" %}
 
-
-                            <a
-                                href="{% url 'complete_appointment' appointment.id %}"
-                                class="mc-btn"
-                            >
-
-                                <i class="bi bi-check2-all"></i>
-
-                                Complete
-
-                            </a>
-
+                            <form method="POST"
+                                action="{% url 'complete_appointment' appointment.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="mc-btn">
+                                    <i class="bi bi-check2-all"></i>
+                                    Complete
+                                </button>
+                            </form>
 
                         {% endif %}
-
 
                         {% if appointment.status == "COMPLETED" %}
 
-
                             {% if appointment.has_prescription %}
-
-                                <a
-                                    href="{% url 'prescription_detail' appointment.prescription_id_value %}"
-                                    class="mc-btn"
-                                >
-
+                                <a href="{% url 'prescription_detail' appointment.prescription_id_value %}"
+                                class="mc-btn">
                                     <i class="bi bi-capsule"></i>
-
                                     Prescription
-
                                 </a>
-
                             {% else %}
-
-                                <a
-                                    href="{% url 'create_prescription' appointment.id %}"
-                                    class="mc-btn"
-                                >
-
+                                <a href="{% url 'create_prescription' appointment.id %}"
+                                class="mc-btn">
                                     <i class="bi bi-plus-circle"></i>
-
                                     Prescription
-
                                 </a>
-
                             {% endif %}
-
 
                             {% if appointment.has_medical_record %}
-
-                                <a
-                                    href="{% url 'medical_record_detail' appointment.medical_record_id_value %}"
-                                    class="mc-btn"
-                                >
-
+                                <a href="{% url 'medical_record_detail' appointment.medical_record_id_value %}"
+                                class="mc-btn">
                                     <i class="bi bi-file-medical"></i>
-
                                     Medical Record
-
                                 </a>
-
                             {% else %}
-
-                                <a
-                                    href="{% url 'create_medical_record' appointment.id %}"
-                                    class="mc-btn"
-                                >
-
+                                <a href="{% url 'create_medical_record' appointment.id %}"
+                                class="mc-btn">
                                     <i class="bi bi-plus-circle"></i>
-
                                     Medical Record
-
                                 </a>
-
                             {% endif %}
-
 
                             {% if appointment.has_payment %}
-
-                                <a
-                                    href="{% url 'payment_detail' appointment.payment_id_value %}"
-                                    class="mc-btn"
-                                >
-
+                                <a href="{% url 'payment_detail' appointment.payment_id_value %}"
+                                class="mc-btn">
                                     <i class="bi bi-credit-card"></i>
-
                                     Bill
-
                                 </a>
-
                             {% else %}
-
-                                <a
-                                    href="{% url 'create_payment' appointment.id %}"
-                                    class="mc-btn"
-                                >
-
+                                <a href="{% url 'create_payment' appointment.id %}"
+                                class="mc-btn">
                                     <i class="bi bi-receipt"></i>
-
                                     Create Bill
-
                                 </a>
-
                             {% endif %}
 
-
                         {% endif %}
-
 
                     </div>
 

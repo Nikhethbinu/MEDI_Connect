@@ -14,9 +14,9 @@ from .models import Appointment
 class AppointmentForm(forms.ModelForm):
 
     # ------------------------------------------
-    # FORM CONFIGURATION
+    # REASON FIELD
     # ------------------------------------------
-    
+
     reason = forms.CharField(
         required=False,
         strip=False,
@@ -27,6 +27,10 @@ class AppointmentForm(forms.ModelForm):
             }
         )
     )
+
+    # ------------------------------------------
+    # FORM CONFIGURATION
+    # ------------------------------------------
 
     class Meta:
         model = Appointment
@@ -39,22 +43,11 @@ class AppointmentForm(forms.ModelForm):
 
         widgets = {
             'appointment_date': forms.DateInput(
-                attrs={
-                    'type': 'date'
-                }
+                attrs={'type': 'date'}
             ),
 
             'appointment_time': forms.TimeInput(
-                attrs={
-                    'type': 'time'
-                }
-            ),
-
-            'reason': forms.Textarea(
-                attrs={
-                    'rows': 4,
-                    'placeholder': 'Reason for appointment'
-                }
+                attrs={'type': 'time'}
             ),
         }
 
@@ -64,9 +57,8 @@ class AppointmentForm(forms.ModelForm):
 
     def clean_appointment_date(self):
         appointment_date = self.cleaned_data['appointment_date']
-        today = timezone.localdate()
 
-        if appointment_date < today:
+        if appointment_date < timezone.localdate():
             raise forms.ValidationError(
                 'Appointment date cannot be in the past.'
             )

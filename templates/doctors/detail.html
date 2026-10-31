@@ -233,57 +233,39 @@
 <div class="mc-card">
 
     <h2>
-
         <i class="bi bi-calendar-week"></i>
-
         Available Timings
-
     </h2>
-
 
     {% if availabilities %}
 
-
         <div class="availability-list">
-
 
             {% for availability in availabilities %}
 
-
                 <div class="availability-item">
 
-
                     <div class="availability-day">
-
                         <i class="bi bi-calendar3"></i>
 
-                        {{ availability.get_day_display }}
-
+                        {{ availability.availability_date|date:"M d, Y" }}
                     </div>
-
 
                     <div class="availability-time">
-
                         <i class="bi bi-clock"></i>
 
-                        {{ availability.start_time }}
+                        {{ availability.start_time|time:"g a" }}
                         -
-                        {{ availability.end_time }}
-
+                        {{ availability.end_time|time:"g a" }}
                     </div>
-
 
                 </div>
 
-
             {% endfor %}
-
 
         </div>
 
-
     {% else %}
-
 
         <div class="mc-empty">
 
@@ -292,27 +274,18 @@
                 style="font-size: 38px; color: var(--purple);"
             ></i>
 
-            <h3>
-
-                No Availability
-
-            </h3>
+            <h3>No Availability</h3>
 
             <p>
-
                 This doctor currently has no available
                 consultation timings.
-
             </p>
 
         </div>
 
-
     {% endif %}
 
-
 </div>
-
 
 <!-- ==========================================
      BOOK APPOINTMENT

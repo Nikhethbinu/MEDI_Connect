@@ -11,10 +11,6 @@ from .models import User
 
 class RegistrationForm(UserCreationForm):
 
-    # ------------------------------------------
-    # FORM CONFIGURATION
-    # ------------------------------------------
-
     class Meta:
         model = User
 

@@ -26,15 +26,11 @@ class DoctorProfileForm(forms.ModelForm):
 
         widgets = {
             'specialization': forms.TextInput(
-                attrs={
-                    'placeholder': 'Example: Cardiologist'
-                }
+                attrs={'placeholder': 'Example: Cardiologist'}
             ),
 
             'qualification': forms.TextInput(
-                attrs={
-                    'placeholder': 'Example: MBBS, MD Cardiology'
-                }
+                attrs={'placeholder': 'Example: MBBS, MD Cardiology'}
             ),
 
             'experience_years': forms.NumberInput(
@@ -69,56 +65,56 @@ class DoctorProfileForm(forms.ModelForm):
     # ------------------------------------------
 
     def clean_specialization(self):
-        specialization = self.cleaned_data['specialization'].strip()
+        value = self.cleaned_data['specialization'].strip()
 
-        if not specialization:
+        if not value:
             raise forms.ValidationError(
                 'Specialization cannot be empty.'
             )
 
-        return specialization
+        return value
 
     # ------------------------------------------
     # QUALIFICATION VALIDATION
     # ------------------------------------------
 
     def clean_qualification(self):
-        qualification = self.cleaned_data['qualification'].strip()
+        value = self.cleaned_data['qualification'].strip()
 
-        if not qualification:
+        if not value:
             raise forms.ValidationError(
                 'Qualification cannot be empty.'
             )
 
-        return qualification
+        return value
 
     # ------------------------------------------
     # EXPERIENCE VALIDATION
     # ------------------------------------------
 
     def clean_experience_years(self):
-        experience_years = self.cleaned_data['experience_years']
+        value = self.cleaned_data['experience_years']
 
-        if experience_years < 0:
+        if value < 0:
             raise forms.ValidationError(
                 'Experience years cannot be negative.'
             )
 
-        return experience_years
+        return value
 
     # ------------------------------------------
     # CONSULTATION FEE VALIDATION
     # ------------------------------------------
 
     def clean_consultation_fee(self):
-        consultation_fee = self.cleaned_data['consultation_fee']
+        value = self.cleaned_data['consultation_fee']
 
-        if consultation_fee < 0:
+        if value < 0:
             raise forms.ValidationError(
                 'Consultation fee cannot be negative.'
             )
 
-        return consultation_fee
+        return value
 
     # ------------------------------------------
     # BIO VALIDATION
@@ -237,9 +233,7 @@ class DepartmentForm(forms.ModelForm):
 
         widgets = {
             'name': forms.TextInput(
-                attrs={
-                    'placeholder': 'Enter department name'
-                }
+                attrs={'placeholder': 'Enter department name'}
             ),
 
             'description': forms.Textarea(

@@ -218,13 +218,9 @@ def appointment_history(request):
         patient=request.user
     ).select_related(
         'doctor',
-        'doctor__user',
-        'doctor__department'
-    ).prefetch_related(
-        'prescription'
+        'doctor__user'
     ).order_by(
-        '-appointment_date',
-        '-appointment_time'
+        '-created_at'
     )
 
     # ------------------------------------------
