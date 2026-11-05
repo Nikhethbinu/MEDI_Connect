@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
-
+import tempfile
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,7 +38,9 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
         "DJANGO_ALLOWED_HOSTS",
-        "localhost,127.0.0.1"
+        # "localhost,127.0.0.1",
+        "https://mediconnect-itan0t7p1-nikhethbinus-projects.vercel.app/login/"
+
     ).split(",")
     if host.strip()
 ]
@@ -123,18 +125,18 @@ DATABASES = {
     }
 }
 
-# Enable SSL only when a CA certificate path is configured.
+# Aiven MySQL SSL configuration
 DB_SSL_CA_CONTENT = os.getenv("DB_SSL_CA_CONTENT")
 
 if DB_SSL_CA_CONTENT:
-    ca_path = "/tmp/aiven-ca.pem"
+    ca_path = Path(tempfile.gettempdir()) / "aiven-ca.pem"
 
-    with open(ca_path, "w") as ca_file:
+    with open(ca_path, "w", encoding="utf-8") as ca_file:
         ca_file.write(DB_SSL_CA_CONTENT)
 
-    DATABASES['default']['OPTIONS'] = {
-        'ssl': {
-            'ca': ca_path,
+    DATABASES["default"]["OPTIONS"] = {
+        "ssl": {
+            "ca": str(ca_path),
         }
     }
 # Password validation
